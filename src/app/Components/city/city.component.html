@@ -1,13 +1,13 @@
-<!-- <div class="container mt-3">
+<div class="container mt-3">
     <div class="search-container">
       <input type="text" placeholder="Search Lead Id" (input)="onSearch()">
       <button class="addbtn btn btn1 btn-sm btn-primary" (click)="openModal()">Add City</button><br>
     </div><br>
     <ngx-datatable *ngIf="!loading" #table class="data-table" [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="55"
       [rowHeight]="'auto'" [externalPaging]="true" [scrollbarH]="true" [count]="page.count" [offset]="page.offset"
-      [limit]="page.limit" [rows]="tabrows"> -->
+      [limit]="page.limit" [rows]="tabrows"> 
       <!-- Columns and Data Rows -->
-      <!-- <ngx-datatable-column name="Id" [flexGrow]="1" [minWidth]="120">
+      <ngx-datatable-column name="Id" [flexGrow]="1" [minWidth]="120">
         <ng-template let-value="value" ngx-datatable-cell-template>
           {{ value }}
         </ng-template>
@@ -50,8 +50,8 @@
       </ngx-datatable-column>
     </ngx-datatable>
   
-    <div class="modal" *ngIf="isOpen"> -->
-      <!-- <app-modal-animation [modalID]="'modaladdeditcity'">
+    <div class="modal" *ngIf="isOpen"> 
+       <app-modal-animation [modalID]="'modaladdeditcity'">
         <div class="modal-content">
           <div class="app-modal-header"></div>
           <div class="app-modal-body src">
@@ -95,24 +95,24 @@
   <app-modal-animation   *ngIf="isOpen"  [modalID]="'modaladdeditcity'"    >
     <div class="app-modal-header">
       <h4 class="modal-title"><span >Edit '{{model?.name}}'</span>  <span >Add</span> City</h4>
-    <!--   <button type="button" class="close basic-close" (click)="commonService.hideModal()">
+    <!-- <button type="button" class="close basic-close" (click)="commonService.hideModal()">
         <span aria-hidden="true">&times;</span>
-      </button> -->
-    <!-- </div>
+      </button>  -->
+     </div>
     <div class="app-modal-body" class="src">
         <form ngNativeValidate >
 
           <div class="form-group">
             Name :<br>
             <input type="text" class="form-control" name=name required [(ngModel)]="model.name" placeholder="Enter City Name">
-            <br> -->
-           <!--  District :<br>
+            <br> 
+            District :<br>
             <input type="text" class="form-control" name=district required [(ngModel)]="model.district" placeholder="Enter District Name">
             <br>
             GST Code :<br>
             <input type="text" class="form-control" name=gstcode required [(ngModel)]="model.gstcode" placeholder="Enter GST Code">
-            <br> -->
-            <!-- Select State : <br>
+            <br> 
+            Select State : <br>
             <ng-select placeholder="Select State" name="state" required bindLabel="state" bindValue="state" [items]="states" [(ngModel)]="model.state" >
             </ng-select>
             <br>
@@ -132,4 +132,4 @@
           </form>
     </div>
 
-</app-modal-animation > --> -->
+</app-modal-animation > 
