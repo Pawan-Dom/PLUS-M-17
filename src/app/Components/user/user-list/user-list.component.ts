@@ -71,6 +71,7 @@ export class UserListComponent implements OnInit {
   ngOnInit() {
     this.motherRegion();
     this.loadPeople3();
+    this.getList();
     this.loadCities();
   }
 

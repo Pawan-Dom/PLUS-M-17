@@ -12,16 +12,9 @@
 :host ::ng-deep.datatable-scroll{
   width: fit-content!important;
 }
-::ng-deep ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-  /* Apply custom styles to dropdown options */
-  background-color: lightblue; /* Change this to your desired background color */
-}
 
 :host ::ng-deep.datatable-body-row{
   width: 100%!important;
-}
-.custom-dropdown-item {
-  background-color: lightblue; /* Change this to your desired background color */
 }
 
   @media screen and (max-width: 700px){

@@ -12,7 +12,7 @@ import { ModalAnimationComponent } from '../../shared/modal-animation/modal-anim
     CommonModule,
     UserRoutingModule,
     NgSelectModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [
   ],
