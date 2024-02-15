@@ -5,31 +5,43 @@
     <app-card >
      <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>
       <div class="row">
-        <div class="col-md-4">
+         <div class="col-md-4">
           <button class="btn btn1 btn-info btn-freezeduser"  *ngIf="authService.checkPermission(18)" (click)="commonService.openModal('defreezUser');getfreezuserList();"> Freezed User List</button>
           </div>
           <div class="col-md-8">
-          <label class="dt-cust-search f-right">
-            <div class="form-group">
-              <label>Search: </label>
-
-              <input
-              type='search' name=search
-              class="form-control input-sm m-l-10"
-              placeholder='Search Name' autocomplete="off" [readonly]=!roflag
-              (focus)="roflag=true;"
-              (keyup)='updateFilter($event)'
-            />
-            
-            
-            
-
-              <button class="btn btn1 btn-info"  *ngIf="authService.checkPermission(18)" (click)="commonService.openModal('useraddedit');selectedUser.id=0;selectedUser={}">Add</button>
+            <div class="row">
+              <div class="col-md-12" style="
+              text-align: right;
+          ">
+                <label class="dt-cust-search f-right">
+                  <div class="form-group">
+                    <!-- <label>Search: </label> -->
+      
+                    <input
+                    type='search' name=search
+                    class="form-control input-sm m-l-10"
+                    placeholder='Search Name' autocomplete="off" [readonly]=!roflag
+                    (focus)="roflag=true;"
+                    (keyup)='updateFilter($event)'
+                  />
+                  
+                  
+                  
+      
+                    </div>
+                  
+                </label>
+                <button class="btn btn1 btn-info"  *ngIf="authService.checkPermission(18)" (click)="commonService.openModal('useraddedit');selectedUser.id=0;selectedUser={}">Add</button>
+      
               </div>
-            
-          </label>
+            </div>
+         
+
           </div>
-        </div>
+          <!-- <div class="col-md-4">
+
+          </div> -->
+          </div>
       
        <div class="preloader3 loader-block" *ngIf="loading">
         <div class="circ1"></div>

@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
+  styleUrls: ['./user-list.component.scss','../../../../assets/icon/icofont/css/icofont.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush // Optionally, if you want to enable OnPush change detection
 })
 export class UserListComponent implements OnInit {
