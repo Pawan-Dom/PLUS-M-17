@@ -12,6 +12,7 @@ export class NavBarComponent {
  // nav-bar.component.ts
 
 @Output() onToggleSideMenu = new EventEmitter<void>();
+drawer: any;
 
 toggleSideMenu() {
   this.onToggleSideMenu.emit(); // Use onToggleSideMenu here

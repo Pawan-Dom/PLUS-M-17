@@ -27,4 +27,149 @@
     padding-bottom: 4px; /* Adjust bottom padding */
     font-size: 14px; /* Adjust font size */
   }
+  .navbar{
+    background-color:#da62b1 ;
+    color: white !important;
+    height: 60px;
+}
+.list{
+
+    color: black;
+    text-decoration: none;
+    list-style-type: none;
+    margin-top: 22px;
+}
+.list li{
+    margin-bottom: 20px;
+    padding-left: 50px;
+    padding-right: 40px;
+}
+.fistlist{
+    margin-top: 20px;
+
+}
+.secondlist{
+    margin-top: 50px;
+}
+.underline-div {
+    margin-top: 30px;
+    border-bottom: 1px solid #00000041;
+    /* Adjust the color and width as needed */
+    padding-bottom: 10px;
+    /* Optional: Add padding to create space between the content and the line */
+    width: 300px;
+}
+.foot-sidenav{
+    text-align: center;
+    padding-top: 10px;
+}
+/* styles.css or your component-specific stylesheet */
+/* Example CSS for ngx-datatable styling */
+.box1{
+  margin: 50px;
+  padding: 30px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   
+}/* Styling ngx-datatable */
+/* Styling ngx-datatable */
+
+
+:host ::ng-deep .ngx-datatable {
+  font-family: 'Arial', sans-serif; /* Set font family */
+  border-collapse: collapse; /* Collapse table borders */
+  border-radius: 8px; /* Add border radius */
+  overflow: hidden; /* Hide overflow */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+  border-radius: 0px;
+}
+
+:host ::ng-deep .datatable-header {
+  background-color: #f0f0f0; /* Header background color */
+  border-bottom: 1px solid #00000057; /* Bottom border color */
+}
+
+:host ::ng-deep .datatable-header-cell {
+  font-weight: bold; /* Header cell font weight */
+  padding: 16px; /* Header cell padding */
+}
+
+
+:host ::ng-deep .datatable-row {
+  border-bottom: 1px solid #ddd; /* Bottom border color */
+}
+
+:host ::ng-deep .datatable-body-cell {
+  padding: 16px; /* Cell padding */
+}
+
+:host ::ng-deep .datatable-row:hover {
+  background-color: #f5f5f50a; /* Hover background color */
+}
+
+:host ::ng-deep .datatable-row-even {
+  background-color: #d4d4d479; /* Even row background color */
+}
+
+:host ::ng-deep .datatable-row-center {
+}
+
+:host ::ng-deep .datatable-row-odd {
+  background-color: #f7f7f7; /* Odd row background color */
+}
+:host ::ng-deep .ngx-datatable-scrollbar-thumb {
+  background-color: #ccc; /* Scrollbar thumb color */
+ /* Adjust the minimum width as needed */
+}
+.ngx-datatable.material .datatable-body .datatable-row-even {
+  background-color: #ffffff; /* Change this to the color you desire */
+}
+
+.box {
+  display: flex;
+}
+.head{
+  display: flex;
+  padding-bottom: 40px;
+}
+.right{
+  display: flex;
+}
+.btn{
+  background-color: #da62b1;
+}
+.dropdown {
+  margin-left: auto;
+}
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+.search {
+  margin-left: auto;
+}

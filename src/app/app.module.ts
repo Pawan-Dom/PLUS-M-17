@@ -34,6 +34,17 @@ import { CityComponent } from './Components/city/city.component';
 import { AuthService } from './Services/auth.service';
 import { AppRoutingModule } from './app-routing.module'; // Correct import statement
 import { NotificationsService } from 'angular2-notifications';
+
+
+
+
+
+import { MatInputModule } from '@angular/material/input';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -58,6 +69,8 @@ import { NotificationsService } from 'angular2-notifications';
     imports: [
         BrowserModule,
         FormsModule,
+        MatMenuModule,
+        MatInputModule,
         HttpClientModule,
         BrowserAnimationsModule,
         MatSnackBarModule,
@@ -69,13 +82,16 @@ import { NotificationsService } from 'angular2-notifications';
         RouterModule, 
         CommonModule,
         NgbModule,
+        MatDialogModule,
         NgChartsModule,
         NgxChartsModule,
         NgxDatatableModule,
+        SimpleNotificationsModule,
         NgSelectModule,
         SharedModule,
         AppRoutingModule, 
-        RouterModule.forRoot([]) 
+        RouterModule.forRoot([]) ,
+        
     ]
 })
 export class AppModule { }
