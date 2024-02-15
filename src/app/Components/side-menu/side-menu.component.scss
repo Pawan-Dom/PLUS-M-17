@@ -1,0 +1,30 @@
+/* styles.css or styles.scss */
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
+
+.mat-toolbar.mat-primary {
+    --mat-toolbar-container-background-color: #D0399D;
+    --mat-toolbar-container-text-color: white;
+}
+/* styles.scss or your component's style file */
+/* styles.scss or your component's style file */
+.mat-nav-list {
+    max-height: calc(100vh - 64px); /* Set the maximum height based on viewport height (adjust the 64px based on your header height) */
+    overflow-y: auto; /* Add a scrollbar if the content overflows */
+  }
+  #side-menu {
+    height: 100vh; /* Set the height to 100% of the viewport height */
+    /* Add other styles as needed */
+  }
+  
+  .mat-sidenav {
+    width: 250px; /* Adjust the width as needed */
+    height: 100%;
+    box-shadow: 3px 0 5px -1px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for styling */
+  }
+  .custom-list-item {
+    padding-top: 4px; /* Adjust top padding */
+    padding-bottom: 4px; /* Adjust bottom padding */
+    font-size: 14px; /* Adjust font size */
+  }
+  

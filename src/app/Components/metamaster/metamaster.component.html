@@ -1,0 +1,156 @@
+<!-- <div class="container mt-3" *ngIf="tabrows">
+<div class="row">
+
+    <div class="col-md-7">
+      
+    </div>
+    <div class="col-md-3 search-container">
+      <input type="text" class="form-control" placeholder="Search Metamaster" [(ngModel)]="searchText" (input)="onSearch()">
+    </div>
+    <div class="col-md-2">
+      <button class="addbtn btn btn1 btn-sm btn-primary" (click)="openModal()">Add Meta Master</button>
+    </div>
+  </div>
+  <br>
+
+
+<ngx-datatable 
+    #table
+    class="data-table"
+    [columnMode]="'flex'"
+    [headerHeight]="50"
+    [footerHeight]="55"
+    [rowHeight]="'auto'"
+    [externalPaging]="true"
+    [count]="page.count"
+    [offset]="page.offset"
+    [limit]="page.limit"
+    [rows]="tabrows"
+    [scrollbarH]="true"
+>
+    <ngx-datatable-column name="Id" [flexGrow]="1" [minWidth]="132">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Name" [flexGrow]="3" [minWidth]="397">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row?.name}}
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Type" [flexGrow]="2" [minWidth]="250">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row?.type}}
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Status" [flexGrow]="2" [minWidth]="250">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <div class="text-center" [style.color]="row.active == 0 ? 'red' : 'green'">
+                {{row.active == 0 ? 'Deactive' : 'Active'}}
+            </div>
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Created On" [flexGrow]="2" [minWidth]="250">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row?.created_on | date}}
+        </ng-template>
+    </ngx-datatable-column>
+    
+
+    <ngx-datatable-column name="Action" [flexGrow]="1" [minWidth]="132">
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="row">
+                <div class="col-6">
+                    <a style="color: #6B05F9">
+                        <i class="ti-pencil"></i>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a  style="color: red">
+                        <i class="ti-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </ng-template>
+    </ngx-datatable-column>
+</ngx-datatable> -->
+<!-- <app-modal-animation *ngIf="isModalOpen" class="centered-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span *ngIf="model.id">Edit '{{model?.name}}'</span>
+          <span *ngIf="!model.id">Add</span> Master
+        </h4>
+        <!-- <button type="button" class="close basic-close" (click)="commonService.hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      <!-- </div>
+      <div class="modal-body">
+        <form ngNativeValidate>
+         
+          <div class="form-group">
+            Select Type :
+            <ng-select placeholder="Select Type" name="type" required bindLabel="type" bindValue="type" [items]="metatypes" [(ngModel)]="model.type" >
+              </ng-select> <br>
+          <span *ngIf="model.type != 'LDC'">Name : </span>
+          <span *ngIf="model.type == 'LDC'">TAN No : </span>
+          <br>
+          <input type="text" class="form-control" name=name required [(ngModel)]="model.name" placeholder="Enter Name">
+          <br>
+          <ng-container *ngIf="model.type == 'LDC'">
+
+          Name of Establishment :<br>
+          <input type="text" class="form-control" name=ldc_name required [(ngModel)]="model.ldc_name" placeholder="Enter  Name of Establishment">
+          <br>
+          Percentage :<br> -->
+          <!-- <input type="number" class="form-control" name=ldc_percent required [(ngModel)]="model.ldc_percent" placeholder="Enter percentage"> -->
+          <!-- <input type="number" min=0 class="form-control" step="0.0000001" name=ldc_percent required [(ngModel)]="model.ldc_percent" placeholder="Enter percentage">
+          <br>
+          Start Date :<br>
+          <input type="date" class="form-control" name=ldc_startdate required [(ngModel)]="model.ldc_startdate" placeholder="Enter Start Date">
+          <br>
+
+          End Date :<br>
+          <input type="date" class="form-control" name=ldc_enddate required [(ngModel)]="model.ldc_enddate" placeholder="Enter End Date">
+          <br>
+
+          </ng-container>
+          <ng-container *ngIf="model.type == 'EVENTVENUE'">
+
+            Event Venue Tag:<br>
+            <ng-select placeholder="Event Venue Tag" name="event_venue_tag" required bindLabel="name" bindValue="name" [items]="metaeventvenuetag" [(ngModel)]="model.event_venue_tag" >
+            </ng-select> 
+            <br>
+          
+
+            </ng-container>
+
+
+        </div>
+          <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3">
+              <button type="button" class="btn btn-secondary f-right" (click)="hideModal()">Cancel</button>
+            </div>
+      
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary waves-effect f-left">
+                <span *ngIf="model.id; else addMaster">Save Changes</span>
+                <ng-template #addMaster>Add Master</ng-template>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</app-modal-animation> --> -->
+
+
+<!-- </div> -->

@@ -1,0 +1,52 @@
+.btn1{
+    margin-left: 15px;
+}
+.src{
+    overflow: auto;
+    height: 400px;
+}
+
+.regionmc{
+    white-space: normal;
+}
+:host ::ng-deep.datatable-scroll{
+  width: fit-content!important;
+}
+::ng-deep ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  /* Apply custom styles to dropdown options */
+  background-color: lightblue; /* Change this to your desired background color */
+}
+
+:host ::ng-deep.datatable-body-row{
+  width: 100%!important;
+}
+.custom-dropdown-item {
+  background-color: lightblue; /* Change this to your desired background color */
+}
+
+  @media screen and (max-width: 700px){
+    .datatable-scroll{
+      width: fit-content!important;
+      overflow-x: hidden !important;
+    }
+  }
+    @media screen and (max-width: 770px){
+      .data-table{
+       overflow-x: hidden !important;
+      }
+  }
+  // .data-table{
+  //   overflow-x: auto !important;
+  //  }
+
+
+  @media only screen and (max-width: 480px){
+    .btn {
+      padding: 10px 19px !important;
+  }
+  .btn-freezeduser{
+    width: -webkit-fill-available !important;
+    margin-bottom: 5px !important;
+  }
+}
+  

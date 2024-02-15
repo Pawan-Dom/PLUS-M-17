@@ -1,0 +1,14 @@
+<app-login *ngIf="!isLoggedIn"></app-login>
+
+<ng-container *ngIf="isLoggedIn">
+  <app-nav-bar (onToggleSideMenu)="onToggleSideMenu()"></app-nav-bar>
+
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" [opened]="isSideMenuVisible">
+      <app-side-menu></app-side-menu>
+    </mat-sidenav>
+    <mat-sidenav-content class="content-container">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>

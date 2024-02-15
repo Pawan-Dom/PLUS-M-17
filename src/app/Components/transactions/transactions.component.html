@@ -1,0 +1,340 @@
+<!-- <div class="page-body">
+    <div class="row">
+    <div class="col-sm-12">
+  
+      <app-card > -->
+       <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+        <!-- <div class="row">
+          <div class="col-md-4">
+            <button clsass="btn btn1 btn-info btn-freezeduser"  *ngIf="authService.checkPermission(18)" (click)="commonService.openModal('defreezUser');getfreezuserList();"> Freezed User List</button>
+            </div>
+            <div class="col-md-8">
+            <label class="dt-cust-search f-right">
+              <div class="form-group">
+                <label>Search: </label>
+  
+                <input
+                  type='search' name=search
+                  class="form-control input-sm m-l-10"
+                  placeholder='Search Name' autocomplete="off"[readonly]=!roflag
+                  (focus)="roflag=true;"
+                  (keyup)='updateFilter($event)'
+                />
+                <button class="btn btn1 btn-info"  *ngIf="authService.checkPermission(18)" (click)="commonService.openModal('useraddedit');selectedUser.id=0;selectedUser={}">Add</button>
+                </div>
+              
+            </label>
+            </div>
+          </div>
+        
+         <div class="preloader3 loader-block" *ngIf="loading">
+          <div class="circ1"></div>
+          <div class="circ2"></div>
+          <div class="circ3"></div>
+          <div class="circ4"></div>
+        </div>
+  
+        <ngx-datatable *ngIf="!loading"
+          #table
+          class='data-table'
+          [columnMode]="'force'"
+          [headerHeight]="50"
+          [footerHeight]="55"
+          [rowHeight]="'auto'"
+          [scrollbarH]="true"
+          [limit]="10"
+          [rows]='tabrows'>
+        <ngx-datatable-column name="Id" [flexGrow]="0.5"[minWidth]="97" >
+            <ng-template let-value="value" ngx-datatable-cell-template>
+              {{value}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Name" [flexGrow]="2" [minWidth]="379">
+            <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+              <a  (click)="view(row)">
+  
+       <span *ngIf="row.active==0" style="color:red">{{ row.userdisplayname  }}</span>
+       <span *ngIf="row.active==1"  >{{ row.userdisplayname  }}</span>
+  
+  
+                <br>
+                <small>{{row.designation}} </small>  </a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Contact" [flexGrow]="2" [minWidth]="300">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              {{row.email}}<br>{{row.mobile}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Approver / LFC - Region" [flexGrow]="1.5" [minWidth]="292">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              {{row?.approver_user?.name}} <br>
+              <small *ngIf="row.branch"> {{row?.branch?.name}}<br></small>
+              <small class="regionmc" *ngIf="row.region">Region (Old method): {{row?.region}} <br></small>
+              <small class="regionmc" *ngIf="row.region_ids_info">Region (New method): <span *ngFor="let reg of row.region_ids_info"> {{ reg.region_name}}, </span></small>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Action" [flexGrow]="0.5" [minWidth]="110">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <a *ngIf="authService.checkPermission(19)" style="color: #6B05F9" (click)="editUser(row);commonService.openModal('useraddedit')">
+                    <i class="ti-pencil"></i> -->
+                  <!-- </a>   <a style="color: red" (click)="openSuccessCancelSwal()"> -->
+                    <!-- <i class="ti-trash"></i>
+                  </a> --> 
+       <!-- &nbsp;
+                  <a style="color:red;font-weight:bold" *ngIf="row.reporting_to_user_id==0 && row?.role?.level>3" title="Reporting Manager Not Set : Set it to {{row.reporting_manager}}">
+                    <i class="ti-alert"></i>
+                  </a>
+  
+                  <a style="color:red;font-weight:bold" *ngIf="row.active==0" title="Disabled User">
+                      <i class="ti-na"></i>
+                    </a>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+  
+  
+      </app-card>
+    </div>
+  </div>
+  </div>
+  
+  <app-modal-animation   [modalClass]="'useraddedit'"  #modalEdit [modalID]="'useraddedit'" >
+  
+      <h3  ><span *ngIf="!selectedUser.id">Add</span> <span *ngIf="selectedUser.id">Edit</span> &nbsp;User</h3>
+  
+    <div class="app-modal-body" class="src">
+      <div class="row">
+        <div class="col-sm-12 mobile-inputs">
+          <form ngNativeValidate (submit)="editSelectedUser()">
+              <div class="form-group row">
+                <div class="col-sm-6">
+                    Name :
+                    <input type="text" class="form-control " name="name" placeholder="Enter Name" [(ngModel)]="selectedUser.name" required>
+                    [(ngModel)]="selectedUser.name" -->
+                 <!-- </div>
+                 <div class="col-sm-6 ">
+                    Role :
+                    <ng-select  name="role_id"  bindLabel="name" bindValue="id" [items]="roles" placeholder="Select Role"
+  
+                    [(ngModel)]="selectedUser.role_id" >
+                      </ng-select>
+                 </div>
+                </div> -->
+                <!-- <div class="form-group row">
+                  <div class="col-sm-6">
+                    Email :
+                      <input type="text"  class="form-control " name="email" placeholder="Enter Email" [(ngModel)]="selectedUser.email" required>
+                  </div>
+                  <div class="col-sm-6">
+                    Mobile :
+                      <input type="text" class="form-control " name="mobile" placeholder="Enter Mobile" [(ngModel)]="selectedUser.mobile" required>
+                  </div>
+                </div>
+  
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                       Discount Approver :
+                        <ng-select  name="approver_to_user_id"  bindLabel="userdisplayname" bindValue="id" [items]="reportingtorows" placeholder="Approver to"
+                         [(ngModel)]="selectedUser.approver_to_user_id" >
+                          </ng-select>
+  
+                      </div>
+                    <div class="col-sm-6"> -->
+                        <!--<input type="text" class="form-control form-control-success" name="reporting_to" placeholder="Enter Reporting To" [(ngModel)]="selectedUser.reporting_to" >-->
+                         <!-- Reporting Manager :                 <a style="color:red;font-weight:bold" *ngIf="selectedUser.reporting_to_user_id==0 && selectedUser?.role?.level>3" title="Reporting Manager Not Set : Set it to {{selectedUser.reporting_manager}}"> -->
+                          <!-- <i class="ti-alert"></i>
+                        </a>
+                        <ng-select  name="reporting_to_user_id"  bindLabel="userdisplayname" bindValue="id" [items]="reportingtorows" placeholder="Reporting to"
+                         [(ngModel)]="selectedUser.reporting_to_user_id" >
+                          </ng-select>
+  
+                    </div>
+                  </div>
+  
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                       ATI Approver :
+                        <ng-select  name="atiapprover_to_user_id"  bindLabel="userdisplayname" bindValue="id" [items]="reportingtorows" placeholder="ATI Approver to"
+                         [(ngModel)]="selectedUser.atiapprover_to_user_id" >
+                          </ng-select> -->
+  
+                      <!-- </div>
+                    <div class="col-sm-6">
+   -->
+                    <!-- </div> -->
+                  <!-- </div>
+                  
+  
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                        Regional Manager :
+                        <ng-select  name="regional_to_user_id"  bindLabel="userdisplayname" bindValue="id" [items]="regionalreportingrows" placeholder="Reporting to"
+                         [(ngModel)]="selectedUser.regional_to_user_id" >
+                          </ng-select>
+  
+                    </div>
+                    <div class="col-sm-6">
+                      Local Fac. Center:
+                      <ng-select name="branch_id" required bindLabel="name" bindValue="id" [items]="branches" placeholder="Select Branch" [(ngModel)]="selectedUser.branch_id">
+                      </ng-select>
+                  </div>
+                  
+                  </div> -->
+  
+                  <!-- <div class="form-group row">
+  
+                      <div class="col-sm-6"> --> 
+                        <!-- Region (Old Method) :
+                      <ng-select [clearable]=false [searchable]=false name="region" required    [items]="['ALL INDIA','CORPORATE','EAST','WEST','NORTH','SOUTH','TEST','NORTHWEST']" placeholder="Select Region"
+  
+                      [(ngModel)]="selectedUser.region" >
+                        </ng-select>
+                        </div>
+  
+                        <div class="col-sm-6">
+                          Region (New Method):
+                          <ng-select [items]="region_ids" name=region_ids
+                            bindLabel="displayname" bindValue="id"
+                            multiple=true
+                            placeholder="Select Region (New Method)"
+                            [(ngModel)]="selectedUser.region_ids" required>
+                          </ng-select>
+                        </div>
+  
+  
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                         Password :
+                            <input type="password" class="form-control " name="password" placeholder="Enter New Password" [(ngModel)]="selectedUser.password" >
+  
+  
+                        </div>
+                        <div class="col-sm-6">
+                          Designation :
+                      <input type="text" class="form-control " name="designation" placeholder="Enter Designation" [(ngModel)]="selectedUser.designation" >
+  
+  
+                           </div>
+  
+                      </div>
+  
+  
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                         Prev DSR Amount to Add :
+                            <input type="number" step=1 min=0 class="form-control " name="olddsramount" placeholder="Enter Prev DSR Amount" [(ngModel)]="selectedUser.olddsramount" >
+  
+  
+                        </div>
+                        <div class="col-sm-6">
+  
+  
+                            Operating Cities : <span style="color:red">*</span> -->
+                           <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
+                        -->
+     <!--     /* bindValue="id" -->
+                        <!-- <ng-select  name=cities  bindLabel="displayname"    [items]="cities"
+                        [loading]="cityLoading" multiple=true
+                        [typeahead]="custTypeaheadCity"
+                        placeholder="Search Existing City"
+                        [(ngModel)]="selectedUser.cities" required >
+                                      </ng-select>
+  
+  
+  
+                             </div>
+                      </div>
+  
+  
+                      <div class="form-group row">
+                          <div class="col-sm-6">
+                            Active / Inactive ?
+                              <ng-select [clearable]=false [searchable]=false name=active bindLabel="name" bindValue="id" [items]="[{id:'1',name:'Active'},{id:'0',name:'InActive'}]" [(ngModel)]="selectedUser.active" placeholder="Active / Inactive">
+                                </ng-select>
+                          </div>
+  
+                          <div class="col-sm-6">
+                            Employee code :
+                                   <input type="text" class="form-control " name="hr_idcode" placeholder="Enter Employee code" [(ngModel)]="selectedUser.hr_idcode" required>
+  
+                                 </div>
+  
+  
+                      </div>
+  
+                       <div class="form-group row">
+                          <div class="col-sm-6">
+                            Mobile Serial No :
+                              <input type="text" class="form-control " name="serial_no" placeholder="Enter Serial No." [(ngModel)]="selectedUser.serial_no" >
+                          </div>
+  
+                          <div class="col-sm-6">
+                            IMEI No :
+                                   <input type="text" class="form-control " name="ime_no" placeholder="Enter IMEI No." [(ngModel)]="selectedUser.imei_no" >
+  
+                                 </div>
+  
+  
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                          Samsung Mobile No : -->
+                            <!-- <input type="number" class="form-control " name="samsung_mobile_no" placeholder="Enter Samsung Mobile No." [(ngModel)]="selectedUser.samsung_mobile_no"  pattern="[0-9]" maxlength="10"> -->
+                            <!-- <input type="text" class="form-control" name="samsung_mobile_no" placeholder="Enter Samsung Mobile No."
+                            [(ngModel)]="selectedUser.samsung_mobile_no" pattern="[0-9]{10}" maxlength="10">
+  
+                        </div>
+  
+                        
+  
+  
+                    </div>
+  
+  
+              <div class="app-modal-footer f-right">
+                <input style="display:inline" type="submit" class="btn btn-primary waves-effect waves-light" value="Save">
+  
+                &nbsp;
+                <button style="display:inline" type="button" class="btn btn-secondary waves-effect" (click)="commonService.hideModal('useraddedit');">Close</button>
+         </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </app-modal-animation>
+  <app-modal-animation   [modalClass]="'defreezUser'"  [modalID]="'defreezUser'" >
+  
+    <h3><span >Current Freezed User List
+      <button type="button" class="close basic-close" (click)="commonService.hideModal('defreezUser');">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </span> </h3>
+  
+    <div class="col-12 col-sm-12 col-md-12" style="width:100%;max-height:500px!important;overflow:scroll">
+      <ng-container *ngIf="frzrows.length > 0">
+        <table class="table table-striped" >
+          <thead>
+            <tr>
+              <th scope="col">User ID</th>
+              <th scope="col">User Information</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let frz of frzrows;let i = index">
+            <td><span>{{frz.user_id}}</span></td>
+            <td><span>{{frz.email}}<br>+{{frz.mobile}}</span></td>
+            <td><input style="display:inline" type="button" class="btn btn-primary btn-sm waves-effect waves-light" (click)="gotounfreezuser(frz)" value="Unfreez"></td>
+          </tr>
+        </tbody>
+        </table>
+  
+      </ng-container>
+      <ng-container *ngIf="frzrows.length == 0">
+        <span style="color: #ff00d2;font-size: 20px;">Freezed User List Not Found Last 15 Minutes...</span>
+      </ng-container>
+    </div>
+    </app-modal-animation>
+   -->

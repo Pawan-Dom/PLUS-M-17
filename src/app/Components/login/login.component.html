@@ -1,0 +1,51 @@
+
+   
+   <div class="login-container">
+
+    
+    <div class="login-form">
+        <div class="text-center" style="
+        text-align: center;
+    ">
+            <img src="assets/img/plus-logo.png" alt="PPL Licesing System" width=100px>
+          </div>
+      <h2><em>Sign in</em></h2>
+      <form *ngIf="!showResetForm" (ngSubmit)="login()" class="form-group">
+        <div class="form-group">
+          <label for="email" class="label"><em>Email:</em></label>
+          <input type="text" id="email" [(ngModel)]="credentials.email" name="email" class="input" required>
+        </div>
+  
+        <div class="form-group">
+          <label for="password" class="label"><em>Password:</em></label>
+          <input type="password" id="password" [(ngModel)]="credentials.password" name="password" class="input" required>
+        </div>
+  
+        <button type="submit" class="btn">Login</button>
+    <hr>
+    <div class="row" style="
+    text-align: center;
+">  
+        <div class="col-md-8">
+          <p class="text-inverse text-left m-b-0">© Copyright 2024</p>
+          <p class="text-inverse text-left"><b>PPL Licensing System</b></p>
+        </div>
+        <div class="col-md-4">
+          <img width=50px src="assets/img/ppl-logo.png" alt="small-logo.png">
+        </div>
+      </div>
+      </form>
+      <form *ngIf="showResetForm" (ngSubmit)="resetPassword()"  class="form-group">
+        <div class="form-group">
+          <label for="resetEmail" class="label">Email:</label>
+          <input type="email" id="resetEmail" [(ngModel)]="resetCredentials.email" name="resetEmail" class="input" required>
+        </div>
+  
+        <button type="submit" class="btn">Reset Password</button>
+      </form>
+  
+      <a href="#" *ngIf="!showResetForm" (click)="showResetForm = true">Forgot Password?</a>
+      <a href="#" *ngIf="showResetForm" (click)="showResetForm = false">Go back to login</a>
+    </div>
+  </div>
+  

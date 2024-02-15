@@ -1,0 +1,41 @@
+.search-container{
+    justify-content: end;
+    display: flex;
+}
+/* Styling for ngx-datatable columns */
+::ng-deep .ngx-datatable {
+    font-family: Arial, sans-serif; /* Set font family */
+    font-size: 14px; /* Set font size */
+  }
+  
+  ::ng-deep .datatable-header-cell {
+    background-color: #f2f2f2; /* Set header background color */
+    border-bottom: 1px solid #ccc; /* Add bottom border */
+    color: #333; /* Set header text color */
+    font-weight: bold; /* Make header text bold */
+  }
+  
+  ::ng-deep .datatable-body-row {
+    border-bottom: 1px solid #eee; /* Add bottom border to rows */
+  }
+  
+  /* Styling for ngx-datatable cells */
+  ::ng-deep .datatable-body-cell {
+    padding: 10px; /* Add padding to cells */
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  
+  /* Alternate row colors */
+  ::ng-deep .datatable-row-even {
+    background-color: #f9f9f9; /* Set background color for even rows */
+  }
+  
+  ::ng-deep .datatable-row-odd {
+    background-color: #ffffff; /* Set background color for odd rows */
+  }
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1400px;
+    }
+  }
+  
