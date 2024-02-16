@@ -22,10 +22,7 @@ import { ErrorInterceptor } from './Services/error.interceptor';
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { SideMenuComponent } from './Components/side-menu/side-menu.component';
 import { NavBarComponent } from './Components/nav-bar/nav-bar.component';
-import { LeadComponent } from './Components/lead/lead.component';
 import { LicensesComponent } from './Components/licenses/licenses.component';
-import { QuotationComponent } from './Components/quotation/quotation.component';
-import { CustomerComponent } from './Components/customer/customer.component';
 import { MetamasterComponent } from './Components/metamaster/metamaster.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { LoginComponent } from './Components/login/login.component';
@@ -41,10 +38,7 @@ import { NotificationsService } from 'angular2-notifications';
         DashboardComponent,
         SideMenuComponent,
         NavBarComponent,
-        LeadComponent,
         LicensesComponent,
-        QuotationComponent,
-        CustomerComponent,
         MetamasterComponent,
         CityComponent,
 

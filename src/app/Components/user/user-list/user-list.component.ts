@@ -19,9 +19,11 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss','../../../../assets/icon/icofont/css/icofont.scss'],
+  styleUrls: ['./user-list.component.scss',    '../../../../assets/icon/icofont/css/icofont.scss'
+],
   changeDetection: ChangeDetectionStrategy.OnPush // Optionally, if you want to enable OnPush change detection
 })
+
 export class UserListComponent implements OnInit {
   rowsBasic = [];
   roflag=false;
@@ -127,23 +129,35 @@ export class UserListComponent implements OnInit {
   }
 
   editUser(row: any) {
-    this.selectedUser= this.commonService.cloneWR(row);
-    console.log("Edit user",this.selectedUser);
+    console.log("Editing user:", row);
+    // Assign the selected user data to this.selectedUser
+    this.selectedUser = this.commonService.cloneWR(row);
+    console.log("Selected user for editing:", this.selectedUser);
+  
+    // Open the modal for editing a user
+    this.commonService.openModal('useraddedit');
   }
+  
 
   delete(row: any) {
     // Handle delete operation
   }
-
-  editSelectedUser(){
-   console.log(this.selectedUser);
-    this.userService.addEdit(this.selectedUser).subscribe(selectedUser =>{
-      this.getList();
-      this.commonService.hideModal('useraddedit');
-    });
-
+  editSelectedUser() {
+    console.log(this.selectedUser);
+    this.userService.addedit(this.selectedUser).subscribe(
+      (selectedUser) => {
+        // Handle success
+        this.getList();
+        this.commonService.hideModal('useraddedit');
+      },
+      (error) => {
+        // Handle error
+        console.error('An error occurred:', error);
+        // Optionally, handle error UI or notify user
+      }
+    );
   }
-
+  
   private loadPeople3() {
     console.log('loadin callaed');
     this.custTypeahead.pipe(

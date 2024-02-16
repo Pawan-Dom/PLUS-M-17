@@ -1,0 +1,132 @@
+<div class="page-body">
+  <div class="row">
+  <div class="col-sm-12">
+
+    <app-card >
+     <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+      <div class="row">
+        <div class="col-sm-12">
+
+
+          <label class="dt-cust-search f-right">
+
+
+
+            <div class="form-group">
+
+
+              <div class="input-group "  >
+
+                <input  type="search" autocomplete="off" [readonly]=!roflag
+                (focus)="roflag=true;" (change)="search()" [(ngModel)]="searchq"  class="form-control input-sm m-l-10"  placeholder="Search Lead Id">
+              <span class="input-group-append "><i class="ti-search input-group-text"></i></span>
+
+              <!-- <button class="btn btn1 btn-sm btn-primary " *ngIf="authService.checkPermission(63)" (click)="model={};model.id=0;model.country='India';commonService.showModal('modaladdeditcity')">Add City</button> -->
+            </div>
+
+
+
+            </div>
+          </label>
+
+
+
+        </div>
+      </div>   <div class="preloader3 loader-block" *ngIf="loading">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+
+      <ngx-datatable *ngIf="!loading"
+        #table
+      class="data-table"
+      [columnMode]="'flex'"
+      [headerHeight]="50"
+      [footerHeight]="55"
+      [rowHeight]="'auto'"
+      [externalPaging]="true"
+      [scrollbarH]="true"
+      [count]="page.count"
+      [offset]="page.offset"
+      [limit]="page.limit"
+      [rows]='tabrows'
+      (page)="pageCallback($event)">
+        <ngx-datatable-column name="Lead Id" [flexGrow]="1" [minWidth]="120">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.id}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Lead Owner" [flexGrow]="3" [minWidth]="261">
+          <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+            {{row.user.name}} -  {{row.user.role.name}} <br>
+            Region : <span *ngFor="let reg of row?.user?.region_ids_info"> {{ reg.region_name}}, </span>
+            <br>
+            <small>CreatedOn: {{row?.created_on | date : 'd/M/y'}}<br>
+            UpdatedOn: {{row?.updated_on | date : 'd/M/y'}}<br> </small>
+             </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Lead Details" [flexGrow]="3" [minWidth]="361" >
+            <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+              <small>CustomerId# {{row.customer.id}}</small><br>
+              <b>{{row.customer.name}}</b>  <br>
+            <small>{{row.customer.address_line_1}},{{row.customer.address_line_2}}, {{row.customer.address_line_3}},<br>
+            {{row.customer.city}} , {{row.customer.state}} ,{{row.customer.pincode}} </small>
+            <span *ngIf=row.remark><br>Remark : {{row.remark}}</span>
+            <span *ngIf=row.type><br><b>Type : {{row.type}}</b></span>
+            
+            </ng-template>
+          </ngx-datatable-column>
+
+        <ngx-datatable-column name="Status /Source" [flexGrow]="3" [minWidth]="361" >
+            <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+              <span *ngIf="row.customer.approved==1" style="color:green;font-weight:bold">Approved</span>
+                      <span *ngIf="row.customer.approved=='-1'" style="color:purple;font-weight:bold">Rejected</span>
+                      <span   *ngIf="row.customer.approved=='0'" style="color:black">Pending Approval</span>
+                      <br>
+             
+              <span   *ngIf="row.customer.src=='app'" style="color:black">PALM</span>
+             <span   *ngIf="row.customer.src=='web'" style="color:black">PLUS</span>
+             <span   *ngIf="row.customer.src=='Whatsapp'" style="color:black">Whatsapp</span>
+             <span   *ngIf="row.customer.src=='d2c'" style="color:black">D2C</span>
+            </ng-template>
+          </ngx-datatable-column>
+
+        
+
+
+        <!--   <ngx-datatable-column name="District" [flexGrow]="2" >
+              <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+                {{row.district}}
+                 </ng-template>
+            </ngx-datatable-column> -->
+
+
+          <!-- <ngx-datatable-column name="Action" [flexGrow]="1" [minWidth]="120">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="row">
+              <div class="col-6">
+                  <a  *ngIf="authService.checkPermission(64)" (click)="model=row;commonService.showModal('modaladdeditcity')" style="color: #6B05F9">
+                    <i class="ti-pencil"></i>
+                  </a>
+              </div>
+              <div class="col-6">
+                  <a *ngIf="authService.checkPermission(65)" style="color: red" (click)="city_delete(row)">
+                    <i class="ti-trash"></i>
+                  </a>
+                </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column> -->
+      </ngx-datatable>
+
+    </app-card>
+  </div>
+</div>
+
+</div>
+
+
+

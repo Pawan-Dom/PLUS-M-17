@@ -33,11 +33,11 @@ export class UserService {
          }));
     }
 
-       addEdit(selectedUser: any) {
+       addedit(selectedUser: any) {
        console.log(selectedUser);
        return this.http.post<any>(this.apiUrl + '/user/addedit',  selectedUser ).pipe(
        map(user => {
-        //   console.log(quotation);
+        console.log(123);
             return user;
        }));
       }

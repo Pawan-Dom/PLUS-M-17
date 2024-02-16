@@ -92,22 +92,21 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Action" [flexGrow]="0.5" [minWidth]="110">
           <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-              <!-- Check if the user has permission 19 to edit user -->
-              <a *ngIf="authService.checkPermission(19)" style="color: #6B05F9" (click)="editUser(row); commonService.openModal('useraddedit')" title="Edit User">
+              <a *ngIf="authService.checkPermission(19)" style="color: #6B05F9" (click)="editUser(row);commonService.openModal('useraddedit')">
                   <i class="ti-pencil"></i>
-              </a>
-              <!-- Check if the reporting manager is not set for the user -->
-              <a *ngIf="row.reporting_to_user_id === 0 && row?.role?.level > 3" style="color: red; font-weight: bold" title="Reporting Manager Not Set: Set it to {{ row.reporting_manager }}">
+                </a> <!--  <a style="color: red" (click)="openSuccessCancelSwal()">
+                  <i class="ti-trash"></i>
+                </a> -->
+     &nbsp;
+                <a style="color:red;font-weight:bold" *ngIf="row.reporting_to_user_id==0 && row?.role?.level>3" title="Reporting Manager Not Set : Set it to {{row.reporting_manager}}">
                   <i class="ti-alert"></i>
-              </a>
-              <!-- Check if the user is disabled -->
-              <a *ngIf="row.active === 0" style="color: red; font-weight: bold" title="Disabled User">
-                  <i class="ti-na"></i>
-              </a>
+                </a>
+
+                <a style="color:red;font-weight:bold" *ngIf="row.active==0" title="Disabled User">
+                    <i class="ti-na"></i>
+                  </a>
           </ng-template>
-      </ngx-datatable-column>
-      
-      
+        </ngx-datatable-column>
       </ngx-datatable>
 
 
@@ -125,10 +124,9 @@
       <div class="col-sm-12 mobile-inputs">
         <form ngNativeValidate (submit)="editSelectedUser()">
             <div class="form-group row">
-              <div classs="col-sm-6">
+              <div class="col-sm-6">
                   Name :
                   <input type="text" class="form-control " name="name" placeholder="Enter Name" [(ngModel)]="selectedUser.name" required>
-                   [(ngModel)]="selectedUser.name" 
                 </div>
                <div class="col-sm-6 ">
                   Role :
@@ -297,7 +295,6 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         Samsung Mobile No : 
-                           <input type="number" class="form-control " name="samsung_mobile_no" placeholder="Enter Samsung Mobile No." [(ngModel)]="selectedUser.samsung_mobile_no"  pattern="[0-9]" maxlength="10"> 
                            <input type="text" class="form-control" name="samsung_mobile_no" placeholder="Enter Samsung Mobile No."
                           [(ngModel)]="selectedUser.samsung_mobile_no" pattern="[0-9]{10}" maxlength="10">
 
