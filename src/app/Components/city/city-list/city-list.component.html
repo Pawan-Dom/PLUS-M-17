@@ -1,0 +1,154 @@
+<div class="page-body">
+  <div class="row">
+  <div class="col-sm-12">
+
+    <app-card >
+     <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+      <div class="row">
+        <div class="col-sm-12">
+
+
+          <label class="dt-cust-search f-right">
+
+
+
+            <div class="form-group">
+
+
+              <div class="input-group "  >
+
+                <input  type="search" autocomplete="off" [readonly]=!roflag
+                (focus)="roflag=true;" (change)="search()" [(ngModel)]="searchq"  class="form-control input-sm m-l-10"  placeholder="Search Cities">
+              <span class="input-group-append "><i class="ti-search input-group-text"></i></span>
+
+              <button class="btn btn1 btn-sm btn-primary " *ngIf="authService.checkPermission(63)" (click)="model={};model.id=0;model.country='India';commonService.showModal('modaladdeditcity')">Add City</button>
+            </div>
+
+
+
+            </div>
+          </label>
+
+
+
+        </div>
+      </div>   <div class="preloader3 loader-block" *ngIf="loading">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+
+      <ngx-datatable *ngIf="!loading"
+        #table
+      class="data-table"
+      [columnMode]="'flex'"
+      [headerHeight]="50"
+      [footerHeight]="55"
+      [rowHeight]="'auto'"
+      [externalPaging]="true"
+      [scrollbarH]="true"
+      [count]="page.count"
+      [offset]="page.offset"
+      [limit]="page.limit"
+      [rows]='tabrows'
+      (page)="pageCallback($event)">
+        <ngx-datatable-column name="Id" [flexGrow]="1" [minWidth]="120">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="City Name" [flexGrow]="3" [minWidth]="361" >
+            <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+              {{row?.name}}
+            </ng-template>
+          </ngx-datatable-column>
+
+        <ngx-datatable-column name="Class" [flexGrow]="3" [minWidth]="361" >
+            <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+              {{row?.class}}
+            </ng-template>
+          </ngx-datatable-column>
+
+        <ngx-datatable-column name="State" [flexGrow]="3" [minWidth]="361">
+          <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+            {{row.state}} <br>
+            <span *ngIf=row.gstcode>GSTCODE : {{row?.gstcode}}</span>
+             </ng-template>
+        </ngx-datatable-column>
+
+
+        <!--   <ngx-datatable-column name="District" [flexGrow]="2" >
+              <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+                {{row.district}}
+                 </ng-template>
+            </ngx-datatable-column> -->
+
+
+          <ngx-datatable-column name="Action" [flexGrow]="1" [minWidth]="120">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="row">
+              <div class="col-6">
+                  <a  *ngIf="authService.checkPermission(64)" (click)="model=row;commonService.showModal('modaladdeditcity')" style="color: #6B05F9">
+                    <i class="ti-pencil"></i>
+                  </a>
+              </div>
+              <div class="col-6">
+                  <a *ngIf="authService.checkPermission(65)" style="color: red" (click)="city_delete(row)">
+                    <i class="ti-trash"></i>
+                  </a>
+                </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+
+    </app-card>
+  </div>
+</div>
+
+</div>
+
+<app-modal-animation    [modalID]="'modaladdeditcity'"    >
+    <div class="app-modal-header">
+      <h4 class="modal-title"><span *ngIf="modelcg.id">Edit '{{model?.name}}'</span>  <span *ngIf="!model.id">Add</span> City</h4>
+    <!--   <button type="button" class="close basic-close" (click)="commonService.hideModal()">
+        <span aria-hidden="true">&times;</span>
+      </button> -->
+    </div>
+    <div class="app-modal-body" class="src">
+        <form ngNativeValidate (submit)="addEditCity($event)">
+
+          <div class="form-group">
+            Name :<br>
+            <input type="text" class="form-control" name=name required [(ngModel)]="model.name" placeholder="Enter City Name">
+            <br>
+           <!--  District :<br>
+            <input type="text" class="form-control" name=district required [(ngModel)]="model.district" placeholder="Enter District Name">
+            <br>
+            GST Code :<br>
+            <input type="text" class="form-control" name=gstcode required [(ngModel)]="model.gstcode" placeholder="Enter GST Code">
+            <br> -->
+            Select State : <br>
+            <ng-select placeholder="Select State" name="state" required bindLabel="state" bindValue="state" [items]="states" [(ngModel)]="model.state" >
+            </ng-select>
+            <br>
+            Select Class : <br>
+            <ng-select placeholder="Select Class" name="class" [items]="['A','OTHER']"  required bindLabel="class" bindValue="class"  [(ngModel)]="model.class" >
+            </ng-select>
+          </div>
+          <div class="row">
+            <div class="col-6 ">
+              <button type="button" class="btn btn-secondary f-right" (click)="commonService.hideModal('modaladdeditcity')">Cancel</button>
+            </div>
+
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary waves-effect  f-left" >  <span *ngIf="model.id">Save Changes</span>  <span *ngIf="!model.id">Add City</span>  </button>
+            </div>
+          </div>
+          </form>
+    </div>
+
+</app-modal-animation >
+
+

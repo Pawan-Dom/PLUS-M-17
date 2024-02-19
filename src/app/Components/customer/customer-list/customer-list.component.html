@@ -1,0 +1,597 @@
+<div class="page-body">
+  <div class="row">
+  <div class="col-sm-12">
+
+    <app-card >
+     <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+      <div class="row">
+        <div class="col-sm-4" (click)="searchqf='0';search()" style="cursor:pointer" title="Refresh List">
+            Pending Approvals : {{tempFilter?.na_count}}       &nbsp;               <i  class=" ti-reload"></i> &nbsp; &nbsp;
+        </div>
+        <div class="col-sm-8 ">
+
+
+          <label class="dt-cust-search f-right">
+
+
+
+            <div class="form-group">
+
+
+              <div class="input-group "  >
+                  <ng-select class="status" placeholder="Filter Approval Status" name=searchqf bindLabel=name bindValue=id [(ngModel)]=searchqf  (change)="search()" [clearable]=false [searchable]=false (clear)="search()" [items]="[{id:'-3',name:'All'},{id:'1',name:'Approved'},{id:'0',name:'Pending Approval'},{id:'-1',name:'Rejected'}]">
+
+                    </ng-select>
+
+                <input type='search' (change)="search()" autocomplete="off"[readonly]=!roflag
+                (focus)="roflag=true;"[(ngModel)]="searchq"  class="searchinput form-control input-sm"  placeholder="Search Customers">
+              <span class="searchicon input-group-append"><i class="ti-search input-group-text"></i></span>
+
+              <button class="addbtn btn btn1 btn-sm btn-primary " *ngIf="authService.checkPermission(14)" (click)="model={};model.country='INDIA';commonService.showModal('modaladdeditcustomer');isPanVerified=false;isGSTVerified=false;">Add New Customer</button>
+            </div>
+
+
+
+            </div>
+          </label>
+
+
+
+        </div>
+      </div>   <div class="preloader3 loader-block" *ngIf="loading">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+
+      <ngx-datatable *ngIf="!loading"
+        #table
+      class="data-table"
+      [columnMode]="'flex'"
+      [headerHeight]="50"
+      [footerHeight]="55"
+      [rowHeight]="'auto'"
+      [externalPaging]="true"
+      [scrollbarH]="true"
+      [count]="page.count"
+      [offset]="page.offset"
+      [limit]="page.limit"
+      [rows]='tabrows'
+      (page)="pageCallback($event)">
+        <ngx-datatable-column name="Cust Id" [flexGrow]="0.5" [minWidth]="101" >
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.id}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Lead Id" [flexGrow]="0.5" [minWidth]="101" >
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.lead_ids}}
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column name="Name & Address" [flexGrow]="3" [minWidth]="531">
+          <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+            <!-- <span><b>Lead Id # </b> {{row.lead_ids}}</span> <br> -->
+            <a  (click)="view(row)"> <b>{{row.name}}</b> </a> <br>
+            {{row.address_line_1}},{{row.address_line_2}}, {{row.address_line_3}},<br>
+            {{row.city}} , {{row.state}} ,{{row.pincode}}
+            <span *ngIf=row.pan><br>PAN : {{row.pan}}</span>
+            <span *ngIf=row.gst><br>GST : {{row.gst}}</span>
+             </ng-template>
+        </ngx-datatable-column>
+
+          <ngx-datatable-column name="No. of PI" [flexGrow]="1" [minWidth]="203">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <!--gotoQuotationSearch(row) [routerLink]="['/quotation/search/',row.id]" -->
+              <a *ngIf="row?.count_quotation" (click)="gotoQuotationSearch(row)"  target="_blank"> <b>{{row?.count_quotation}} PI</b></a>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Added By" [flexGrow]="1" [minWidth]="203">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+             {{row?.user?.name}} <br> {{row?.user?.branch?.name}} -  {{row?.user?.region}}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Status / Source" [flexGrow]="1" [minWidth]="203">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span *ngIf="row.approved==1" style="color:green;font-weight:bold">Approved</span>
+                      <span *ngIf="row.approved=='-1'" style="color:purple;font-weight:bold">Rejected</span>
+                      <span   *ngIf="row.approved=='0'" style="color:black">Pending Approval</span>
+                      <br>
+              
+             <span   *ngIf="row.src=='app'" style="color:black">PALM</span>
+             <span   *ngIf="row.src=='web'" style="color:black">PLUS</span>
+             <span   *ngIf="row.src=='Whatsapp'" style="color:black">Whatsapp</span>
+             <span   *ngIf="row.src=='D2C'" style="color:black">D2C</span>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Action" [flexGrow]="1" [minWidth]="203">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="row"><div class="col-4">
+                <span *ngIf="row.approved==0" title="Pending">
+                    <i  class=" ti-time"></i>
+
+                  </span>
+
+                  <span *ngIf="row.approved==-1" title="Rejected" style="color:red">
+                      <i  class=" ti-na"></i>
+
+                    </span>
+
+                <span *ngIf="row.approved==1" style="color:green"  title="Approved">
+                  <i  class=" ti-check"></i>
+
+                </span>
+
+            </div>
+              <div class="col-2" *ngIf="authService.checkPermission(43) || (row.approved==0 && row.user_id==currentUser.id)">
+                  <a (click)="model=commonService.cloneWR(row);commonService.showModal('modaladdeditcustomer');isPanVerified=false;isGSTVerified=false;" style="color: #6B05F9">
+                    <i class="ti-pencil"></i><!-- model.approved=row.approved;-->
+                  </a>
+              </div>
+             <!--  <div class="col-2">
+                  <a style="color: red" (click)="openSuccessCancelSwal()">
+                    <i class="ti-trash"></i>
+                  </a>
+                </div> -->
+            </div>
+            <div *ngIf="authService.checkPermission(43) && row.approved==0"> <hr>
+              <button  class="button btn-primary  btn-xl">Review</button>
+            </div>
+            <div *ngIf="authService.checkPermission(2) && row.approved==1"> <hr>
+              <button (click)="gotoQuotationAdd(row)"  class="button btn-primary  btn-xl">Create PI</button>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+
+<hr>
+<div *ngIf="authService.checkPermission(42)">
+  <h3>Customer Groups</h3>
+
+  <div class="row">
+      <div class="col-sm-12">
+
+        <label class="dt-cust-search f-right">
+
+
+          <div class="form-group">
+            <label>Search: </label>
+            <input
+              type='text'
+              class="form-control input-sm m-l-10"
+              placeholder='Search Group'
+              (keyup)='updateFilterCG($event)'
+            />
+            <button class="btn btn1 btn-sm btn-primary  " (click)="modelcg={};commonService.showModal('modaladdeditgroup')">Add Group</button>
+
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+  <ngx-datatable *ngIf="customergroups && !loading"
+  #table2
+class="data-table"
+[columnMode]="'flex'"
+[headerHeight]="50"
+[footerHeight]="50"
+[rowHeight]="'auto'"
+[count]="10"
+[scrollbarH]="true"
+[limit]="10"
+[rows]='tabrowscg'  >
+  <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="165">
+    <ng-template let-row=row let-value="value" ngx-datatable-cell-template>
+      {{row.id}}
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Name" [flexGrow]="2" [minWidth]="662" >
+      <ng-template let-row=row let-value="value" ngx-datatable-cell-template>
+        {{row.name}}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Customers" [flexGrow]="1" [minWidth]="331">
+        <ng-template let-row=row let-value="value" ngx-datatable-cell-template>
+          {{row.count_customer}} Customers
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Action" [flexGrow]="0.5" [minWidth]="165">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <div class="row"><div class="col-4">
+
+
+            </div>
+              <div class="col-2">
+                  <a (click)="modelcg=row;commonService.showModal('modaladdeditgroup')" style="color: #6B05F9">
+                    <i class="ti-pencil"></i>
+                  </a>
+              </div>
+              </div>
+
+              </ng-template>
+              </ngx-datatable-column>
+
+
+  </ngx-datatable>
+
+</div>
+    </app-card>
+  </div>
+</div>
+
+</div>
+
+<app-modal-animation [modalID]="'modaladdeditgroup'">
+    <div class="app-modal-header">
+      <h4 class="modal-title"><span *ngIf="modelcg.id">Edit '{{modelcg?.name}}'</span>  <span *ngIf="!modelcg.id">Add</span> Group</h4>
+    <!--   <button type="button" class="close basic-close" (click)="commonService.hideModal()">
+        <span aria-hidden="true">&times;</span>
+      </button> -->
+    </div>
+    <div class="app-modal-body" class="src">
+        <form ngNativeValidate (submit)="addEditCustomerGroup()">
+
+          <div class="form-group">
+            Name :<br>
+            <input type="text" class="form-control" name=name required [(ngModel)]="modelcg.name" placeholder="Enter Group Name">
+            <br>
+            Description : <br>
+            <textarea  class="form-control" name=description required [(ngModel)]="modelcg.description" ></textarea>
+          </div>
+          <div class="row">
+            <div class="col-6 ">
+              <button type="button" class="btn btn-secondary f-right" (click)="commonService.hideModal('modaladdeditgroup')">Cancel</button>
+            </div>
+
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary waves-effect  f-left" >  <span *ngIf="modelcg.id">Save Changes</span>  <span *ngIf="!modelcg.id">Add Group</span>  </button>
+            </div>
+          </div>
+          </form>
+    </div>
+
+</app-modal-animation >
+
+<app-modal-animation  [modalID]="'similarcustomers'"   >
+    <div class="app-modal-header">
+      <h4 class="modal-title ">
+          Customers like '{{model?.name}}' :
+      </h4>
+      <div class="row" *ngIf=model.franchise>
+          <div class="col-md-12">
+          <h6><br>Franchise / Brand : {{model.franchise}}</h6>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+      {{model.address_line_1}},{{model.address_line_2}}, {{model.address_line_3}},<br>
+      {{model.city}} , {{model.state}} ,{{model.pincode}}
+      <span *ngIf=model.pan><br>PAN : {{model.pan}}</span>
+      <span *ngIf=model.gst> | GST : {{model.gst}}</span>
+          </div>
+
+        </div>
+
+</div>
+
+<div class="app-modal-body" class="src">
+
+    <div class="preloader3 loader-block" *ngIf="scloading">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+      <input type="search" *ngIf="!scloading" class=form-control placeholder="Check Other Keywords" autocomplete="off" [readonly]=!roflag1
+      (focus)="roflag1=true;" >
+<ng-container *ngIf="!scloading && scustomers"><br>
+    {{scustomers?.length}} Matching Results Found : <span *ngIf="scustomers?.length<1"> Please Search Manually</span> <br>
+      <div style="margin: 5px 0;"  class="card" *ngFor="let item of scustomers; let i = index" >
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-md-8">
+                  <h5 class="card-title"  style="font-size: 14px;
+                  font-weight: 400;"  >
+                    <small>#{{item.id}}</small><br>{{item?.name}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted" style="margin-top: 0px;">
+                      <span *ngIf=item?.franchise><br>Franchise / Brand : {{item?.franchise}}</span>
+                      <span *ngIf="item?.pan"><br><br>PAN : {{item?.pan}}</span>
+                   <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
+                  </h6>
+                  <p class="card-text">
+                    {{item?.address_line_1}},{{item.address_line_2}},{{item?.address_line_3}},<br>
+                    {{item.city}},{{item?.state}},{{item.pincode}}
+                   </p>
+              </div>
+              <div class="col-md-4">
+                  <button  (click)="commonService.hideModal('similarcustomers');customer_approvereject(model,-1,item.id)" class="button btn-secondary  btn-xl">Use This</button>
+                </div>
+
+            </div>
+
+
+          </div>
+      </div>
+    </ng-container>
+
+    <hr>
+    <div class=" " *ngIf="authService.checkPermission(43) ">
+
+        <div class="row">
+            <div class="col-5 ">
+              <button type="button" class="btn btn-secondary f-right " (click)="commonService.hideModal('similarcustomers')">Cancel</button>
+            </div>
+
+            <div class="col-7">
+                <button type=button *ngIf="authService.checkPermission(14) " (click)="model.approved='1';commonService.hideModal('similarcustomers');commonService.showModal('modaladdeditcustomer')" class="btn btn-primary f-left">Continue Edit & Approve</button>
+              </div>
+          </div>
+
+
+    </div>
+
+</div>
+
+</app-modal-animation>
+
+<app-modal-animation  [modalID]="'modaladdeditcustomer'"   >
+    <div class="app-modal-header">
+      <h4 class="modal-title"><span *ngIf="model.id">Edit '{{model.name}}'</span><span *ngIf="!model.id"> Add New Customer</span></h4>
+     <!--  <p>By Default ,  Customer Will be added as Nonapproved, PI's can only be created when Customer Details get Verified by Admin.</p>
+      <button type="button" class="close basic-close" (click)="commonService.hideModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <span style="color:red" *ngIf="!authService.checkPermission(43)">Note : You dont have access to change customer info once added. <br>
+      This Customer will show up in Creating PI after approval from Admin, You will be notified.</span>-->
+    </div>
+    <div class="app-modal-body" class="src">
+      <div class="row">
+        <div class="col-sm-12 mobile-inputs">
+          <form ngNativeValidate (submit)="addEditCustomer()">
+
+              <div class="form-group row">
+                  <div class="col-sm-6">
+                    Name : <span style="color:red">*</span>
+                      <input type="text"  class="form-control " name="name" placeholder="Enter Name" [(ngModel)]="model.name" required>
+
+
+                    </div>
+
+                   <div class="col-sm-6">
+                      Franchise / Brand :
+                      <input type="text" class="form-control " name="franchise" placeholder="Enter Franchise/Brand" [(ngModel)]="model.franchise">
+
+                    </div>
+
+
+              </div>
+
+              <div class="form-group row"  >
+
+                  <div class="col-sm-6">
+                      Parent Group :
+                      <ng-select name=customergroup_id [(ngModel)]="model.customergroup_id" [items]="customergroups" bindLabel=name bindValue=id placeholder="Select Customer Group"></ng-select>
+
+                      <span *ngIf="model.customergroup_id==1"> <br>
+                        Please Specify :
+                        <input type="text" class="form-control " name="cgsuggest" placeholder="Please Suggest Group" [(ngModel)]="model.cgsuggest">
+
+                      </span>
+                    </div>
+
+                  <div class="col-sm-6" *ngIf="authService.checkPermission(43)">
+                      <b>Approved ?</b>
+                  <ng-select placeholder="Select Approval Status" name=approved bindLabel=name bindValue=id [(ngModel)]=model.approved [items]="[{id:'1',name:'Approved'},{id:'0',name:'Pending Approval'},{id:'-1',name:'Rejected'}]">
+
+                  </ng-select>
+
+                  <span *ngIf="model.approved==-1"> <br>
+                    Please Specify Reason:
+                    <input required type="text" class="form-control " name="approvalremark" placeholder="Remark" [(ngModel)]="model.approvalremark">
+
+                  </span>
+
+                    </div>
+
+              </div>
+
+
+
+              <div class="form-group row">
+                   <div class="col-sm-6" >
+
+                      Address Line 1 : <span style="color:red">*</span>
+                      <input type="text" class="form-control " name="address_line_1" placeholder="Address Line 1" [(ngModel)]="model.address_line_1" required minlength="3" maxlength="300">
+
+
+                   </div>
+
+                   <div class="col-sm-6">
+                      Address Line 2 : <span style="color:red">*</span>
+                      <input type="text" class="form-control " name="address_line_2" placeholder="Address Line 2" [(ngModel)]="model.address_line_2" required minlength="3" maxlength="300">
+
+                   </div>
+              </div>
+
+
+
+              <div class="form-group row">
+                  <div class="col-sm-6">
+                      Town / Locality : <span style="color:red">*</span>
+                    <input required type="text" class="form-control " name="address_line_3" placeholder="Address Line 3" [(ngModel)]="model.address_line_3" minlength="3" maxlength="300">
+
+                   </div>
+                   <div class="col-sm-6">
+                      Pincode : <span style="color:red">*</span>
+                      <!-- (change)="getPincodeinfo()"-->
+                      <input type="number"  class="form-control " name="pincode" placeholder="Enter Pincode" [(ngModel)]="model.pincode" required min="0" (change)="checkPincodelength()">
+
+
+                   </div>
+              </div>
+
+              <div class="form-group row">
+
+                  <div class="col-sm-6" *ngIf=states>
+                    State : <span style="color:red">*</span>
+                     <!--  <input placeholder = "State" class="form-control  " disabled [(ngModel)]="selectedCustomer.state" name="state" required>
+                  -->
+                  <ng-select placeholder="Select State" name="state" (change)="cities = [];model.city='';" required bindLabel="state" bindValue="state" [items]="states" [(ngModel)]="model.state" >
+                  </ng-select>
+                   </div>
+
+
+                    <div class="col-sm-6">
+                        City : <span style="color:red">*</span>
+                       <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
+                    -->
+
+                    <ng-select  name=city  bindLabel="name"  bindValue="name"  [items]="cities"
+                    [loading]="cityLoading"
+                    [typeahead]="custTypeaheadCity"
+                    placeholder="Search Existing City"
+                    [(ngModel)]="model.city" required >
+                                  </ng-select>
+
+                     </div>
+
+                </div>
+
+
+
+
+              <div class="form-group row">
+                  <div class="col-sm-6">
+                      Country : <span style="color:red">*</span>
+                      <input type="text" class="form-control " name="Country" placeholder="Enter Country" [(ngModel)]="model.country" required>
+
+                    </div>
+
+                  <div class="col-sm-6">
+                    SEZ Unit :
+                    <ng-select placeholder="Select SEZ Status" name=SEZ  [(ngModel)]=model.sez [items]="['NO','LUT','IGST']">
+
+                    </ng-select>
+
+                  </div>
+
+              </div>
+
+
+              <div class="form-group row">
+                <div class="col-sm-6">
+                   PAN : <span style="color:red">*</span>
+                   <!-- <input required type="text" maxlength="10" class="form-control" name="pan" placeholder="Enter PAN"
+                         [(ngModel)]="model.pan" (change)="field_validate($event,'pan',model.pan);"> -->
+                 <input required type="text" maxlength="10" class="form-control" name="pan" placeholder="Enter PAN"
+                         [(ngModel)]="model.pan" (change)="field_validate($event,'pan',model.pan);onPanChange();">
+                  <p style="padding: 5px; margin-top: 7px;" class="btn btn-primary" (click)="verifyPAN()"
+                     *ngIf="showVerifyButton && ((model.approved!=1 && model.src!= 'Whatsapp') || model.src== 'Whatsapp' || !isPanVerified) && isPanValid(model.pan)" >
+                     Verify PAN
+                  </p>
+                  <br>
+                  
+                 <div style="color:green" > <i *ngIf="isPanVerified" class="ti-check">verified </i></div>
+                  <br>                 
+              
+
+                  GST :
+                  <!-- <input [required]="model.sez=='IGST'"  maxlength="15" type="text" class="form-control" name="gst" placeholder="Enter GST"
+                         [(ngModel)]="model.gst" (change)="field_validate($event,'gst',model.gst);" > -->
+                         <br>
+                  <input [required]="model.sez=='IGST'"  maxlength="15" type="text" class="form-control" name="gst" placeholder="Enter GST"
+                         [(ngModel)]="model.gst" (change)="field_validate($event,'gst',model.gst);onGSTChange();" >
+                         <br>
+                         
+                      
+                  <p style="padding: 5px; margin-top: 7px;" class="btn btn-primary" (click)="verifyGST()" *ngIf="model.gst && !isGSTVerified">
+                    Verify GST
+                  </p>
+                       <!--<i *ngIf="isGSTVerified" class=" ti-check">verified</i>
+                      <p><strong>Legal Name of Business:</strong> {{ response?.legal_name_of_business }}</p> -->
+                      <div  *ngIf="isGSTVerified">
+                        <span style="color:green"><i  class="ti-check">verified</i></span>
+                        <p ><strong>Legal Name of Business:</strong> {{ response?.legal_name_of_business }}</p>
+                                               
+                      </div>
+                      <p *ngIf="!isGSTVerified && errorMessage!=null" class="error-message">{{ errorMessage }}</p>
+              </div>
+
+              <div class="col-sm-6">
+                TAN :
+                <input type="text" class="form-control" name="tan" placeholder="TAN" [(ngModel)]="model.tan">
+              </div>
+
+              
+                
+              </div>
+              
+
+              <hr>
+              Customer Contact Details :
+              <hr>
+              <div class="form-group row">
+
+                   <div class="col-sm-6">
+                     Contact Person : <span style="color:red">*</span>
+                    <input type="text" class="form-control " name="contact_person" placeholder="Contact Person" [(ngModel)]="model.contact_person" required>
+                   </div>
+                   <div class="col-sm-6">
+                    Contact Person Designation : <span style="color:red">*</span>
+                   <input type="text" class="form-control " name="contact_designation" placeholder="Contact Person Designation" [(ngModel)]="model.contact_designation" required>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <div class="col-sm-6">
+                    Contact Email : <span style="color:red">*</span>
+                      <input type="email" class="form-control " name="contact_email" placeholder="Contact Email" [(ngModel)]="model.contact_email" required>
+                   </div>
+                   <div class="col-sm-6">
+                     Contact Mobile :  <span style="color:red">*</span>
+                    <input (change)="field_validate($event,'mobile',model.contact_no)" type="text" class="form-control " name="contact_no" placeholder="Contact No" [(ngModel)]="model.contact_no" required>
+                   </div>
+              </div>
+
+
+
+
+
+            <div class="app-modal-footer f-right">
+                <div class="row">
+                    <div class="col-4 ">
+                      <button type="button" class="btn btn-secondary f-right" (click)="commonService.hideModal('modaladdeditcustomer')">Cancel</button>
+                    </div>
+
+                    <!-- <div class="col-8">
+                        <button type="submit" class="btn btn-primary waves-effect  f-left" > <span *ngIf="model.id">Save <span  *ngIf="model.approved==1">& Approve</span> Changes</span><span *ngIf="!model.id"> Add Customer</span> </button>
+                    </div> -->
+                    <div class="col-8">
+                      <button type="submit" class="btn btn-primary waves-effect f-left" >
+                          <span *ngIf="model.id">Save <span *ngIf="model.approved==1">& Approve</span> Changes</span>
+                          <span *ngIf="!model.id">Add Customer</span>
+                      </button>
+                      <!-- <p style="padding: 5px; margin-top: 7px; color:red;" 
+                      *ngIf="showVerifyButton && ((model.approved!=1 && model.src!= 'Whatsapp') || model.src== 'Whatsapp' || !isPanVerified)">
+                      Please enter valid PAN and verify it.
+                   </p> -->
+                  </div>
+                  
+                  </div>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </app-modal-animation >
+

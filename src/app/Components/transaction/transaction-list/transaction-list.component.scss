@@ -1,0 +1,20 @@
+:host ::ng-deep.datatable-scroll{
+  width: fit-content!important;
+}
+
+:host ::ng-deep.datatable-body-row{
+  width: 100%!important;
+}
+
+  @media screen and (max-width: 768px){
+    .datatable-scroll{
+      width: fit-content!important;
+      overflow-x: scroll;
+    }
+  }
+    @media screen and (max-width: 768px){
+      .data-table {
+         width: 100%!important;
+         overflow-x: scroll;
+      }
+  }

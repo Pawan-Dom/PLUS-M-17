@@ -34,6 +34,7 @@
     "bootstrap": "^5.3.2",
     "chart.js": "^4.4.1",
     "ng-click-outside": "^9.0.1",
+    "ng2-archwizard": "^2.1.0",
     "ng2-charts": "^5.0.4",
     "ngx-charts": "^3.0.2",
     "ngx-scrollbar": "^13.0.3",

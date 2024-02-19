@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'https://api-v1-dev.pplplus.org/auth1';
+  apiUrl = 'https://api-v1-dev.pplplus.org/auth1';
 
   constructor(private http: HttpClient) {}
 

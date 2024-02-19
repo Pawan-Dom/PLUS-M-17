@@ -1,0 +1,21 @@
+:host ::ng-deep.datatable-scroll{
+  width: fit-content!important;
+}
+
+:host ::ng-deep.datatable-body-row{
+  width: 100%!important;
+}
+
+  @media screen and (max-width: 768px){
+    .datatable-scroll{
+      width: fit-content!important;
+      overflow-x: hidden;
+    }
+  }
+
+  @media screen and (max-width: 768px){
+     .data-table {
+      overflow-x: hidden !important;
+
+    }
+  }

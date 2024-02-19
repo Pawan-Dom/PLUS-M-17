@@ -23,14 +23,14 @@ import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { SideMenuComponent } from './Components/side-menu/side-menu.component';
 import { NavBarComponent } from './Components/nav-bar/nav-bar.component';
 import { LicensesComponent } from './Components/licenses/licenses.component';
-import { MetamasterComponent } from './Components/metamaster/metamaster.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { LoginComponent } from './Components/login/login.component';
 import { AppComponent } from './app.component';
-import { CityComponent } from './Components/city/city.component';
 import { AuthService } from './Services/auth.service';
 import { AppRoutingModule } from './app-routing.module'; // Correct import statement
-import { NotificationsService } from 'angular2-notifications';
+import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications'; // Import SimpleNotificationsModule for options
+import { ArchwizardModule } from 'ng2-archwizard/dist';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -39,12 +39,10 @@ import { NotificationsService } from 'angular2-notifications';
         SideMenuComponent,
         NavBarComponent,
         LicensesComponent,
-        MetamasterComponent,
-        CityComponent,
-
     ],
     providers: [
         AuthService,
+        NotificationsService, 
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     ],
@@ -68,8 +66,9 @@ import { NotificationsService } from 'angular2-notifications';
         NgxDatatableModule,
         NgSelectModule,
         SharedModule,
-        AppRoutingModule, 
-        RouterModule.forRoot([]) 
+        AppRoutingModule,
+        SimpleNotificationsModule.forRoot() ,
+        // Add SimpleNotificationsModule.forRoot() to imports
     ]
 })
 export class AppModule { }

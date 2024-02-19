@@ -12,6 +12,7 @@ export class ModalAnimationComponent implements OnInit {
   @Input() contentClass: string = ''; // Initialize with an empty string
   @Input() modalID: string = ''; // Initialize with an empty string
   @Input() backDrop: boolean = false; // Initialize with a default value
+hide: any;
 
   constructor() { }
 

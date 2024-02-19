@@ -1,0 +1,51 @@
+.btn1{
+    /*margin-left: 15px;*/
+}
+.src{
+    overflow: auto;
+    height: 400px;
+}
+:host ::ng-deep.datatable-scroll{
+  width: fit-content!important;
+}
+
+:host ::ng-deep.datatable-body-row{
+  width: 100%!important;
+}
+
+  @media screen and (max-width: 768px){
+    .datatable-scroll{
+      width: fit-content!important;
+      overflow-x: scroll;
+    }
+  }
+    @media screen and (max-width: 768px){
+      .data-table {
+         width: 100%!important;
+         overflow-x: scroll;
+      }
+  }
+  .status{
+    width: 130px;
+  }
+  .status, .searchicon { 
+    margin-right: 10px;
+  }
+  @media only screen and (max-width: 480px){
+    .searchinput {
+      /*margin: 0px 0px 5px 16px;*/
+
+  }
+  .status{
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .addbtn{
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  .searchicon{
+    margin-bottom: 5px;
+  }
+}

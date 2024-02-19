@@ -1,0 +1,173 @@
+<div class="page-body">
+  <div class="row">
+  <div class="col-sm-12">
+
+    <app-card >
+     <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+      <div class="row">
+
+          <div class="col-md-4">
+            <!-- *ngIf=" commonService.getCurrentUser().role_id === '75' || commonService.getCurrentUser().role.level < 2" -->
+            <span class=" f-left" >
+              <label style="display:inline" for="upload2" *ngIf="authService.checkPermission(7)">
+
+                  <span class="btn btn-info" >Upload Statement</span>
+                       <input type="file" id="upload2" style="display:none"  accept=".csv"   (change)="onFileChange($event,'photos','add')">
+                        </label>
+                        &nbsp;  <button *ngIf="authService.checkPermission(8)" class="btn btn-primary " (click)="runReco()">Run Reco</button>
+
+                      </span>
+
+                       </div>
+
+
+                       <div class="col-md-4" style="margin: 10px 0px;">
+
+                          <span  style="padding:10px;" >
+                            Filter : <label> <input type=radio name="lcatfilter" checked (change)="filterq('all')"> All</label> &nbsp;&nbsp; <label> <input (change)="filterq('success')" type=radio name="lcatfilter"> Paid</label> &nbsp;&nbsp; <label> <input (change)="filterq('pending')" type=radio name="lcatfilter"> Pending</label>
+
+                          </span>
+                        </div>
+
+                         <div class="col-md-4">
+                            <div class="input-group f-right"  >
+                                <input  type="search" autocomplete="off" [readonly]=!roflag
+                                (focus)="roflag=true;" (change)="search()" [(ngModel)]="searchq"  class="form-control"  placeholder="Search By id / Ref no / App no">
+                              <span class="input-group-append "><i class="ti-search input-group-text"></i></span>
+                            </div>
+
+                         </div>
+
+
+
+      </div>
+
+      <div class="preloader3 loader-block" *ngIf="loading">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+      <ngx-datatable  *ngIf="!loadingIndicator"
+      #table
+      class="data-table"
+      [columnMode]="'flex'"
+      [headerHeight]="50"
+      [footerHeight]="55"
+      [rowHeight]="'auto'"
+      [scrollbarH]="true"
+      [externalPaging]="true"
+      [count]="page.count"s
+      [offset]="page.offset"
+      [limit]="page.limit"
+      [rows]='tabrows'
+      (page)="pageCallback($event)">
+        <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="165" >
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Details" [flexGrow]="2" [minWidth]="662">
+          <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+           <span *ngIf="row.receipt_no"><b>{{row?.receipt_no}}</b> <br></span>
+    <!--        <a  (click)="view(row)"> <b>{{row.customer_id}}</b><br>{{row.data}} </a> -->
+    <span *ngIf="commonService.getCurrentUser().role.level > 2">{{row.customer.name}}</span>
+    <a *ngIf="commonService.getCurrentUser().role.level < 3" [routerLink]="['/quotation/view/'+row.quotation_id+'/'+row?.quotation?.uuid]"> {{row.customer.name}}</a>
+    <br><!-- /quotation/view/{{row.quotation_id}}  -->
+    <a target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2&uuid={{row?.quotation?.uuid}}">Appl. No. {{row.quotation_id}} </a>
+  <!--   <a  target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2" style="color: #6B05F9">
+      <i class="ti-cloud-down"></i> </a>-->
+      &nbsp;&nbsp;
+      <a  target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2&uuid={{row?.quotation?.uuid}}" style="color: #6B05F9">
+        PI <i class="ti-download"></i>
+      </a>
+
+      &nbsp;&nbsp;<a *ngIf="row?.quotation?.invoice_no" target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=1&uuid={{row?.quotation?.uuid}}" style="color: #6B05F9">
+        TI <i class="ti-download"></i>
+      </a>
+      <span *ngIf="row.pplbank" style="font-weight:bold"><br>PPL Bank Acc : {{row.pplbank}}</span>
+<span *ngIf="row.remark" style="font-weight:bold"><br>{{row.remark}}</span>
+      <br>
+    <small> Created On : {{ row.created_on | date: 'd/M/y H:m' }} </small>
+
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Detail's" [flexGrow]="1.5" [minWidth]="496" >
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+
+
+              <span *ngIf="row.status!='success'" title="{{row.status}}">
+                  <i  class=" ti-time"></i>
+                  ₹ {{row.amount}}
+                </span>
+
+              <span *ngIf="row.status=='success'" style="color:green"  title="{{row.status}}">
+                <i  class=" ti-check"></i>
+                ₹ {{row.amount}}
+              </span> <br>
+           <small> <b>{{row.payment_method}}</b><br>{{row.ref_no}} </small><br>
+           <span title="Pickup Point" *ngIf="row.pickuppoint">PP  : {{row?.pickuppoint}}</span>
+            <br>
+            <a  style="color: #6B05F9"
+            href="{{commonService.apiUrl}}/pg/receipt.php?id={{row.id}}&uuid={{row.uuid}}" target=_blank   >
+            Receipt</a>
+
+             <a *ngIf="authService.checkPermission(6)" (click)="selectedTransaction=row;commonService.openModal('modaladdedittransaction');" style="color: #6B05F9">
+               Edit <i class="ti-pencil"></i>
+              </a>
+
+          </ng-template>
+        </ngx-datatable-column>
+
+
+<!--
+        <ngx-datatable-column name="Amount" [flexGrow]="1.5">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Action" [flexGrow]="0.5">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+
+          </ng-template>
+        </ngx-datatable-column> -->
+      </ngx-datatable>
+
+
+    </app-card>
+  </div>
+</div>
+</div>
+
+
+
+<app-modal-animation #modaladdedittransaction [modalID]="'modaladdedittransaction'" [modalClass]="'modaladdedittransaction'">
+    <div class="app-modal-header">
+      <h4 class="modal-title">Edit {{selectedTransaction.payment_method}} Transaction #{{selectedTransaction.id}}</h4>
+      <small *ngIf="selectedTransaction.creditnote_no">Credit Note No : {{selectedTransaction.creditnote_no}}</small>
+      <button type="button" class="close basic-close" (click)="commonService.hideModal('modaladdedittransaction')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="app-modal-body">
+        Change Status : <select class="form-control" [(ngModel)]="selectedTransaction.status">
+          <option>pending</option>
+          <option>success</option>
+        </select>
+        <input class="form-control" name=ref_no [(ngModel)]=selectedTransaction.ref_no placeholder="UTR No">
+        <input type=datetime class="form-control" name=pdate [(ngModel)]=selectedTransaction.date placeholder=" Date">
+        <input  class="form-control" name=bank [(ngModel)]=selectedTransaction.bank placeholder="Bank Name">
+        <input class="form-control" name=branch [(ngModel)]=selectedTransaction.branch placeholder="Bank Branch">
+        <input type=number class="form-control" name=amount [(ngModel)]=selectedTransaction.amount placeholder="Amount">
+        <br>
+<!--                           <ng-select [(ngModel)]=selectedTransaction.pplbank placeholder="Select PPL Bank Account" [items]="['CITI','SBI']"></ng-select>
+      -->
+
+                            <input type="text" class="form-control" name="remark" [(ngModel)]=selectedTransaction.remark placeholder="Remark">
+
+        <hr>
+        <button (click)="addEditTransaction()" class="btn btn-primary btn-xl">
+            Edit Transaction</button>
+
+   <br> </div>
+  </app-modal-animation>

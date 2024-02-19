@@ -1,0 +1,225 @@
+<div class="page-body">
+  <div class="row">
+  <div class="col-sm-12">
+
+    <app-card >
+     <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+      <div class="row">
+         <div class="col-md-1">
+
+         </div>
+        <div class="col-md-8">
+<!-- bindLabel="name" bindValue="id"-->
+<div class="row">
+  <div class="col-md-3" style="padding: 0px;margin-bottom: 5px;">
+    <span>
+      <ng-select    name="searchqf"   [items]="['All','Pending','Paid','Draft','Cancelled']" placeholder="Select Filter"
+       [(ngModel)]="searchqf" (change)="search()" (clear)="search()">
+        </ng-select>
+      </span>
+  </div>
+  <div class="col-md-3" style="padding: 0px;margin-bottom: 5px;">
+    <span>
+      <ng-select  name="searchquserf" bindValue="id" bindLabel="name"  [items]="users"
+       placeholder="Select Users"
+    [(ngModel)]="searchquserf" (change)="search()" (clear)="searchquserf='All';search()" >
+      </ng-select>
+    </span>
+  </div>
+  <div class="col-md-3" style="padding: 0px;margin-bottom: 5px;">
+    <span>
+      <ng-select name="searchqsubregionf" [items]="region_ids"  bindValue="id" bindLabel="displayname"
+        placeholder="Select Region (New method)" [(ngModel)]="searchqsubregionf" (change)="search()" (clear)="search()">
+      </ng-select>
+    </span>
+  </div>
+  <div class="col-md-3" style="padding: 0px;margin-bottom: 5px;">
+    <span>
+      <ng-select  name="searchqregionf"   [items]="['All','NORTH','EAST','WEST','SOUTH','NORTHWEST']"
+       placeholder="Select Region"
+    [(ngModel)]="searchqregionf" (change)="search()" (clear)="searchqregionf='All';search()">
+      </ng-select>
+    </span>
+
+  </div>
+</div>
+                
+               
+                  
+
+
+            <!-- <span class="f-right" style="padding:10px" *ngIf="showdr=='dr'">
+                Filter : <label> <input type=radio name="lcatfilter" checked (change)="filterq('all')"> All</label> &nbsp;&nbsp; <label> <input (change)="filterq('dr_approve')" type=radio name="lcatfilter"> Approved</label> &nbsp;&nbsp; <label> <input (change)="filterq('dr_pending')" type=radio name="lcatfilter"> Pending</label>
+
+              </span>
+
+              <span class="f-right" style="padding:10px" *ngIf="showdr=='atir'">
+                Filter : <label> <input type=radio name="lcatfilter" checked (change)="filterq('all')"> All</label> &nbsp;&nbsp; <label> <input (change)="filterq('atir_approve')" type=radio name="lcatfilter"> Approved</label> &nbsp;&nbsp; <label> <input (change)="filterq('atir_pending')" type=radio name="lcatfilter"> Pending</label>
+
+              </span>
+
+              <span class="f-right" style="padding:10px" *ngIf="!showdr">
+                Filter : <label> <input type=radio name="lcatfilter" checked (change)="filterq('all')"> All</label> &nbsp;&nbsp; <label> <input (change)="filterq('paid')" type=radio name="lcatfilter"> Paid</label> &nbsp;&nbsp; <label> <input (change)="filterq('pending')" type=radio name="lcatfilter"> Pending</label>
+
+              </span> -->
+
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="input-group f-right" >
+                  <input type="search" autocomplete="off" [readonly]=!roflag
+                  (focus)="roflag=true;"  (change)="search()" [(ngModel)]="searchq"  class="form-control"  placeholder="Search">
+                <span class="input-group-append "><i class="ti-search input-group-text"></i></span>
+              </div>
+        </div>
+
+        <br>
+      </div>
+
+      <div class="preloader3 loader-block" *ngIf="loadingIndicator==true">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+
+
+      <ngx-datatable *ngIf="!loadingIndicator"
+        #table
+        class="data-table"
+        [columnMode]="'flex'"
+        [headerHeight]="50"
+        [footerHeight]="55"
+        [rowHeight]="'auto'"
+        [externalPaging]="true"
+        [scrollbarH]="true"
+        [count]="page.count"
+        [offset]="page.offset"
+        [limit]="page.limit"
+        [rows]='tabrows'
+        (page)="pageCallback($event)" >
+        <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="189">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <small><span [routerLink]="['/quotation/view/'+row.quotation_id+'/'+row?.quotation?.uuid]" >{{row.id}} </span></small>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column  name="Customer / Assigned to" [flexGrow]="2" [minWidth]="757" >
+          <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+            <b>{{row.creditnote_no}}</b> For PI #{{row.quotation_id}}<br>
+            <a  [routerLink]="['/quotation/view/'+row.quotation_id+'/'+row?.quotation?.uuid]" *ngIf="authService.checkPermission(2) || authService.checkPermission(3)"> <b>{{row.quotation.customer.name}}</b> </a>
+            <a *ngIf="!authService.checkPermission(2) && !authService.checkPermission(3) "> <b>{{row.quotation.customer.name}}</b> </a>
+            <br>
+        <small>    {{row.quotation.user.name}} -  {{row.quotation.user.role.name}}<br></small>
+        <small  *ngIf="row.quotation.user.region">Region (Old method): {{row?.quotation.user.region}} <br></small>
+        <small *ngIf="row.quotation.user.region_ids_info">Region (New method): <span *ngFor="let reg of row?.quotation.user.region_ids_info"> {{ reg.region_name}}, </span>  <br></small>
+        <small> Created On : {{ row.created_on | date: 'd/M/y H:m' }} <br> </small>
+
+          </ng-template>
+        </ngx-datatable-column>
+
+
+
+         <!-- <ngx-datatable-column name="Status" [flexGrow]="1">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.status}}
+              </ng-template>
+            </ngx-datatable-column> -->
+
+
+        <ngx-datatable-column name="Action" [flexGrow]="1" [minWidth]="378">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+
+            <div class="text-center"><b> ₹  {{row.amount}} </b></div>
+            <div class="row text-center">
+               <!-- <div class="col-2">
+
+                    <a (click)="edit(row)" style="color: #6B05F9">
+                        <i class="ti-eye"></i>
+                      </a>
+                  </div> -->
+
+            <div class="col-md-12 text-center">
+
+                <a  target=_blank href="{{commonService.apiUrl}}/pg/creditnote.php?id={{row.id}}" style="color: #6B05F9">
+                  CN<i class="ti-download"></i>
+                </a>
+                &nbsp;
+              <a  target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2&uuid={{row?.quotation?.uuid}}" style="color: #6B05F9">
+                PI<i class="ti-download"></i>
+              </a>
+
+              &nbsp;<a title="{{row?.invoice_no}}" *ngIf="row?.quotation?.invoice_no" target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=1&uuid={{row?.quotation?.uuid}}" style="color: #6B05F9">
+                TI <i class="ti-download"></i>
+              </a>
+
+
+
+
+            </div>
+
+
+
+
+
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+
+
+    </app-card>
+  </div>
+</div>
+</div>
+
+
+<app-modal-basic #modaldrrequest [dialogClass]="'modal-lg'">
+  <div class="app-modal-header">
+    <!-- <h4 class="modal-title">Discount Requests ({{getNoOfDR()}})</h4> -->
+    <button type="button" class="close basic-close" (click)="modaldrrequest.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <div class="centered-contentt"  style="max-height:500px;overflow:scroll">
+      <table style="max-width:100%;width:100%" border=1 cellpadding=5 cellspacing=5  >
+        <tr>
+          <th>Quotation ID</th>
+          <th>Executive</th>
+        <th>Amount</th>
+        <th>Request</th>
+        <th>Action</th>
+        </tr>
+        <!-- <ng-container  *ngFor="let q of tabrows;">
+        <tr     *ngIf="getInt(q.dr_from_user_id)>0 && q.dr_status=='pending' && q.dr_to_user_id==commonService.getCurrentUser().id  ">
+          <td> <a  (click)="edit(q)"> {{q.id}} : <small>{{q.customer.name}}</small></a>
+            <a  target=_blank href="{{commonService.apiUrl}}/pg/?id={{q.id}}&uuid={{q.uuid}}" style="color: #6B05F9">
+              <i class="ti-cloud-down"></i>
+            </a></td>
+          <td>{{q.user.name}}</td>
+          <td>{{q.totalamount}} Rs.</td>
+          <td>
+              {{q.dr_discount}}% <span placement="bottom" ngbTooltip="{{q.dr_comment}}"> ?</span>
+
+
+
+          </td>
+          <td>
+
+            <button *ngIf="getInt(q.dr_discount) <= getInt(commonService.getCurrentUser().discount)" class="button btn-primary  btn-xl"  (click)="dr_request(q,'approve')">Approve</button>
+
+            <button *ngIf="getInt(q.dr_discount) > getInt(commonService.getCurrentUser().discount)" class="button btn-primary  btn-xl"  (click)="dr_request(q,'forward')" title="Your Discount Limit is less than Request , Please Forward to Upper Reporting Manager">Forward</button>
+
+
+            <button class="button btn-danger" (click)="dr_request(q,'reject')">Reject</button>   </td>
+
+        </tr>
+      </ng-container> -->
+      </table>
+      <br>&nbsp;
+      </div>
+  </div>
+    </app-modal-basic>

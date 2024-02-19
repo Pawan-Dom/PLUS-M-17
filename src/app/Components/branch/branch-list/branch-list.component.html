@@ -1,0 +1,165 @@
+<div class="page-body">
+  <div class="row">
+  <div class="col-sm-12">
+
+    <app-card >
+     <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+      <div class="row">
+        <div class="col-sm-12">
+          <label class="dt-cust-search f-right">
+            <div class="form-group">
+              <label>Search: </label>
+              <input  type='search'
+              autocomplete="off"
+              [readonly]="!roflag"
+              (focus)="roflag=true;"
+              class="form-control input-sm m-l-10"
+              placeholder='Search Name'
+              #searchInput
+              (keyup)="updateFilter({ target: { value: searchInput.value } })"
+      />
+      
+      
+               <button class="btn btn1 btn-info"  (click)="model={};modalAdd.show()">Add</button>
+            </div>
+          </label>
+        </div>
+      </div>   <div class="preloader3 loader-block" *ngIf="loading">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+
+      <ngx-datatable
+        #table
+        class='data-table'
+        [columnMode]="'flex'"
+        [headerHeight]="50"
+        [footerHeight]="55"
+        [rowHeight]="'auto'"
+        [scrollbarH]="true"
+        [limit]="page.limit"
+        [rows]='tabrows'>
+        <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="147" >
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.id}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Name & City" [flexGrow]="1" [minWidth]="294" >
+          <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+            <a  (click)="view(row)"> <b>{{row.name}}</b><br>{{row.city}}  </a>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="State" [flexGrow]="1.5" [minWidth]="294">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.state}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Phone" [flexGrow]="1" [minWidth]="294">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.phone}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Status" [flexGrow]="1" [minWidth]="294">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{(row.status==1)?"Active":"Deactive"}}
+          </ng-template>
+        </ngx-datatable-column>
+         <ngx-datatable-column name="Action" [flexGrow]="0.5" [minWidth]="147">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+              <a  style="color: #6B05F9" (click)="model=row;modalAdd.show()">
+                  <i class="ti-pencil"></i>
+                </a> <!--|  <a style="color: red" (click)="openSuccessCancelSwal()">
+                  <i class="ti-trash"></i>
+                </a>-->
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+
+
+    </app-card>
+  </div>
+</div>
+</div>
+
+
+
+<app-modal-basic #modalAdd  [dialogClass]="'modal-lg'">
+    <div class="app-modal-header">
+      <h4 class="modal-title">Add/Edit Branch</h4>
+      <button type="button" class="close basic-close" (click)="modalAdd.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="app-modal-body" class="src">
+        <div class="row">
+          <div class="col-sm-12 mobile-inputs">
+            <form ngNativeValidate (submit)="addEditbranch()">
+                <div class="form-group row">
+                      <div class="col-sm-12">
+                          <input type="text" class="form-control " name="name" placeholder=" Name" [(ngModel)]="model.name" required>
+
+                        </div>
+
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control " name="address1" placeholder="Address 1" [(ngModel)]="model.address1" required>
+                  </div>
+                  <div class="col-sm-6">
+                      <input type="text" class="form-control " name="address2" placeholder=" Address 2" [(ngModel)]="model.address2" required>
+                  </div>
+                </div>
+
+
+
+
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                      <input type="text" class="form-control " name="City" placeholder="City" [(ngModel)]="model.city" required>
+
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="number" class="form-control " name="pincode" placeholder="Pincode" [(ngModel)]="model.pincode" required>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control " name="State" placeholder="State" [(ngModel)]="model.state" required>
+
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control " name="region" placeholder="Region" [(ngModel)]="model.region" required>
+
+                      </div>
+                  </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control " name="phone" placeholder="Phone" [(ngModel)]="model.phone"  >
+                  </div>
+                  <div class="col-sm-6">
+                      <input type="text" class="form-control " name="fax" placeholder="Fax" [(ngModel)]="model.fax" >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <ng-select placeholder="Select Status" name=approved bindLabel=name bindValue=id [(ngModel)]=model.status [items]="[{id:'1',name:'Active'},{id:'0',name:'Deactive'}]">
+                    </ng-select>
+                  </div>
+                </div>
+
+                    <div class="app-modal-footer f-right">
+                        <button type="button" class="btn btn-primary waves-effect" (click)="modalAdd.hide()">Close</button>
+                        <input type="submit" class="btn btn-primary waves-effect waves-light " value="Save">
+                   </div>
+              </form>
+            </div>
+        </div>
+      </div>
+
+  </app-modal-basic>

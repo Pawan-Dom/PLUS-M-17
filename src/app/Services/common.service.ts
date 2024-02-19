@@ -7,7 +7,7 @@ declare var jQuery: any;
 
 @Injectable()
 export class CommonService {
-  private apiUrl = 'https://api-v1-dev.pplplus.org';
+   apiUrl = 'https://api-v1-dev.pplplus.org';
   servicePNotify: any;
 
   constructor(private http: HttpClient) { }
