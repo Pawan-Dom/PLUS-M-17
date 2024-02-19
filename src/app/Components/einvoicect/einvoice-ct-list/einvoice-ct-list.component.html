@@ -1,0 +1,123 @@
+<div class="page-body">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <app-card>
+        <div class="row">
+          <div class="col-md-3" style="text-align:left">
+           <h5>Einvoice CT Log List</h5>
+          </div>
+          <div class="col-md-6">
+            <span class="f-right" style="width:50%">
+              <ng-select name="searchqtyp" [items]="['All','REQUEST', 'RESPONSE']"
+                placeholder="Select Type" [(ngModel)]="searchqtyp" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:50%">
+              <ng-select name="searchqstatus" [items]="['All','Success','Failed']"
+                placeholder="Select Status" [(ngModel)]="searchqstatus" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group f-right">
+              <input type="search" autocomplete="off" [readonly]=!roflag (focus)="roflag=true;" (change)="search()"
+                [(ngModel)]="searchq" class="form-control" placeholder="Search">
+              <span class="input-group-append "><i class="ti-search input-group-text"></i></span>
+            </div>
+          </div>
+
+        </div>
+        <br>
+
+
+        <div class="preloader3 loader-block" *ngIf="loadingIndicator==true">
+          <div class="circ1"></div>
+          <div class="circ2"></div>
+          <div class="circ3"></div>
+          <div class="circ4"></div>
+        </div>
+
+
+        <ngx-datatable *ngIf="!loadingIndicator" #table class="data-table" [columnMode]="'flex'" [headerHeight]="50"
+          [footerHeight]="55" [rowHeight]="'auto'" [externalPaging]="true" [count]="page.count" [offset]="page.offset"
+          [limit]="page.limit" [rows]='tabrows' (page)="pageCallback($event)" [scrollbarH]="true">
+          <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="101">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <small><span>{{row.id}} </span></small>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Customer / Invoice details" [flexGrow]="2" [minWidth]="407">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span *ngIf="row.quotation_id"[routerLink]="['/quotation/view/'+row.quotation_id+'/'+row.quotation_uuid]"><b> #PI {{row?.quotation_id}}  </b> </span>
+              <span *ngIf="row.doc_refno"[routerLink]="['/quotation/view/'+row.quotation_id+'/'+row.quotation_uuid]"><b> #Invoice {{row?.doc_refno}}  </b> </span>
+                 <span *ngIf="row?.debugjson?.DocDtls"> <br> Invoice Date : {{row?.debugjson?.DocDtls?.Dt}} </span>
+
+              <b *ngIf="row?.debugjson?.BuyerDtls"><br>{{row?.debugjson?.BuyerDtls?.LglNm}}</b>
+              <small *ngIf="row?.debugjson?.BuyerDtls">  <br> Address : {{row?.debugjson?.BuyerDtls?.Addr1}} {{row?.debugjson?.BuyerDtls?.Addr2}}  {{row?.debugjson?.BuyerDtls?.Loc}}<br> </small>
+              <small *ngIf="row?.debugjson?.BuyerDtls?.Pin"> PIN : {{row?.debugjson?.BuyerDtls?.Pin}}   </small>
+
+              <small *ngIf="row?.debugjson?.BuyerDtls && row?.debugjson?.BuyerDtls?.Gstin != ''">  <br> GST No :  {{row?.debugjson?.BuyerDtls?.Gstin}} </small>
+              <small><span>  <br>Created On
+                  {{ row.created_on | date: 'd/M/y H:m' }} </span></small>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Type" [flexGrow]="1" [minWidth]="203">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+              <div class="row ">
+                <div title="Type" class="col-md-12 ">
+                  <div *ngIf="row?.type =='REQUEST'">
+                    <span><b> {{row?.type}}  </b></span>
+                  </div>
+                  <div *ngIf="row?.type =='RESPONSE'">
+                    <span><b>{{row?.type}} </b>  </span>
+                  </div>
+
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="CT Request Type" [flexGrow]="1" [minWidth]="203">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+              <div class="row ">
+                <div class="col-md-12 ">
+                  <div *ngIf="row?.ctrequesttype">
+                    <span><b>{{row?.ctrequesttype}}</b></span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Response" [flexGrow]="2" [minWidth]="407">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+              <div class="row ">
+                <div class="col-md-12 ">
+
+                  <div title="Request status" *ngIf="row?.response == 0">
+                    <span  style="color:red;font-weight:bold"> Failed </span>
+                  </div>
+                   <div title="Request status" *ngIf="row?.response">
+                    <span style="color:green;font-weight:bold"> {{row?.response?.PostStatusDesc}} </span>
+                  </div>
+                  <div *ngIf="row?.type =='RESPONSE'">
+                    <span *ngIf="row?.response_irn" title="Response_Response_qrcode : {{row?.response_qrcode}} "> <b> Response_irn No : </b>  {{row?.response_irn}} </span>
+                    <span *ngIf ="row?.response_statusmessage"> <br><b> Status Msg : </b>  {{row?.response_statusmessage}} </span>
+
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </app-card>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+

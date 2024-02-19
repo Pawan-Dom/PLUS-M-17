@@ -1,0 +1,339 @@
+<div class="page-body">
+    <div class="row">
+    <div class="col-sm-12">
+
+      <app-card >
+       <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+        <div class="row">
+          <div class="col-sm-12">
+         <label class="dt-cust-search f-right">
+                <div class="form-group">
+                <!--  <label>Search: </label>
+                <input
+                  type='text'
+                  class="form-control input-sm m-l-10"
+                  placeholder='Search Name'
+                  (keyup)='updateFilter($event)'
+                /> -->
+                 <button class="btn btn1 btn-info"  (click)="resetModel();commonService.showModal('leadstatusaddedit')">Add</button>
+              </div>
+            </label>
+          </div>
+        </div>   <div class="preloader3 loader-block" *ngIf="loading">
+          <div class="circ1"></div>
+          <div class="circ2"></div>
+          <div class="circ3"></div>
+          <div class="circ4"></div>
+        </div>
+
+        <ngx-datatable
+          #table
+          class='data-table'
+          [columnMode]="'flex'"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="'auto'"
+          [scrollbarH]="true"
+
+          [limit]="10"
+          [rows]='tabrows'>
+          <ngx-datatable-column name="ID::Seq" [flexGrow]="0.3" [minWidth]="194">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i *ngIf="row.active==1" title=active class="ti-check"></i>
+                <i *ngIf="row.active!=1" title=inactive class="ti-time"></i>
+                {{row.id}}::<b>{{row.seq}} </b>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Name" [flexGrow]="0.5" [minWidth]="289" >
+            <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+              <b>{{row.name}}</b>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Description" [flexGrow]="1" [minWidth]="484">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.description}}
+            </ng-template>
+          </ngx-datatable-column>
+
+
+           <ngx-datatable-column name="Action" [flexGrow]="0.3" [minWidth]="154">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <a  style="color: #6B05F9" *ngIf="row.id!=0" (click)="setModel(row);commonService.showModal('leadstatusaddedit')">
+                    <i class="ti-pencil"></i>
+                  </a> &nbsp;&nbsp;|&nbsp;&nbsp;  <a style="color: red" title="Manage Questions" (click)="resetModel(row);commonService.showModal('addeditleadstatusquestions')">
+                    <i class="ti-layout-list-thumb"></i>
+                  </a>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+
+
+      </app-card>
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+<!-- Right Bar Org Signup Module-->
+<!--  <app-modal-basic #roleAdd  [dialogClass]="'modal-lg'"  >
+
+
+                    <div class="modal-header"> hm
+                            <h1 class="mrg-top-30 adduserd masterforma">
+                                    <span *ngIf="model.id!=0">Edit Role '{{model.name}}' in </span> <span *ngIf="model.id==0">Add New Role   </span>
+                           </h1>
+                        </div>
+
+                        <form name="form" (ngSubmit)="role_add($event)" ngNativeValidate>
+
+                <div class="modal-body">
+                    <div class="vertical-aligndepr">
+                        <div class="table-cell">
+                            <div class="pdd-horizon-15">
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                        <div class="row">
+                            <div class="col">
+                                <button  type="button" type=submit class="btn btn-primary btn-block border-radius-6"> <span *ngIf="model.id!=0">Edit Role </span> <span *ngIf="model.id==0">Create Role </span>  <img *ngIf="loading2" src="/assets/loaderwhite.png" width=20px ></button>
+                            </div> <div class="col">
+                                <button  type="button"  data-dismiss="modal" class="btn btn-danger btn-block border-radius-6">Cancel</button>
+                            </div>
+                            </div>
+                </div>
+            </form>
+
+</app-modal-basic> -->
+
+
+
+
+<app-modal-animation #modalLeadstatusaddedit  [modalClass]="'leadstatusaddedit'"   [modalID]="'leadstatusaddedit'">
+    <div class="app-modal-header">
+        <h4 class="modal-title">
+            <span *ngIf="model.id!=0">Edit LeadStatus '{{model.name}}'</span> <span *ngIf="model.id==0">Add New LeadStatus   </span>
+   </h4>
+      <button type="button" class="close basic-close" (click)="modalLeadstatusaddedit.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="app-modal-body" class="src">
+        <div class="row">
+          <div class="col-sm-12 mobile-inputs">
+            <form name="form" (ngSubmit)="leadstatus_addedit($event)" ngNativeValidate>
+
+                <div class="form-group">
+                    <label class="text-normal text-dark"><b>Active ?</b></label>
+                    <ng-select   placeholder="Active ?" name="active" [(ngModel)]="model.active"
+                    required bindValue="id" bindLabel="name" [searchable]=false [clearable]=false
+                     [items]="[{id:'1',name:'Yes'},{id:'0',name:'No'}]">
+                    </ng-select>
+                  </div>
+
+
+                <div class="form-group">
+                    <label class="text-normal text-dark"><b>Name *</b></label>
+                    <input placeholder="Name" type=text name="Enter Name" [(ngModel)]="model.name"   required class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="text-normal text-dark"><b>Description</b></label>
+                  <input placeholder="Description" type=text name="Enter description" [(ngModel)]="model.description"   class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="text-normal text-dark"><b>Sequence</b></label>
+                <input placeholder="Enter Sequence Number" type=number min=0 name="seq" [(ngModel)]="model.seq"   class="form-control">
+            </div>
+
+
+            <div class="form-group">
+              <label class="text-normal text-dark"><b>Related Lead Statuses :</b></label> <br>
+              <ng-select   placeholder="Select Lead Statuses" name="related_ids" [(ngModel)]="model.related_ids"
+          required [multiple]=true bindValue="id" bindLabel="name" [searchable]=true [clearable]=false
+           [items]="tabrows">
+          </ng-select>
+            </div>
+
+
+
+              <div class="row">
+                <div class="col">
+                    <button  type="button" type=submit    class="btn btn-primary btn-block border-radius-6">
+                       <span *ngIf="model.id!=0">Edit</span> <span *ngIf="model.id==0">Create </span>  <img *ngIf="loading2" src="/assets/loaderwhite.png" width=20px ></button>
+                </div> <div class="col">
+                    <button  type="button"  data-dismiss="modal" (click)="commonService.hideModal('leadstatusaddedit');" class="btn btn-danger btn-block border-radius-6">Cancel</button>
+                </div>
+                </div>
+
+                </form>
+            </div>
+        </div>
+      </div>
+
+
+
+  </app-modal-animation>
+
+
+
+
+<app-modal-animation #modaladdeditLeadstatusquestions  [modalClass]="'addeditleadstatusquestions'"   [modalID]="'addeditleadstatusquestions'">
+  <div class="app-modal-header">
+      <h4 class="modal-title">
+      <!--    <span *ngIf="model.id!=0">Edit LeadStatus '{{model.name}}'</span> <span *ngIf="model.id==0">Add New LeadStatus   </span> -->
+
+      Manage Questions for "{{selectLeadstatus?.name}}"
+ </h4>
+    <button type="button" class="close basic-close" (click)="modaladdeditLeadstatusquestions.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body" *ngIf=selectLeadstatus class="src"  style="overflow:scroll;max-height:500px">
+
+      <div class="row">
+          <div class="col-sm-12">
+         <label class="dt-cust-search f-right">
+                <div class="form-group">
+                <!--  <label>Search: </label>
+                <input
+                  type='text'
+                  class="form-control input-sm m-l-10"
+                  placeholder='Search Name'
+                  (keyup)='updateFilter($event)'
+                /> -->
+                 <button class="btn btn1 btn-info"  (click)="resetModelq();commonService.showModal('addeditleadstatusquestion')">Add</button>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <ng-container *ngIf=!selectLeadstatus?.questions>
+            <div text-center style="text-align:center">  No Questions</div>
+           </ng-container>
+    <ng-container *ngIf=selectLeadstatus?.questions>
+      <table style="width:100%;" cellspacing=4 cellpadding=4 class='data-table' >
+        <tr><th>ID::Seq</th><th>Title</th> <th>Input Type</th><th>options</th><th>Actions</th></tr>
+        <tr *ngFor="let question of selectLeadstatus?.questions;let i = index" >
+          <td style="color: #6B05F9" (click)="setModelq(question);commonService.showModal('addeditleadstatusquestion')">
+              <i *ngIf="question.active==1" class="ti-check"></i>
+              <i *ngIf="question.active!=1" class="ti-time"></i>
+            {{question.id}}::<b>{{question.seq}}</b></td>
+          <td style="white-space: pre-line;">{{question.title}}</td>
+          <td style="white-space: pre-line;">{{question.input_type}}</td>
+          <td style="width:50px">{{question?.input_options}}</td>
+          <td> <a  style="color: #6B05F9" *ngIf="question.id!=0" (click)="setModelq(question);commonService.showModal('addeditleadstatusquestion')">
+              <i class="ti-pencil"></i>
+            </a></td>
+        </tr>
+      </table>
+    </ng-container>
+
+
+    </div>
+
+
+
+</app-modal-animation>
+
+
+
+
+<app-modal-animation #modaladdeditLeadstatusquestion  [modalClass]="'addeditleadstatusquestion'"   [modalID]="'addeditleadstatusquestion'">
+    <div class="app-modal-header">
+        <h4 class="modal-title">
+          {{selectLeadstatus?.name}} :: <span *ngIf="modelq.id!=0">Edit Question '{{modelq.title}}'</span> <span *ngIf="modelq.id==0">Add New Question   </span>
+   </h4>
+      <button type="button" class="close basic-close" (click)="modaladdeditLeadstatusquestion.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="app-modal-body" class="src"  style="overflow:scroll;max-height:500px">
+        <div class="row">
+          <div class="col-sm-12 mobile-inputs">
+            <form name="form" (ngSubmit)="leadstatusquestion_addedit($event)" ngNativeValidate>
+
+                <div class="form-group">
+                    <label class="text-normal text-dark"><b>Active ?</b></label>
+                    <ng-select   placeholder="Active ?" name="active" [(ngModel)]="modelq.active"
+                    required bindValue="id" bindLabel="name" [searchable]=false [clearable]=false
+                     [items]="[{id:'1',name:'Yes'},{id:'0',name:'No'}]">
+                    </ng-select>
+                  </div>
+
+                <div class="form-group">
+                    <label class="text-normal text-dark"><b>Question Title *</b></label>
+                    <input placeholder="Name" type=text name="Enter Name" [(ngModel)]="modelq.title"   required class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="text-normal text-dark"><b>Description</b></label>
+                  <input placeholder="Description" type=text name="Enter description" [(ngModel)]="modelq.description"   class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="text-normal text-dark"><b>Sequence</b></label>
+                <input placeholder="Enter Sequence Number" type=number min=0 name="seq" [(ngModel)]="modelq.seq"   class="form-control">
+            </div>
+
+
+            <div class="form-group">
+                <label class="text-normal text-dark"><b>Input Type</b></label>
+                <ng-select   placeholder="Input Type" name="input_type" [(ngModel)]="modelq.input_type"
+                required bindValue="id" bindLabel="name" [searchable]=false [clearable]=false
+                 [items]="[{id:'text',name:'Text'},{id:'number',name:'Number'},{id:'textarea',name:'Textarea'},
+                 {id:'date',name:'Date'},{id:'datetime',name:'Date & Time'},{id:'radio',name:'Radio Buttons'},
+                 {id:'select',name:'Select DropDown'},{id:'file',name:'File Upload'}]">
+                </ng-select>
+              </div>
+
+              <div class="form-group" *ngIf="modelq.input_type=='select' || modelq.input_type=='radio'">
+                  <label class="text-normal text-dark"><b>Input Options : </b></label><br>
+                  <textarea class="fonr-control"  style="width:100%" placeholder="Enter Options Seperated By Comma" name="input_options" [(ngModel)]="modelq.input_options"
+                  required >
+              </textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-normal text-dark"><b>Parent Question : </b></label>
+                    <ng-select   placeholder="Select Question" name="parent_id" [(ngModel)]="modelq.parent_id"
+                    required bindValue="id" bindLabel="title"
+                     [items]="selectLeadstatus?.questions">
+                    </ng-select>
+
+
+                  </div>
+
+                  <div class="form-group" *ngIf=modelq.parent_id>
+                    Available Options : {{getQOptions(modelq.parent_id)}}<br>
+                      <label class="text-normal text-dark"><b>For Input Option (if any) </b></label>
+                      <input placeholder="Enter Option Value" type=text name="parent_seq" [(ngModel)]="modelq.parent_seq"   class="form-control">
+                  </div>
+
+
+              <div class="row">
+                <div class="col">
+                    <button  type="button" type=submit    class="btn btn-primary btn-block border-radius-6">
+                       <span *ngIf="modelq.id!=0">Edit</span> <span *ngIf="modelq.id==0">Create </span>  <img *ngIf="loading2" src="/assets/loaderwhite.png" width=20px ></button>
+                </div> <div class="col">
+                    <button  type="button"  data-dismiss="modal" (click)="commonService.hideModal('addeditleadstatusquestion');" class="btn btn-danger btn-block border-radius-6">Cancel</button>
+                </div>
+                </div>
+
+                </form>
+            </div>
+        </div>
+      </div>
+
+
+
+  </app-modal-animation>

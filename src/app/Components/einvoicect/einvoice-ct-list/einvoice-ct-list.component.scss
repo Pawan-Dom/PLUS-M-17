@@ -1,0 +1,39 @@
+#modalviewpirequest{
+    max-width: 900px!important;
+}
+.f-right{
+    // margin-top: 1px;
+    margin-bottom:3px;
+}
+
+
+// .limitpage .ng-select .ng-arrow-wrapper{
+// margin-left: 10px!important;
+// }
+
+.limitpage .ng-select .ng-clear-wrapper{
+    margin-left: 20px!important;
+}
+:host ::ng-deep.datatable-scroll{
+  width: fit-content!important;
+}
+
+:host ::ng-deep.datatable-body-row{
+  width: 100%!important;
+}
+
+  @media screen and (max-width: 768px){
+    .datatable-scroll{
+      width: fit-content!important;
+      overflow-x: scroll;
+    }
+  }
+    @media screen and (max-width: 768px){
+      :host ::ng-deep.data-table {
+         width: 100%!important;
+         overflow-x: scroll;
+      }
+  }
+
+
+

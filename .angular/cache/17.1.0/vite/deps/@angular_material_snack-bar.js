@@ -7,15 +7,15 @@ import {
   TemplatePortal
 } from "./chunk-XEUXW7ES.js";
 import {
-  MatButton,
-  MatButtonModule
-} from "./chunk-54AZI2BZ.js";
-import {
   ScrollDispatcher,
   ScrollingModule,
   ViewportRuler
 } from "./chunk-I4TPFTNH.js";
 import "./chunk-NQZWYY5I.js";
+import {
+  MatButton,
+  MatButtonModule
+} from "./chunk-54AZI2BZ.js";
 import {
   BidiModule,
   BreakpointObserver,

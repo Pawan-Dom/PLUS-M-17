@@ -292,4 +292,12 @@ getchildregion(region: any) {
           return res;
      }));
 }
+logevent(model: any) {
+  return this.http.post<any>(this.apiUrl + '/other/logevent', model).pipe(
+      map(user => {
+           
+           return user;
+      }));
 }
+}
+

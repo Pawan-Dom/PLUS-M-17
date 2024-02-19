@@ -1,0 +1,110 @@
+<title>Reports</title>
+<div class="page-body">
+<app-card>
+    <h3  >Report</h3>
+    <hr>
+    <form class="md-float-material" name="form" (ngSubmit)="genReport(); logevent();" ngNativeValidate >
+      <div class="row">
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-4" style="margin-bottom: 10px;">
+             <ng-select placeholder="Please Select Report Type" name=report_type [items]=reports bindLabel="name" bindValue=alias [(ngModel)]="model.report_type">
+            
+             </ng-select>
+             
+            </div>
+            <div class="col-md-4" style="margin-bottom: 10px;">
+             <input class="form-control" name="start_date" type="date" required placeholder="From Date" [(ngModel)]="model.start_date">
+             
+            </div>
+            <div class="col-md-4" style="margin-bottom: 10px;">
+             <input class="form-control" name="end_date" type="date" required placeholder="To Date" [(ngModel)]="model.end_date">
+             
+            </div>
+            
+          </div>
+          <div class="row">
+            <div class="col-md-4" style="margin-bottom: 10px;">
+             <ng-select  name="searchqregionf"   [items]="['ALL','NORTH','EAST','WEST','SOUTH','NORTHWEST','CORPORATE']"
+             placeholder="Select Region" (change)="model.user_id='';filterusers()"
+          [(ngModel)]="model.region"  (clear)="model.region='All';filterusers()">
+            </ng-select>
+       
+            </div>
+            <div class="col-md-4" style="margin-bottom: 10px;">
+       
+             <ng-select  name="searchquserf" bindValue="id" bindLabel="userdisplayname"  [items]="tempusers"
+             placeholder="Select User" 
+          [(ngModel)]="model.user_id" (clear)="model.user_id=''"    >
+            </ng-select> 
+            </div>
+            <div class="col-md-4" style="margin-bottom: 10px;">
+             <ng-select *ngIf="model.report_type!='allcollection'"   name="searchqf"   [items]="['All','Pending','Paid','Draft','Cancelled']" placeholder="Select Filter"
+             [(ngModel)]="model.status"   (clear)="model.status='All'">
+              </ng-select>
+       
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4" style="margin-bottom: 10px;">
+       
+             <ng-select name="subregion" [items]="region_ids"  bindValue="id" bindLabel="displayname"
+             placeholder="Select Region(New method)" [(ngModel)]="model.subregion">
+           </ng-select>
+            </div>
+
+            <div class="col-md-4" style="margin-bottom: 10px;">
+       
+              <ng-select  name="searchqrecotype" bindValue="id" bindLabel="name"  [items]="[{id:'all',name:'All'},{id:'0',name:'Pending'},{id:'1',name:'Recodone'}]"
+              placeholder="Select Reco Status" 
+           [(ngModel)]="model.reco_status" >
+             </ng-select> 
+            </div>
+          </div>
+          <!-- <div class="row">
+           <div class="col-md-4" style="margin-bottom: 10px;">
+       
+             <ng-select  name="searchqbranchf" bindValue="id" bindLabel="name"  [items]="branches"
+             placeholder="Select Branch" 
+          [(ngModel)]="model.branch_id"    >
+            </ng-select> 
+           </div>
+         </div> -->
+         <div class="row">
+           <div class="col-md-4" style="margin-bottom: 10px;">
+       
+             <ng-select  name="searchqlcat" bindValue="id" bindLabel="displayname"  [items]="lcats"
+             placeholder="Select License Category" 
+          [(ngModel)]="model.lcat_id"   >
+            </ng-select> 
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-md-4" style="margin-bottom: 10px;">
+       
+             <ng-select  name="searchqltype" bindValue="id" bindLabel="name"  [items]="[{id:'new',name:'New'},{id:'renew',name:'Renew'}]"
+             placeholder="Select New/Renew" 
+          [(ngModel)]="model.ltype" >
+            </ng-select> 
+           </div>
+         </div>
+              
+        </div>
+        <div class="col-md-3" style="margin-bottom: 10px;">
+          
+            <button class="btn btn-primary" type="submit">Download  <img *ngIf="loading" width=20px src="/assets/loaderwhite.png" /></button>
+             
+           
+        </div>
+      </div>
+   
+    </form>
+
+    <div style="height:200px">&nbsp;</div>
+    <hr>
+    Please Choose Shorter Date Range for Faster Processing.
+  <!--   <hr>
+    All Quotations : All Quotations Sorted by Quotation Created date <br>
+    Only Invoices : All Quotations with Invoices sorted by Invoice Date -->
+</app-card>
+</div>

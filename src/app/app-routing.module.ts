@@ -15,6 +15,9 @@ const routes: Routes = [
   { path: 'branch', loadChildren: () => import('./Components/branch/branch.module').then(m => m.BranchModule) },
   { path: 'creditnote', loadChildren: () => import('./Components/creditnote/creditnote.module').then(m => m.CreditnoteModule) },
   {path: 'transaction', loadChildren: () => import('./Components/transaction/transaction.module').then(m => m.TransactionModule) },
+  {path: 'einvoicect', loadChildren: () => import('./Components/einvoicect/einvoicect.module').then(m => m.EinvoicectModule) },
+  {path: 'report', loadChildren: () => import('./Components/report/report.module').then(m => m.ReportModule) },
+  {path: 'leadstatus', loadChildren: () => import('./Components/leadstatus/leadstatus.module').then(m => m.LeadstatusModule) },
 
 
 ];
