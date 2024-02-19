@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'metamaster', loadChildren: () => import('./Components/metamaster/metamaster.module').then(m => m.MetamasterModule) },
   { path: 'branch', loadChildren: () => import('./Components/branch/branch.module').then(m => m.BranchModule) },
   { path: 'creditnote', loadChildren: () => import('./Components/creditnote/creditnote.module').then(m => m.CreditnoteModule) },
-  // {path: 'transaction', loadChildren: () => import('./Components/transaction/transaction.module').then(m => m.TransactionModule) },
+  {path: 'transaction', loadChildren: () => import('./Components/transaction/transaction.module').then(m => m.TransactionModule) },
 
 
 ];

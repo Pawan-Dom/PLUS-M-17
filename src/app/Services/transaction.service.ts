@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../environments/environment';
 
 @Injectable()
 export class TransactionService {
-    apiUrl: string = environment.apiUrl;
-    RapiUrl: string = environment.RapiUrl;
+  private apiUrl = 'https://api-v1-dev.pplplus.org';
+  private RapiUrl = 'https://api-v1-dev.pplplus.org';
+  private R2apiUrl = 'https://api-v1-dev.pplplus.org';
 
     constructor(private http: HttpClient) { }
 
@@ -69,7 +69,7 @@ export class TransactionService {
 
 
 
-    delete(r) {
+    delete(r: any) {
         return this.http.post<any>(this.apiUrl + '/transaction/delete', r).pipe(
         map(user => {
              
@@ -77,7 +77,7 @@ export class TransactionService {
         }));
       }
 
-      deletebankstatement(r) {
+      deletebankstatement(r: { id: any; }) {
         return this.http.post<any>(this.apiUrl + '/transaction/deletebankstatement', r).pipe(
         map(user => {
              
@@ -86,28 +86,31 @@ export class TransactionService {
       }
 
 
-      uploadfileandrunreco(file) {
+      uploadfileandrunreco(file: Blob) {
         let formData: FormData = new FormData();
-        formData.append('file', file, file.name);
-      
+        // Explicitly cast 'file' to 'File' type to access the 'name' property
+        formData.append('file', file as File, (file as File).name);
+        
         return this.http.post<any>(this.apiUrl + '/transaction/uploadfileandrunreco', formData).pipe(
-        map(upost => {
+          map(upost => {
             // login successful if there's a jwt token in the response
-           
-             return upost;
-        }));
+            return upost;
+          })
+        );
       }
-
-      questionuploadfile(file) {
-        let formData: FormData = new FormData();
-        formData.append('file', file, file.name);
       
+      questionuploadfile(file: Blob) {
+        let formData: FormData = new FormData();
+        // Explicitly cast 'file' to 'File' type to access the 'name' property
+        formData.append('file', file as File, (file as File).name);
+        
         return this.http.post<any>(this.apiUrl + '/transaction/uploadfilesurvey', formData).pipe(
-        map(upost => {
+          map(upost => {
             // login successful if there's a jwt token in the response
-           
-             return upost;
-        }));
+            return upost;
+          })
+        );
       }
+      
 
 }

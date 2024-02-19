@@ -13,10 +13,10 @@ const routes: Routes = [
         path: 'list',
         loadChildren: () => import('./transaction-list/transaction-list.module').then(m => m.TransactionListModule)
       },
-      // {
-      //   path: 'bankstatement',
-      //   loadChildren: () => import('./bankstatement-list/bankstatement-list.module').then(m => m.BankstatementListModule)
-      // },
+       {
+         path: 'bankstatement',
+         loadChildren: () => import('./bankstatement-list/bankstatement-list.module').then(m => m.BankstatementListModule)
+      },
       {
         path: 'returntransactions',
         loadChildren: () => import('./returntransaction-list/returntransaction-list.module').then(m => m.ReturnTransactionListModule)

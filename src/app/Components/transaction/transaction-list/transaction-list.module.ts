@@ -6,6 +6,9 @@ import {SharedModule} from '../../../shared/shared.module';
 import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'; 
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CommonService } from '../../../Services/common.service';
+import { QuotationService } from '../../../Services/quotation.service';
+import { NotificationsService } from 'angular2-notifications';
 
 @NgModule({
   imports: [
@@ -15,6 +18,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     NgxDatatableModule,
     FormsModule, ReactiveFormsModule
   ],
-  declarations: [TransactionListComponent]
+  declarations: [TransactionListComponent],
+  providers: [NotificationsService,CommonService ,QuotationService] 
+
 })
 export class TransactionListModule { }

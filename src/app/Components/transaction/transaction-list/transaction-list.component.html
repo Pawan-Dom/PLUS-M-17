@@ -12,7 +12,7 @@
               <label style="display:inline" for="upload2" *ngIf="authService.checkPermission(7)">
 
                   <span class="btn btn-info" >Upload Statement</span>
-                       <input type="file" id="upload2" style="display:none"  accept=".csv"   (change)="onFileChange($event,'photos','add')">
+                       <input type="file" id="upload2" style="display:none"  accept=".csv"   (change)="onFileChange($event)">
                         </label>
                         &nbsp;  <button *ngIf="authService.checkPermission(8)" class="btn btn-primary " (click)="runReco()">Run Reco</button>
 
