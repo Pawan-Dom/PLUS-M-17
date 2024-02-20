@@ -1,0 +1,688 @@
+<div class="page-body">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <app-card>
+        <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+        <div class="row">
+          <div class="col-md-4" style="text-align:left">
+            <button type="button" class=" btn text-center   btn-primary waves-effect"
+              *ngIf="!showdr && authService.checkPermission(2)" [routerLink]="['/quotation/add']">Create PI</button>
+
+            <button *ngIf="showdr=='noc' && authService.checkPermission(79)" type="button"
+              class=" btn text-center   btn-primary waves-effect" [routerLink]="['/quotation/add/noc']">Create
+              NOC</button>
+
+            <span *ngIf="showdr && showdr!='noc'"> <a class="   waves-effect">Total {{page.count}}
+                <span *ngIf="showdr=='dr'">DRs</span>
+                <span *ngIf="showdr=='atir'">ATI Requests</span>
+                <span *ngIf="showdr=='pir'">PI Requests</span>
+                <!-- <span *ngIf="showdr=='noc'">NOC Requests</span> -->
+                <span *ngIf="page.approver_user && showdr !='noc'"> <br> Your Discount/ATI Approver :
+                  <b>{{page.reporting_user?.name}}</b>
+                  <br > Your PI Approver : <b>{{page.reporting_user?.name}}</b>
+                  <!-- <br> Your PI Approver : <b>{{page.reporting_user?.name}}</b> -->
+                </span>
+              </a>
+            </span>
+
+          </div>
+          <div class="col-md-6">
+            <!-- bindLabel="name" bindValue="id"-->
+            <span class="f-right" style="width:50%">
+              <ng-select name="searchquserf" bindValue="id" bindLabel="userdisplayname" [items]="users"
+                placeholder="Select Users" [(ngModel)]="searchquserf" (change)="search()" (clear)="search()">
+                <ng-template ng-option-tmp let-item="item">
+                  <span *ngIf="item.active==0" style="color:red">{{ item.userdisplayname  }}</span>
+                  <span *ngIf="item.active==1">{{ item.userdisplayname  }}</span>
+                </ng-template>
+
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:50%">
+              <ng-select name="searchqregionf" [items]="['All','NORTH','EAST','WEST','SOUTH','NORTHWEST']"
+                placeholder="Select Region" [(ngModel)]="searchqregionf" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:50%;">
+              <ng-select bindLabel="displayname" bindValue="id" [items]="customers" [loading]="custLoading"
+                [typeahead]="custTypeahead" placeholder="Select Customer" [(ngModel)]="searchqcustomerf "
+                (change)="search()" (clear)="searchqcustomerf='All';search()">
+                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                  <div style="margin: 2px 0;" class="card">
+                    <div class="card-body" style="padding: 5px">
+                      <h5 class="card-title" style="font-size: 14px;
+                          font-weight: 400;">#{{item?.id}} : {{item?.name}} -
+                        {{item.city}}
+                      </h5>
+                      <h6 class="card-subtitle   text-muted" style="margin-top: 0px;">
+                        <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
+                        <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
+                      </h6>
+                    </div>
+                  </div>
+                </ng-template>
+
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:50%">
+              <ng-select name="searchqsubregionf" [items]="region_ids"  bindValue="id" bindLabel="displayname"
+                placeholder="Select Region(New method)" [(ngModel)]="searchqsubregionf" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span>
+            <span *ngIf="showdr!='noc'&& showdr!='dr' && showdr!='atir' && showdr!='cpn'" class="f-right" style="width:50%">
+              <ng-select name="searchqf" [items]="['All','Pending','Paid','Draft','Cancelled']"
+                placeholder="Select Status" [(ngModel)]="searchqf" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span>
+            <span *ngIf="showdr=='noc' || showdr=='dr' || showdr=='atir' || showdr=='cpn' " class="f-right" style="width:50%">
+              <ng-select name="searchqf" [items]="['All','Approved','Pending for approval','Rejected']"
+                placeholder="Select Status" [(ngModel)]="searchqf" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span>
+
+            <span class="f-right" style="width:50%">
+              <ng-select name="searchqevidence" [items]="['All','Yes','No']"
+                placeholder="Select evidence PI's" [(ngModel)]="searchqevidence" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span>
+            <!-- <span *ngIf="showdr=='noc'" class="f-left" style="width:50%">
+              <ng-select name="searchqextnd" [items]="['Yes','No']"
+                placeholder="Select Extended PI's" [(ngModel)]="searchqextnd" (change)="search()" (clear)="search()">
+              </ng-select>
+            </span> -->
+
+
+            <!-- <span class="f-right" style="padding:10px" *ngIf="showdr=='dr'">
+                Filter : <label> <input type=radio name="lcatfilter" checked (change)="filterq('all')"> All</label> &nbsp;&nbsp; <label> <input (change)="filterq('dr_approve')" type=radio name="lcatfilter"> Approved</label> &nbsp;&nbsp; <label> <input (change)="filterq('dr_pending')" type=radio name="lcatfilter"> Pending</label>
+
+              </span>
+
+              <span class="f-right" style="padding:10px" *ngIf="showdr=='atir'">
+                Filter : <label> <input type=radio name="lcatfilter" checked (change)="filterq('all')"> All</label> &nbsp;&nbsp; <label> <input (change)="filterq('atir_approve')" type=radio name="lcatfilter"> Approved</label> &nbsp;&nbsp; <label> <input (change)="filterq('atir_pending')" type=radio name="lcatfilter"> Pending</label>
+
+              </span>
+
+              <span class="f-right" style="padding:10px" *ngIf="!showdr">
+                Filter : <label> <input type=radio name="lcatfilter" checked (change)="filterq('all')"> All</label> &nbsp;&nbsp; <label> <input (change)="filterq('paid')" type=radio name="lcatfilter"> Paid</label> &nbsp;&nbsp; <label> <input (change)="filterq('pending')" type=radio name="lcatfilter"> Pending</label>
+
+              </span> -->
+
+
+          </div>
+          <div class="col-md-2">
+            <div class="input-group f-right">
+              <input type="search" autocomplete="off" [readonly]=!roflag (focus)="roflag=true;" (change)="search()"
+                [(ngModel)]="searchq" class="form-control" placeholder="Search">
+              <span class="input-group-append "><i class="ti-search input-group-text"></i></span>
+            </div>
+            <!-- remove search box  searchqlic-->
+            <div *ngIf="showdr =='noc'" class="input-group f-right">
+              <span *ngIf="showdr=='noc'" class="f-left" style="width:100%">
+                <ng-select name="searchqextnd" [items]="['Yes','No']" autocomplete="off"
+                  placeholder="Select Extended PI's" [(ngModel)]="searchqextnd" (change)="search()" (clear)="search()">
+                </ng-select>
+              </span>
+            </div>
+          </div>
+
+        </div>
+        <br>
+
+        <!-- try -->
+        <div class="row" *ngIf="showdr=='dr'">
+          <div class="col-md-4 col-4 col-sm-12 input-group" >
+               <span class=" mt-1" style="font-weight: 400!important;color: black !important;font-size: 12px;"> Show Entry : &nbsp;</span>
+                <span class="f-right input-group limitpage" style="width:50%!important">
+                <ng-select  autocomplete="NoAutocomplete" name="searchqlimit" [items]="['7','10','25','50']"
+              placeholder="Limit" [(ngModel)]="searchqlimit" (change)="search()" (clear)="search();searchqlimit ='7'">
+              <!-- [clearable]="false" autocomplete="off" -->
+              </ng-select>
+              </span>
+          </div>
+          <div class="col-md-6 col-6 col-sm-6">
+          </div>
+          <div class="col-md-2 col-2 col-sm-12" style="text-align:right" *ngIf="showdr=='dr' && selecteddrreqArr.length >0">
+              <button class="btn btn-primary btn-sm f-right text-center  " (click)="reviewmultipledr()">Discount Review </button>
+          </div>
+        </div>
+        <!-- close -->
+
+        <div class="preloader3 loader-block" *ngIf="loadingIndicator==true">
+          <div class="circ1"></div>
+          <div class="circ2"></div>
+          <div class="circ3"></div>
+          <div class="circ4"></div>
+        </div>
+
+
+        <ngx-datatable *ngIf="!loadingIndicator" #table class="data-table" [columnMode]="'flex'" [headerHeight]="50"
+          [footerHeight]="55" [rowHeight]="'auto'" [externalPaging]="true" [count]="page.count" [offset]="page.offset"
+          [limit]="page.limit" [rows]='tabrows' (page)="pageCallback($event)" [scrollbarH]="true">
+          <ngx-datatable-column name="Id" [flexGrow]="0.4" [minWidth]="169">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <small><span [routerLink]="['/quotation/view/'+row.id+'/'+row.uuid]">{{row.id}} </span></small>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Customer / Assigned to" [flexGrow]="1.3" [minWidth]="300">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span *ngIf="row?.lead_id>0"> Lead Id #{{row?.lead_id}} : <b>{{row?.lead?.lead_status_name}}</b></span>
+              <br>
+              <a [routerLink]="['/quotation/view/'+row.id+'/'+row.uuid]"
+                *ngIf="authService.checkPermission(2) || authService.checkPermission(3)"> <b>{{row.customer.name}}</b>
+              </a>
+              <br>
+              <small *ngIf="row.customer.franchise"> Franchise Name : {{ row?.customer?.franchise }}  <br> </small>
+
+              <a *ngIf="!authService.checkPermission(2) && !authService.checkPermission(3) ">
+                <b>{{row.customer.name}}</b>
+                <br></a>
+
+              <small> {{row.user.name}} - {{row.user.role.name}} <br></small>
+              <small  *ngIf="row.user.region">Region (Old method): {{row?.user.region}} <br></small>
+              <small  *ngIf="row.region_name">Region (New method): {{row?.region_name}} <br></small>
+
+              <!-- <small *ngIf="row.user.region_ids_info">Region (New method): <span *ngFor="let reg of row?.user.region_ids_info"> {{ reg.region_name}}, </span>  <br></small> -->
+              <small> Last Updated : {{ row.updated_on | date: 'd/M/y H:m' }} <br> </small>
+
+              <small><span *ngIf="row.user.id != row.createdby_user.id || true">Created by {{row.createdby_user.name}} -
+                  {{row.createdby_user.role.name}} - {{row.createdby_user.region}} - On
+                  {{ row.created_on | date: 'd/M/y H:m' }} </span></small>
+
+
+
+            </ng-template>
+          </ngx-datatable-column>
+
+
+
+          <!-- <ngx-datatable-column name="Status" [flexGrow]="1">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.status}}
+              </ng-template>
+            </ngx-datatable-column> -->
+
+
+          <ngx-datatable-column name="Action" [flexGrow]="1" [minWidth]="350">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+
+              <div class="text-center" *ngIf="row.discount < 99"><b>
+                  ₹<span *ngIf="row.cartamountwithdiscount">{{row.cartamountwithdiscount}}</span>
+                  <span *ngIf="!row.cartamountwithdiscount">&nbsp;{{row.cartamount}}</span>
+                </b></div>
+              <div class="text-center" *ngIf="row.discount > 99"><b> NOC ( ₹ {{row.cartamount}} )</b></div>
+              <div class="row text-center">
+                <!-- <div class="col-2">
+
+                    <a (click)="edit(row)" style="color: #6B05F9">
+                        <i class="ti-eye"></i>
+                      </a>
+                  </div> -->
+
+                <div class="col-md-6 text-center">
+                  <a *ngIf="row.noc == 0" target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.id}}&invoice=2&uuid={{row.uuid}}"
+                    style="color: #6B05F9">
+                    PI<i class="ti-download"></i>
+                  </a>
+
+                  &nbsp;<a title="{{row?.invoice_no}}" *ngIf="row.invoice_no && row.noc == 0" target=_blank
+                    href="{{commonService.apiUrl}}/pg/?id={{row.id}}&invoice=1&uuid={{row.uuid}}" style="color: #6B05F9">
+                    TI <i class="ti-download"></i>
+                  </a>
+                  <br>
+                  <a *ngIf="row.license_issued==1" target=_blank
+                    href="{{commonService.apiUrl}}/pg/?id={{row.id}}&invoice=2&showlicense=1&uuid={{row.uuid}}" style="color: #6B05F9">
+                    Licenses <i class="ti-download"></i>
+                  </a>
+
+                  <span *ngIf="row.license_issued==0 && row.status=='paid'" style="color: red">
+                    Please Issue Licenses
+                  </span>
+                  <br>
+
+                  <span title="Evidence files" class="col-md-6 mb-1" *ngIf="row?.evidencefile">
+                    <i class="ti-files mt-5"   style=" color:blue;font-weight:bold"></i>
+                  </span>
+                  <br>
+                  <span title="Tag PI" class="col-md-6 mb-1" *ngIf="row?.tag_name">
+                    <b style="color:green">{{row?.tag_name}}</b>
+                  </span>
+
+                </div>
+                <ng-container *ngIf="!showdr ">
+                  <div class="col-md-6 text-center" style="color:red" *ngIf="row.status=='cancelled'">
+                    CANCELLED
+                  </div>
+
+                  <div class="col-md-6 text-center" *ngIf="row.status!='paid'">
+                    <a *ngIf="!row.transaction && row.status=='pending'" target=_blank
+                      href="{{commonService.apiUrl}}/pg/?id={{row.id}}&pay=1111&invoice=2&uuid={{row.uuid}}" style="color: #6B05F9">
+                      <small>Pay Now</small>
+                    </a>
+
+                    <!-- currentUser?.role.level < 3-->
+                    <a style="color: red;font-size:large"
+                      *ngIf="authService.checkPermission(4) && row.status!='cancelled'" (click)="markCancel(row.id)">
+                      &nbsp; &nbsp; <i class="ti-trash"></i>
+                    </a>
+
+
+                  </div>
+
+                  <div title="Paid" class="col-md-6" *ngIf="row.status=='paid'">
+                    <i class="ti-check"  style="color:green;font-weight:bold"></i>
+                  </div>
+
+
+
+                </ng-container>
+
+                <ng-container *ngIf="showdr=='dr'">
+
+                  <div class="col-md-12 text-center" *ngIf="row.dr_discount>0">
+                    <div class=""> Request of
+                      <span *ngIf="row.dr_discount < 99"> {{row.dr_discount | number:'1.2-2'}}% <br> <b> ₹
+                          {{row.cartamount * row.dr_discount/100 | number : '1.0-0'}} </b> </span>
+                      <span *ngIf="row.dr_discount > 99"> NOC</span>
+                    </div>
+
+                    <span *ngIf="row.dr_status=='pending' && row.dr_to_user_id==commonService.getCurrentUser().id">
+                      <button
+                        *ngIf="(getInt(row.dr_discount)>99 && commonService.getCurrentUser().nocapprover==1)||(getFloat(row.dr_discount) <= getInt(commonService.getCurrentUser().role.discount)  )"
+                        class="button btn-primary  btn-xl" (click)="dr_request_preapprove(row)">Review </button>
+                      <button
+                        *ngIf=" getInt(row.dr_discount)< 99   && getFloat(row.dr_discount) > getInt(commonService.getCurrentUser().role.discount)"
+                        class="button btn-primary  btn-xl" (click)="dr_request(row,'forward')"
+                        title="Your Discount Limit is less than Request , Please Forward to Upper Approver Manager">Forward</button>
+                      <button class="button btn-secondary" (click)="discount_reject_module(row)">Reject</button>
+                    </span>
+
+                    <span *ngIf="row.dr_to_user_id !=commonService.getCurrentUser().id || row.dr_status!='pending'">
+                      <span *ngIf="row.dr_status==='approve'" style="color:green;font-weight:bold">Approved</span>
+                      <span *ngIf="row.dr_status==='reject'" style="color:purple;font-weight:bold">Rejected</span>
+                      <span   *ngIf="row.dr_status==='pending'" style="color:black">Pending</span>
+                      <!-- title="{{row?.dr_to_user?.id >0 ? 'Discount approval pending from ' + row?.dr_to_user?.name : 'Discount approval pending from user not set'}} " -->
+                      <small class="approvaltest"  *ngIf="row.dr_status==='pending'"><br>{{row?.dr_to_user?.id >0 ? ' Approval from ' + row?.dr_to_user?.name : ' Approval from user not set'}} </small>
+                   <!-- title="Discount approval pending from {{row?.dr_to_user?.name}} " -->
+                    </span>
+
+
+                    <br><small *ngIf="row.dr_status==='reject' && row?.dr_rejectremark " style="color:purple;"> Reject comment : {{row.dr_rejectremark}} <br></small>
+                    <small>{{row.dr_comment}}</small>      
+
+                  </div>
+                </ng-container>
+                <!-- noc -->
+                <ng-container *ngIf="showdr=='noc'">
+
+                  <div class="col-md-12 text-center" *ngIf="row.dr_discount > 99">
+                    <div *ngIf="row.dr_discount > 99" class=""> Request of NOC</div>
+
+                    <span *ngIf="row.dr_status=='pending' && row.dr_to_user_id==commonService.getCurrentUser().id">
+                      <button
+                        *ngIf="(getInt(row.dr_discount)>99)||(getInt(row.dr_discount) <= getInt(commonService.getCurrentUser().role.discount)  )"
+                        class="button btn-primary  btn-xl">Review </button>
+                      <!-- dr_request_preapprove
+                        current condtion
+                         *ngIf="(getInt(row.dr_discount)>99 && commonService.getCurrentUser().nocapprover==1)||(getInt(row.dr_discount) <= getInt(commonService.getCurrentUser().role.discount)  )"
+                       -->
+                      <!-- <button
+                        *ngIf=" getInt(row.dr_discount)< 99   && getInt(row.dr_discount) > getInt(commonService.getCurrentUser().role.discount)"
+                        class="button btn-primary  btn-xl" (click)="dr_request(row,'forward')"
+                        title="Your Discount Limit is less than Request , Please Forward to Upper Approver Manager">Forward</button> -->
+                      <!-- <button class="button btn-secondary" (click)="dr_request(row,'reject')">Reject</button> -->
+                    </span>
+
+                    <span *ngIf="row.dr_to_user_id !=commonService.getCurrentUser().id || row.dr_status!='pending'">
+                      <span *ngIf="row.dr_status==='approve'" style="color:green;font-weight:bold">Approved</span>
+                      <span *ngIf="row.dr_status==='reject'" style="color:purple;font-weight:bold">Rejected</span>
+                      <span   *ngIf="row.dr_status==='pending'" style="color:black">Pending</span>
+                      <!-- title="{{row?.dr_to_user?.id >0 ? 'NOC approval pending from ' + row?.dr_to_user?.name : 'NOC approval pending from user not set'}} " -->
+                      <small class="approvaltest" *ngIf="row.dr_status==='pending'"> <br>{{row?.dr_to_user?.id >0 ? ' Approval from ' + row?.dr_to_user?.name : ' Approval from user not set'}} </small>
+                    <!-- title="NOC FOC approval pending from {{row?.dr_to_user?.name}} " -->
+                    </span>
+
+                    <br><small *ngIf="row.dr_status==='reject' && row?.dr_rejectremark " style="color:purple;"> Reject comment : {{row.dr_rejectremark}} <br></small>
+                    <small>{{row.dr_comment}}</small>                  
+                    
+
+                  </div>
+                </ng-container>
+                <!-- close -->
+
+
+                <ng-container *ngIf="showdr=='atir'">
+
+                  <div class="col-md-12 text-center" *ngIf="row.atir_status">
+                    <!-- <div class=""> Request of {{row.dr_discount}}% <br> <b> ₹ {{row.cartamount * row.dr_discount/100 | number : '1.0-0'}} </b> </div>
+                -->
+                    <div><small>Schedule : {{row.atir_scheduledate |  date }}</small> </div>
+                    <span *ngIf="row.atir_status=='pending' && row.atir_to_user_id==commonService.getCurrentUser().id">
+                      <button *ngIf="getInt(row.totalamount) <= getInt(commonService.getCurrentUser().role.maxati)"
+                        class="button btn-primary  btn-xl" (click)="atir_request_preapprove(row)">Review </button>
+                      <button *ngIf="getInt(row.totalamount) > getInt(commonService.getCurrentUser().role.maxati)"
+                        class="button btn-primary  btn-xl" (click)="atir_request(row,'forward')"
+                        title="Your Approval Limit is less than Request , Please Forward to Upper Approver Manager">Forward</button>
+                      <button class="button btn-secondary" (click)="atir_reject_module(row)">Reject</button>
+                    </span>
+                    <!-- atir_request -->
+
+                    <span *ngIf="row.atir_to_user_id !=commonService.getCurrentUser().id || row.atir_status!='pending'">
+                      <span *ngIf="row.atir_status==='approve'" style="color:green;font-weight:bold">Approved <a
+                          target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.id}}&invoice=1&uuid={{row.uuid}}"
+                          style="color: #6B05F9">
+                          <i class="ti-download"></i>
+                        </a></span>
+                      <span *ngIf="row.atir_status==='reject'" style="color:purple;font-weight:bold">Rejected</span>
+                      <span   *ngIf="row.atir_status==='pending'" style="color:black">Pending</span>
+                      <!-- title="{{row?.atir_to_user?.id >0 ? 'ATI approval pending from ' + row?.atir_to_user?.name : 'ATI approval pending from user not set'}} " -->
+                      <small class="approvaltest" *ngIf="row.atir_status==='pending'"><br> {{row?.atir_to_user?.id >0 ? ' Approval from ' + row?.atir_to_user?.name : ' Approval from user not set'}} </small>
+                    </span>
+
+                    <br><small *ngIf="row.atir_status==='reject' && row?.atir_rejectremark " style="color:purple;"> Reject comment : {{row.atir_rejectremark}} <br></small>
+                    <small> {{row.atir_comment}}</small>
+
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="showdr=='pir'">
+
+                  <div class="col-md-12 text-center" *ngIf="row.pir_status">
+                    <!-- <div class=""> Request of {{row.dr_discount}}% <br> <b> ₹ {{row.cartamount * row.dr_discount/100 | number : '1.0-0'}} </b> </div>
+                -->
+                    <span *ngIf="row.pir_status=='pending' && row.pir_to_user_id==commonService.getCurrentUser().id">
+                      <!-- <button class="button btn-primary  btn-xl" (click)="pir_request_viewpi(row)">Review </button> -->
+                      <button *ngIf="commonService.getCurrentUser().id==584" class="button btn-primary  btn-xl" (click)="pir_request_viewpi(row)">Review </button>
+                      <button *ngIf="row.pir_to_user_id==commonService.getCurrentUser().id && commonService.getCurrentUser().id!=584"
+                        class="button btn-primary  btn-xl" (click)="pir_request(row,'forward')"
+                        title="Your Approval Limit is less than Request , Please Forward to Upper Approver Manager">Forward</button>
+                     <button class="button btn-secondary" (click)="pir_request(row,'reject')">Reject</button>
+
+
+                      <!-- <button class="button btn-secondary" (click)="pir_request(row,'reject')">Reject</button>  -->
+                    </span>
+
+                    <span *ngIf="row.pir_to_user_id !=commonService.getCurrentUser().id || row.pir_status!='pending'">
+                      <span *ngIf="row.pir_status==='approve'" style="color:green;font-weight:bold">Approved
+                        <!-- <a
+                          target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.id}}&invoice=1"
+                          style="color: #6B05F9">
+                          <i class="ti-download"></i>
+                        </a> -->
+                      </span>
+                      <span *ngIf="row.pir_status==='reject'" style="color:purple;font-weight:bold">Rejected</span>
+                      <span *ngIf="row.pir_status==='pending'" style="color:black">Pending</span>
+                      <small class="approvaltest" *ngIf="row.pir_status==='pending'"><br> {{row?.pir_to_user?.id >0 ? ' Approval from ' + row?.pir_to_user?.name : ' Approval from user not set'}} </small>
+                    </span>
+
+
+                    <br><small> {{row.pir_comment}}</small>
+
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="showdr=='cpn'">
+                  <div class="col-md-12 text-center">
+                    <div class=""> Request of PAN No change
+                    </div>
+
+                    <span *ngIf="row.cpn_status=='pending' && row.cpn_to_user_id == commonService.getCurrentUser().id " >
+                      <button *ngIf="row.cpn_status=='pending' && row.cpn_to_user_id== 371 && row.cpn_to_user_id == commonService.getCurrentUser().id" class="button btn-primary  btn-xl" (click)="cpn_request_preapprove(row)">Review </button>
+                      <button class="button btn-secondary" (click)="cpn_request(row,'reject')">Reject</button>
+
+
+                    </span>
+
+                    <span *ngIf="row.cpn_to_user_id !=commonService.getCurrentUser().id || row.cpn_status!='pending'">
+                      <span *ngIf="row.cpn_status==='approve'" style="color:green;font-weight:bold">Approved</span>
+                      <span *ngIf="row.cpn_status==='reject'" style="color:purple;font-weight:bold">Rejected</span>
+                      <span *ngIf="row.cpn_status==='pending'" style="color:black">Pending</span>
+
+                      <!-- title="{{row?.cpn_to_user?.id >0 ? 'Customer No PAN approval pending ' + row?.cpn_to_user?.name : 'Customer No PAN approval pending from user not set'}} "  -->
+                     <small class="approvaltest" *ngIf="row.cpn_status==='pending'">  <br>{{row?.cpn_to_user?.id >0 ? 'Approval from ' + row?.cpn_to_user?.name : 'Approval from user not set'}}</small>
+                    </span>
+
+                    <!-- {{ row.cpn_status}} {{commonService.getCurrentUser().id}} {{row.cpn_to_user_id}} -->
+                    <br><small>{{row.cpn_comment}}</small>
+
+                  </div>
+                </ng-container>
+
+
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Selection" [flexGrow]="0.5" *ngIf="showdr=='dr'" [minWidth]="200">
+            <!-- && commonService.getCurrentUser().role.id > 70 && commonService.getCurrentUser().role.id < 75 -->
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+              <div class="row text-center">
+                <ng-container>
+                  <div class="col-md-12 text-center"
+                    *ngIf="row.dr_status=='pending' && row.dr_to_user_id==commonService.getCurrentUser().id">
+                    <div class="checkbox-fade fade-in-primary d-">
+                      <label><input type=checkbox  [checked]="check_includes(row)">
+                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                      </label>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </app-card>
+    </div>
+  </div>
+</div>
+
+
+<app-modal-basic #modaldrrequest [dialogClass]="'modal-lg'">
+  <div class="app-modal-header">
+    <h4 class="modal-title">Discount Requests ({{getNoOfDR()}})</h4>
+    <button type="button" class="close basic-close" (click)="modaldrrequest.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <div class="centered-contentt" style="max-height:500px;overflow:scroll">
+      <table style="max-width:100%;width:100%" border=1 cellpadding=5 cellspacing=5>
+        <tr>
+          <th>Quotation ID</th>
+          <th>Executive</th>
+          <th>Amount</th>
+          <th>Request</th>
+          <th>Action</th>
+        </tr>
+        <!-- <ng-container *ngFor="let q of tabrows;">
+          <tr
+            *ngIf="getInt(q.dr_from_user_id)>0 && q.dr_status=='pending' && q.dr_to_user_id==commonService.getCurrentUser().id  ">
+            <td> <a (click)="edit(q)"> {{q.id}} : <small>{{q.customer.name}}</small></a>
+              <a target=_blank href="{{commonService.apiUrl}}/pg/?id={{q.id}}&uuid={{q.uuid}}" style="color: #6B05F9">
+                <i class="ti-cloud-down"></i>
+              </a></td>
+            <td>{{q.user.name}}</td>
+            <td>{{q.totalamount}} Rs.</td>
+            <td>
+              {{q.dr_discount}}% <span placement="bottom" ngbTooltip="{{q.dr_comment}}"> ?</span>
+
+
+
+            </td>
+            <td>
+
+              <button *ngIf="getInt(q.dr_discount) <= getInt(commonService.getCurrentUser().discount)"
+                class="button btn-primary  btn-xl" (click)="dr_request(q,'approve')">Approve</button>
+
+              <button *ngIf="getInt(q.dr_discount) > getInt(commonService.getCurrentUser().discount)"
+                class="button btn-primary  btn-xl" (click)="dr_request(q,'forward')"
+                title="Your Discount Limit is less than Request , Please Forward to Upper Reporting Manager">Forward</button>
+
+
+              <button class="button btn-danger" (click)="dr_request(q,'reject')">Reject</button> </td>
+
+          </tr>
+        </ng-container> -->
+      </table>
+      <br>&nbsp;
+    </div>
+  </div>
+</app-modal-basic>
+
+<!-- view Request PI  -->
+<app-modal-animation #modalviewpirequest [modalID]="'modalviewpirequest'" [modalClass]="'modalviewpirequest'">
+  <div class="app-modal-header">
+    <h4 class="modal-title"> Request For Proforma Invoice </h4>
+    <button type="button" class="close basic-close" (click)="commonService.hideModal('modalviewpirequest')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <div class="col-12 col-md-12">
+      <iframe *ngIf="pirUrl" [src]="pirUrl" class="iframe" scrolling="yes"
+        style=" width:100%; height:400px!important;"></iframe>
+    </div>
+    <div>
+      <label><input type=checkbox [checked]="show" (change)="showdiv()" style="width: 20px;height: 20px;">
+        <span style="color:purple;font-weight:bold"> I confirm that I have checked content of Proforma Invoice. </span>
+      </label>
+      <!-- (change)="show = !show" -->
+    </div>
+    <div *ngIf="show && rowid.extended_pi ==0" id="divshow" class="col-12 col-md-12">
+      <button *ngIf="getInt(rowid.dr_discount) > 99 && (commonService.getCurrentUser().role.id == 73 && commonService.getCurrentUser().nocapprover==1 ) || (commonService.getCurrentUser().id == 576 && rowid.tariffapr_flag==1)" class="btn btn-primary float-right btn-sm" style="color:white" (click)="pir_request_preapprove(rowid)">
+        Accept Request </button>
+        <button *ngIf="commonService.getCurrentUser().id == 584 && rowid.pir_status=='pending'" class="btn btn-primary float-right btn-sm" style="color:white" (click)="pir_request_preapprove(rowid)">
+        Accept Request </button>
+        <!-- ((getInt(rowid.dr_discount) <= getInt(commonService.getCurrentUser().role.discount)) &&  -->
+        <button *ngIf="getInt(rowid.dr_discount) > 99 && ((getInt(rowid.dr_discount) > getInt(commonService.getCurrentUser().role.discount)) && (commonService.getCurrentUser().role.id != 73 ) && rowid.tariffapr_flag==0 ) || (getInt(rowid.dr_discount) > 99 && ((getInt(rowid.dr_discount) > getInt(commonService.getCurrentUser().role.discount)) && (commonService.getCurrentUser().role.id != 73 ) && rowid.tariffapr_flag==1 && commonService.getCurrentUser().id != 576)) " class="btn btn-primary float-right btn-sm" style="color:white" (click)="dr_request(rowid,'forward')">
+          Forword Request </button>
+      <button *ngIf="rowid.pir_status=='approve'" class="btn btn-secondary float-left btn-sm " style="color:white"
+      (click)="discount_reject_module(rowid)" > 
+    <!-- (click)="pir_noc_request_reject(rowid,'reject')"> -->
+        <!-- pir_request -->
+        Reject Request </button>
+    
+        <button *ngIf="rowid.pir_status=='pending'"  class="btn btn-secondary float-left btn-sm " style="color:white"
+        (click)="pir_request(rowid,'reject')" > 
+     
+          Reject Request </button>
+    
+    </div>
+
+
+
+    <!-- Extended Noc Covid Impact -->
+    <div *ngIf="show && rowid.extended_pi ==1 && (commonService.getCurrentUser().id == 371)" id="divshow" class="col-12 col-md-12">
+      <button class="btn btn-primary float-right btn-sm" style="color:white" (click)="pir_request_preapprove(rowid)">
+        Accept Request </button>
+
+      <button class="btn btn-secondary float-left btn-sm " style="color:white"
+        (click)="pir_noc_request_reject(rowid,'reject')">
+        Reject Request </button>
+    </div>
+    <br>
+  </div>
+</app-modal-animation>
+
+<!-- multiple discount request  -->
+<!-- view Request PI  -->
+<app-modal-animation #modalviewmultidrrequest [modalID]="'modalviewmultidrrequest'"
+  [modalClass]="'modalviewmultidrrequest'">
+  <div class="app-modal-header">
+    <h4 class="modal-title"> Request For All Discount </h4>
+    <button type="button" class="close basic-close"
+      (click)="commonService.hideModal('modalviewmultidrrequest');closedrmodel();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+
+    <div class="col-12 col-md-12" style="width:100%;max-height:500px!important;overflow:scroll">
+      <ng-container>
+        <table style="margin:0px auto; border:1px solid gray; width:100%" border=1 cellpadding=2 cellspacing=2>
+          <tr>
+            <th>Lead Id</th>
+            <th>Customer Name</th>
+            <th>Discount %</th>
+          </tr>
+          <tr *ngFor="let row of selecteddrreqArr;let i = index">
+            <td><span>{{row?.lead_id}}</span></td>
+            <td><span>{{row.customer.name}}</span></td>
+            <td><span>{{row.dr_discount}}%</span></td>
+          </tr>
+        </table>
+      </ng-container>
+    </div>
+    <br>
+    <div>
+      <label><input type=checkbox [checked]="showmultidr" (change)="showmultidrdiv()" style="width: 20px;height: 20px;">
+        <span style="color:purple;font-weight:bold"> I confirm that I have checked content of all Discount Request.
+        </span>
+      </label>
+      <!-- (change)="show = !show" -->
+    </div>
+    <div *ngIf="showmultidr" id="divshowmultidr" class="row col-12 col-md-12">
+      <button class="btn btn-secondary float-left btn-sm " style="color:white" (click)="rejectdrreq()">
+        Reject Request </button>
+      <button class="btn btn-dark float-center btn-sm" style="color:white" (click)="forwarddrreq()">
+        Forward Request </button>
+      <button class="btn btn-primary float-right btn-sm" style="color:white" (click)="Approveddrreq()">
+        Accept Request </button>
+    </div>
+    <br>
+  </div>
+</app-modal-animation>
+
+<app-modal-animation #modalatirejectrequest [modalID]="'modalatirejectrequest'" [modalClass]="'modalatirejectrequest'">
+  <div class="app-modal-header">
+    <h4 class="modal-title"> Rejection For Advance Tax Invoice </h4>
+    <button type="button" class="close basic-close" (click)="commonService.hideModal('modalatirejectrequest')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <span>Reason for ATI reject: <span style="color: red;">*</span></span>
+    <textarea class="form-control" [(ngModel)]="reject_remark"
+    placeholder="Reason for reject ATI"></textarea>
+    <br>
+    <button class="btn btn-dark float-left" style="color:white" (click)="reject_remark = ''; commonService.hideModal('modalatirejectrequest')"> Cancel</button>
+    <button class="btn btn-primary float-right " style="color:white" [disabled] = "!reject_remark" (click)="atir_request(atirmodel,'reject')"> Reject Request </button>
+    <br>
+  </div>
+</app-modal-animation>
+
+<app-modal-animation #modaldiscountrejectrequest [modalID]="'modaldiscountrejectrequest'" [modalClass]="'modaldiscountrejectrequest'">
+  <div class="app-modal-header">
+    <h4 class="modal-title"> Rejection For {{showdr=='dr'?"Discount":"NOC"}} </h4>
+    <button type="button" class="close basic-close" (click)="commonService.hideModal('modaldiscountrejectrequest')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <span>Reason for Discount reject: <span style="color: red;">*</span></span>
+    <textarea class="form-control" [(ngModel)]="reject_remark"
+    placeholder="Reason for reject"></textarea>
+    <br>
+    <button class="btn btn-dark float-left" style="color:white" (click)="reject_remark = ''; commonService.hideModal('modaldiscountrejectrequest')"> Cancel</button>
+    <button *ngIf="showdr=='dr'" class="btn btn-primary float-right " style="color:white" [disabled] = "!reject_remark" (click)="dr_request(discountmodel,'reject')"> Reject Request </button>
+    <button *ngIf="showdr=='noc'" class="btn btn-primary float-right " style="color:white" [disabled] = "!reject_remark"> Reject Request </button>
+    <br>
+  </div>
+</app-modal-animation>
+
+<app-modal-animation #modalpirrejectrequest [modalID]="'modalpirrejectrequest'" [modalClass]="'modalpirrejectrequest'">
+  <div class="app-modal-header">
+    <h4 class="modal-title"> Rejection For PI Request </h4>
+    <button type="button" class="close basic-close" (click)="commonService.hideModal('modalpirrejectrequest')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <span>Reason for PI Request: <span style="color: red;">*</span></span>
+    <textarea class="form-control" [(ngModel)]="reject_remark"
+    placeholder="Reason for reject PI"></textarea>
+    <br>
+    <button class="btn btn-dark float-left" style="color:white" (click)="reject_remark = ''; commonService.hideModal('modalatirejectrequest')"> Cancel</button>
+    <button class="btn btn-primary float-right " style="color:white" [disabled] = "!reject_remark" > Reject Request </button>
+    <br>
+  </div>
+</app-modal-animation>

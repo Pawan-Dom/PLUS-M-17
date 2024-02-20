@@ -18,6 +18,7 @@ const routes: Routes = [
   {path: 'einvoicect', loadChildren: () => import('./Components/einvoicect/einvoicect.module').then(m => m.EinvoicectModule) },
   {path: 'report', loadChildren: () => import('./Components/report/report.module').then(m => m.ReportModule) },
   {path: 'leadstatus', loadChildren: () => import('./Components/leadstatus/leadstatus.module').then(m => m.LeadstatusModule) },
+  {path: 'quotation', loadChildren: () => import('./Components/quotation/quotation.module').then(m => m.ApplicationModule) },
 
 
 ];
