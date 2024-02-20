@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApplicationListComponent } from './application-list.component';
-import {ApplicationListRoutingModule} from './application-list-routing.module';
+import { LicenseListComponent } from './license-list.component';
+import {LicenseListRoutingModule} from './license-list-routing.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'; 
@@ -14,14 +14,14 @@ import { TransactionService } from '../../../Services/transaction.service';
 @NgModule({
   imports: [
     CommonModule,
-    ApplicationListRoutingModule,
+    LicenseListRoutingModule,
     SharedModule,
     NgxDatatableModule,
     NgSelectModule,
     FormsModule,ReactiveFormsModule
   ],
-  declarations: [ApplicationListComponent],
+  declarations: [LicenseListComponent],
   providers: [NotificationsService,CommonService ,QuotationService,TransactionService] 
 
 })
-export class ApplicationListModule { }
+export class LicenseListModule { }

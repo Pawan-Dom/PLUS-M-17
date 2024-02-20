@@ -1,0 +1,74 @@
+<div class="page-body">
+  <div class="row">
+  <div class="col-sm-12">
+ 
+    <app-card >
+     <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+      <div class="row">
+        <div class="col-sm-12">
+          <label class="dt-cust-search f-right">
+            <div class="form-group">
+              <label>Search: </label>
+              <input
+              type='text'
+              class="form-control input-sm m-l-10"
+              placeholder='Search Name'
+              (keyup)='updateFilter($event)'
+          />
+          
+            </div>
+          </label>
+          <button class="btn btn-info">Add</button>
+        </div>
+      </div>   <div class="preloader3 loader-block" *ngIf="tabrows.length==0">
+        <div class="circ1"></div>
+        <div class="circ2"></div>
+        <div class="circ3"></div>
+        <div class="circ4"></div>
+      </div>
+
+      <ngx-datatable *ngIf="tabrows.length > 0"
+        #table
+        class='data-table'
+        
+        [columnMode]="'flex'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [limit]="10"
+        [rows]='tabrows'>
+        <ngx-datatable-column name="Id" [flexGrow]="0.5" >
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Name" [flexGrow]="1.5" >
+          <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+            <a  (click)="view(row)"> <b>{{row.name}}</b></a>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Contact" [flexGrow]="1.5">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.cat_idcode}}
+          </ng-template>
+        </ngx-datatable-column>
+        <!-- <ngx-datatable-column name="Location" [flexGrow]="0.5">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{row.location}}
+          </ng-template>
+        </ngx-datatable-column> -->
+        <ngx-datatable-column name="Action" [flexGrow]="0.5">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+              <a (click)="edit(row)" style="color: #6B05F9">
+                  <i class="ti-pencil"></i>
+                </a> |  <a (click)="delete(row)" style="color: red">
+                  <i class="ti-trash"></i>
+                </a>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    
+
+    </app-card>
+  </div>
+</div>
+</div>

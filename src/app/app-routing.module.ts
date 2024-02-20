@@ -19,6 +19,7 @@ const routes: Routes = [
   {path: 'report', loadChildren: () => import('./Components/report/report.module').then(m => m.ReportModule) },
   {path: 'leadstatus', loadChildren: () => import('./Components/leadstatus/leadstatus.module').then(m => m.LeadstatusModule) },
   {path: 'quotation', loadChildren: () => import('./Components/quotation/quotation.module').then(m => m.ApplicationModule) },
+  {path: 'license', loadChildren: () => import('./Components/license/license.module').then(m => m.LicenseModule) },
 
 
 ];

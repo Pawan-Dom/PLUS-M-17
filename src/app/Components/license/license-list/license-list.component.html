@@ -1,0 +1,229 @@
+<div class="page-body">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <app-card>
+        <div class="row">
+
+          <div class="col-md-9">
+            <!-- bindLabel="name" bindValue="id"-->
+            <span class="f-right" style="width:33%">
+              <ng-select [searchable]=false  name="searchqs"
+                [items]="['All','Active','Expired','Expiring Within 10 Days','Expiring Within 30 Days','Expiring Within 60 Days','Expiring Within 90 Days']"
+                placeholder="Filter By Status" [(ngModel)]="searchqs" (change)="search()" (clear)="searchqs='All';">
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:33%">
+              <ng-select [searchable]=false  name="searchqf" [items]="['All','BG','EVENT']"
+                placeholder="Filter By Type" [(ngModel)]="searchqf" (change)="search()" (clear)="searchqf='All';">
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:33%">
+              <ng-select name="searchquserf" bindValue="id" bindLabel="name" [items]="users"
+                placeholder="Filter By Users" [(ngModel)]="searchquserf" (change)="search()"
+                (clear)="searchquserf='All';search()">
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:33%">
+              <ng-select name="searchqsubregionf" [items]="region_ids"  bindValue="id" bindLabel="displayname"
+              placeholder="Select Region (New method)" [(ngModel)]="searchqsubregionf" (change)="search()" (clear)="search()">
+            </ng-select>
+            </span>
+            <span class="f-right" style="width:33%">
+              <ng-select name="searchqregionf" [items]="['All','NORTH','EAST','WEST','SOUTH', 'NORTHWEST']"
+                placeholder="Filter By Region" [(ngModel)]="searchqregionf" (change)="searchquserf='All';search()"
+                (clear)="search()">
+              </ng-select>
+            </span>
+            <!-- try -->
+            <span class="f-right" style="width:33%">
+              <ng-select name="searchqeventtypef" bindValue="name" bindLabel="name" [items]="eventtypes" [loading]="eventtypeLoading"
+              [typeahead]="custTypeaheadEventtypes"  placeholder="Filter By Event Type" [(ngModel)]="searchqeventtypef"
+                (change)="search()" (clear)="searchqeventtypef='All';search()">
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:50%">
+              <ng-select name="searchqeventvenuef" bindValue="name" bindLabel="name" [items]="venues" [loading]="venueLoading"
+              [typeahead]="custTypeaheadVenue" placeholder="Filter By Event Venue" [(ngModel)]="searchqeventvenuef"
+                (change)="search()" (clear)="searchqeventvenuef='All';search()">
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:49%;">
+              <ng-select bindLabel="displayname" bindValue="id" [items]="customers" [loading]="custLoading" [typeahead]="custTypeahead"
+                placeholder="Select Existing Customer"
+                [(ngModel)]="searchqcustomerf "
+                (change)="search()"
+                (clear)="searchqcustomerf='All';search()">
+                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                  <div style="margin: 2px 0;" class="card">
+                    <div class="card-body" style="padding: 5px">
+                      <h5 class="card-title" style="font-size: 14px;
+                        font-weight: 400;" >#{{item?.id}} : {{item?.name}} - {{item.city}}
+                      </h5>
+                      <h6 class="card-subtitle   text-muted" style="margin-top: 0px;">
+                        <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
+                        <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
+                      </h6>
+                    </div>
+                  </div>
+                </ng-template>
+
+              </ng-select>
+            </span>
+            <span class="f-right" style="width:50%;">
+              <input placeholder="End Date"
+                class="form-control" type=date [(ngModel)]="searchqend_date" (change)="search()" (clear)="search()" >
+            </span>
+            <span class="f-right" style="width:49%; ">
+              <input  type=date placeholder="Start Date"
+              [(ngModel)]="searchqstart_date" class="form-control" (change)="search()" (clear)="search()">
+            </span>
+
+
+
+            <!-- close -->
+          </div>
+
+
+          <div class="col-md-3">
+
+            <div class="input-group f-right">
+              <input type="search" autocomplete="off" [readonly]=!roflag (focus)="roflag=true;" (change)="search()"
+                [(ngModel)]="searchq" class="form-control " placeholder="Search">
+              <span class="input-group-append "><i class="ti-search input-group-text"></i></span>
+            </div>
+            <div class="input-group f-right">
+              <!-- <input type="text" autocomplete="off"  (change)="search()"
+                [(ngModel)]="searchqeventnamef" class="form-control f-right" placeholder="Search Event name"> -->
+
+              <!-- <span class="input-group-append "><i class="ti-search input-group-text"></i></span> -->
+              <span class="f-right" style="width:100%;">
+              <ng-select bindLabel="event_name" bindValue="event_name" [items]="eventnames" [loading]="eventnameLoading" [typeahead]="custTypeaheadEventname"
+                placeholder="Select Event name"
+                [(ngModel)]="searchqeventnamef "
+                (change)="search()"
+                (clear)="searchqeventnamef='All';search()">
+                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                  <div style="margin: 2px 0;" class="card">
+                    <div class="card-body" style="padding: 2px">
+                      <h5 style="font-size: 14px;
+                        font-weight: 400;" > {{item.event_name}}
+                      </h5>
+                    </div>
+                  </div>
+                </ng-template>
+
+              </ng-select>
+              </span>
+            </div>
+            <div class="input-group f-right">
+              <button class="btn btn-primary btn-sm" (click)="downloadlicsearchdata()" >Download  <img *ngIf="loading" width=20px src="/assets/loaderwhite.png" /></button>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="preloader3 loader-block" *ngIf="loadingIndicator==true">
+          <div class="circ1"></div>
+          <div class="circ2"></div>
+          <div class="circ3"></div>
+          <div class="circ4"></div>
+        </div>
+
+        <br>
+        <ngx-datatable *ngIf="!loadingIndicator" #table class="data-table" [columnMode]="'flex'" [headerHeight]="50" [scrollbarH]="true"
+          [footerHeight]="55" [rowHeight]="'auto'" [externalPaging]="true" [count]="page.count" [offset]="page.offset"
+          [limit]="page.limit" [rows]='tabrows' (page)="pageCallback($event)">
+          <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="189">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <small><span>{{row.id}} </span></small>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Customer / Assigned to" [flexGrow]="2" [minWidth]="757">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <small> #PI {{row.quotation_id}} |
+                <span *ngIf="row.expiring_days>0" style="font-weight:bold"> Expires in {{row.expiring_days}} days</span>
+                <span *ngIf="row.expiring_days<0" style="font-weight:bold;color:red"> Expired {{row.expiring_days * 1}}
+                  days Ago</span>
+
+              </small><br>
+              {{row.customer_name}}
+              <br>
+              <div style="font-weight:bold">
+                <span *ngIf="!row?.start_date.toString().includes('0000')">
+                  From : {{ row?.start_date | date: 'd/M/y H:m' }} <br>
+                  To : {{ row?.end_date | date: 'd/M/y H:m' }}
+                </span>
+                <span *ngIf="row.cat_type=='event'">
+                  <hr>
+                  {{row.event_name}} AT <br>
+                  {{row.event_venue}},{{row.event_location}}
+                </span>
+              </div>
+              <small> {{row?.uname}} - {{row.sales_region}}<br>
+                Issue Date : {{ row.paid_on | date: 'd/M/y H:m' }} </small>
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Action" [flexGrow]="1" [minWidth]="378">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+
+              <div class="text-center">{{row.cat_idcode}} <br><b> ₹ {{row.cattotalwithdiscount}} </b></div>
+              <div class="row text-center">
+
+
+                <div class="col-md-12 text-center">
+                  <a target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2&uuid={{row.quotation_uuid}}"
+                    style="color: #6B05F9">
+                    PI<i class="ti-download"></i>
+                  </a>
+
+                  &nbsp;<a target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=1&uuid={{row.quotation_uuid}}"
+                    style="color: #6B05F9">
+                    TI <i class="ti-download"></i>
+                  </a>
+                  <br>
+                  <a target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2&showlicense=1&uuid={{row.quotation_uuid}}"
+                    style="color: #6B05F9">
+                    Licenses <i class="ti-download"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Renewal PI UI start -->
+              <!-- <div class="row col-md-12 col-12">
+                <div class="col-md-6 float-left">
+                    <div class="text-center">{{row.cat_idcode}} <br><b> ₹ {{row.cattotalwithdiscount}} </b></div>
+                    <div class="row text-center">
+                      <div class="col-md-12 text-center">
+                        <a target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2"
+                          style="color: #6B05F9">
+                          PI<i class="ti-download"></i>
+                        </a>
+
+                        &nbsp;<a target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=1"
+                          style="color: #6B05F9">
+                          TI <i class="ti-download"></i>
+                        </a>
+                        <br>
+                        <a target=_blank href="{{commonService.apiUrl}}/pg/?id={{row.quotation_id}}&invoice=2&showlicense=1"
+                          style="color: #6B05F9">
+                          Licenses <i class="ti-download"></i>
+                        </a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center float-left">
+                    <span >
+                    <button *ngIf="row.renewal_pi_id!=0 && row.cat_type=='bg'" class="btn btn-primary btn-sm" [routerLink]="['/quotation/view/'+row.renewal_pi_id]">PI Renewal Done #{{row.renewal_pi_id}} </button></span>
+                    <button *ngIf="row?.expiring_days < 30 && row.renewal_pi_id==0 && row.cat_type=='bg'" class="btn btn-primary btn-sm"  (click)="createRenewalPi(row)"> + PI Renewal Pending </button>
+                </div>
+              </div> -->
+              <!-- renewal PI UI end -->
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </app-card>
+    </div>
+  </div>
+</div>
