@@ -13,10 +13,10 @@
   <h4 *ngIf="quotation.id"> <a href="javascript:void(0)" (click)="goBack()">
       <i class="cr-icon fa fa-arrow-left"></i>
     </a> Application #{{quotation.id}} : <span *ngIf="quotation.noc == 1">NOC </span> {{ quotation.status | uppercase}}
-    <a *ngIf="quotation.status=='pending'" (click)="
-   stopInterval();
-    getQuotation(quotation.id)" class="btn btn-primary btn-xl" style="color:white"> <i
-        class="cr-icon fa fa-refresh"></i> </a>
+    <a *ngIf="quotation.status=='pending'" (click)="stopInterval(); getQuotation(quotation.id, quotation.uuid)" class="btn btn-primary btn-xl" style="color:white">
+      <i class="cr-icon fa fa-refresh"></i>
+  </a>
+  
 
     <button *ngIf="quotation.invoice_no && quotation.noc == 0 && quotation.irn_no && quotation.irn_status != 'cancel' && authService.checkPermission(85)" style="margin-left:5px; float: right;" target=_blank class="btn btn-danger" (click)="prepareCancelnvoice()"> Cancel Invoice </button>
    
@@ -110,14 +110,16 @@
                   <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                     <div style="margin: 2px 0;" class="card">
                       <div class="card-body" style="padding: 5px">
-                        <h5 class="card-title" style="font-size: 14px;
-                          font-weight: 400;" [ngOptionHighlight]="search">#{{item?.id}} : {{item?.cname}}
-                        </h5>
-                        <h6 class="card-subtitle   text-muted" style="margin-top: 0px;">
-                          <span *ngIf="item?.user">Lead Owner : {{item?.user?.name}}</span>
-                        </h6>
+                          <h5 class="card-title" style="font-size: 14px; font-weight: 400;">
+                              #{{item?.id}} : {{item?.cname}}
+                          </h5>
+                  
+                          <h6 class="card-subtitle text-muted" style="margin-top: 0px;">
+                              <span *ngIf="item?.user">Lead Owner : {{item?.user?.name}}</span>
+                          </h6>
                       </div>
-                    </div>
+                  </div>
+                  
                   </ng-template>
     
                 </ng-select>
@@ -166,20 +168,22 @@
 
                   <div style="margin: 2px 0;" class="card">
                     <div class="card-body" style="padding: 5px">
-                      <h5 class="card-title" style="font-size: 14px;
-                        font-weight: 400;" [ngOptionHighlight]="search">#{{item?.id}} : {{item?.name}} - {{item.city}}
-                      </h5>
-                      <h6 class="card-subtitle   text-muted" style="margin-top: 0px;">
-                        <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
-                        <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
-                      </h6>
-                      <!--  <p class="card-text">
-                         {{item?.address_line_1}},{{item.address_line_2}},{{item?.address_line_3}},<br> 
-                          ,{{item?.state}} ,{{item.pincode}} 
-                         </p> -->
-
+                        <h5 class="card-title" style="font-size: 14px; font-weight: 400;">
+                            #{{item?.id}} : {{item?.name}} - {{item.city}}
+                        </h5>
+                
+                        <h6 class="card-subtitle text-muted" style="margin-top: 0px;">
+                            <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
+                            <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
+                        </h6>
+                        <!--  <p class="card-text">
+                             {{item?.address_line_1}},{{item.address_line_2}},{{item?.address_line_3}},<br> 
+                              ,{{item?.state}} ,{{item.pincode}} 
+                             </p> -->
+                
                     </div>
-                  </div>
+                </div>
+                
                 </ng-template>
 
               </ng-select>
@@ -739,17 +743,26 @@
           </div>
           <hr>
           <span *ngIf="licenseCategories">
-            Filter : <label style="display:none"> <input type=radio name="lcatfilter" [checked]="activefilter=='all'"
-                (change)="filterlc('all');activefilter='all'"> All</label> &nbsp;&nbsp; <label> <input
-                (change)="filterlc('bg');activefilter='bg'" type=radio name="lcatfilter"> Background</label> 
-            &nbsp;&nbsp; <label> <input (change)="filterlc('event');activefilter='event';ltype='New'" type=radio
-                name="lcatfilter"> Events</label>
-                &nbsp;&nbsp; <label> <input (change)="filterlc('penalty');activefilter='penalty';ltype='New'" type=radio
-                  name="lcatfilter"> Damages</label>
-
-                <div [hidden]="activefilter=='event' || rejectedArray.length<1" *ngIf="rejectedArray.length>0 && ( activefilter!='event' || activefilter!='all')" class="col-md-2 col-xl-2" style="float: right;" (click)="checkRejectedCart(); modalrejectcart.show();"><button type="button" class="btn btn-primary btn-sm">Rejected Cart</button></div>
-
-          </span>
+            Filter : 
+            <label style="display:none">
+                <input type="radio" name="lcatfilter" [checked]="activefilter === 'all'" (change)="filterlc('all'); activefilter='all'"> All
+            </label> &nbsp;&nbsp; 
+            <label>
+                <input type="radio" name="lcatfilter" (change)="filterlc('bg'); activefilter='bg'"> Background
+            </label> &nbsp;&nbsp; 
+            <label>
+                <input type="radio" name="lcatfilter" (change)="filterlc('event'); activefilter='event'; ltype='New'"> Events
+            </label> &nbsp;&nbsp; 
+            <label>
+                <input type="radio" name="lcatfilter" (change)="filterlc('penalty'); activefilter='penalty'; ltype='New'"> Damages
+            </label>
+        
+            <div [hidden]="activefilter === 'event' || rejectedArray.length < 1" *ngIf="rejectedArray.length > 0 && (activefilter !== 'event' && activefilter !== 'all')" class="col-md-2 col-xl-2" style="float: right;" (click)="checkRejectedCart(); modalrejectcart.show();">
+              <button type="button" class="btn btn-primary btn-sm">Rejected Cart</button>
+          </div>
+          
+        </span>
+        
 
           <!-- try -->
           <!-- <span *ngIf="licenseCategories && (this.qvalues._166 == 'Multiple Outlets' || qvalues._166 == 'Stand-alone store')">
@@ -789,8 +802,7 @@
             <div class="col-1">*</div>
 
             <div class="col-md-6">
-
-              <span *ngIf="activefilter!='all'">
+              <span *ngIf="activefilter !== 'event' && activefilter !== 'bg' && activefilter !== 'penalty'">
                 <b [hidden]="activefilter=='event' || activefilter=='penalty'"><label><input type=radio name="ltype" [checked]="ltype=='New'"
                       [(ngModel)]="ltype" value="New"> New</label> &nbsp;&nbsp;
                   <label><input type=radio name="ltype" [checked]="ltype=='Renewal'" [(ngModel)]="ltype"
@@ -834,13 +846,14 @@
                         style="padding:3px">
 
                         <span *ngIf="selectedSlc.custom_fields[i].setcartvalue.addfield_desc.length > 1">
-                          {{cf.addfield_f_name}} : <input type=number min=0
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                            (change)="validate_add_max($event,selectedSlc.custom_fields[i].setcartvalue.addfield_max_value,i)"
-                            max="selectedSlc.custom_fields[i].setcartvalue.addfield_max_value"
-                            [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue">
-                          {{selectedSlc.custom_fields[i].setcartvalue.addfield_desc}} </span>
-
+                          {{ cf.addfield_f_name }}:
+                          <input type="number" min="0" 
+                                 (input)="validate_add_max($event, selectedSlc.custom_fields[i].setcartvalue.addfield_max_value, i)"
+                                 [max]="selectedSlc.custom_fields[i].setcartvalue.addfield_max_value"
+                                 [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue">
+                          {{ selectedSlc.custom_fields[i].setcartvalue.addfield_desc }}
+                        </span>
+                        
 
                       </div>
                     </div>
@@ -1223,12 +1236,11 @@
 
               </span>
 
-              <div *ngIf="activefilter!='penalty'">
-                <hr>
+              <div *ngIf="activefilter !== 'penalty'">                <hr>
                 <label for="upload2">
                   <span class="btn btn-info btn-sm f-right">Bulk Upload</span>
                   <input type="file" id="upload2" style="display:none" accept=".csv"
-                    (change)="onBUFileChange($event,'add')"> 
+                    (change)="onBUFileChange($event)"> 
                 </label> <br>
                 <a href="{{commonService.apiUrl}}/others/sampleBulkUpload_new.csv" target="_blank">Download Sample CSV</a>
               </div>
@@ -1258,19 +1270,19 @@
                 <span *ngIf="slc.cat_type=='bg'">
                   {{slc.ltype}}
                   <br></span>
-                <div *ngFor="let cf of getcustomfields(slc.custom_fields)">
-
-                  <span
-                    *ngIf="(cf.f_type=='single_field' || cf.f_type=='range_field' ) && cf.setcartvalue && (!cf.is_show || (cf.is_show && cf?.is_show==1))">{{cf.f_name}} :
-                    {{cf.setcartvalue}} {{cf.single_field_desc}}</span>
-                  <span *ngIf="cf.f_type!='single_field' && cf.f_type!='range_field' && cf.setcartvalue ">
-                    {{cf.name}} : {{getCfValue(cf)}}
-                    <span *ngIf="cf.setaddcartvalue && cf.setcartvalue.addfield_desc.length > 1"> <br>
-                      <i>{{cf.addfield_name}} : {{cf.setaddcartvalue}}</i>
+                  <div *ngFor="let cf of getcustomfields(slc.custom_fields)">
+                    <span *ngIf="(cf.f_type=='single_field' || cf.f_type=='range_field') && cf.setcartvalue && (!cf.is_show || (cf.is_show && cf?.is_show==1))">
+                      {{ cf.f_name }}: {{ cf.setcartvalue }} {{ cf.single_field_desc }}
                     </span>
-                  </span>
-
-                </div>
+                    <span *ngIf="cf.f_type!='single_field' && cf.f_type!='range_field' && cf.setcartvalue">
+                      {{ cf.name }}: {{ getCfValue(cf) }}
+                      <span *ngIf="cf.setaddcartvalue && cf.setcartvalue.addfield_desc && cf.setcartvalue.addfield_desc.length > 1">
+                        <br>
+                        <i>{{ cf.addfield_name }}: {{ cf.setaddcartvalue }}</i>
+                      </span>
+                    </span>
+                  </div>
+                  
                 <span *ngIf="slc.setcartpremium_enable"><b> {{ slc.premium_name }}</b></span>
 
                 <span [hidden]="allSelectedLc[i].show_no_of_usages==0">
@@ -1702,14 +1714,17 @@
 
                   </div>
 
-                  <span *ngIf="tanmms?.ldc_percent && this.selectedCustomer?.tan">
+                  <!-- <span *ngIf="tanmms?.ldc_percent && this.selectedCustomer?.tan">
                     <hr>
                     <span style="font-weight:bold"> This TAN carries LDC @ {{tanmms?.ldc_percent}}% <br>
                       in the name of <b>{{tanmms?.ldc_name}}</b>
                       <br>
                       which is valid from {{tanmms?.ldc_startdate | date: 'd/M/y'}} to
-                      {{tanmms?.ldc_enddate | date: 'd/M/y'}} </span>
-                    <hr></span>
+                      {{tanmms?.ldc_enddate | date: 'd/M/y'}} 
+                    </span>
+                    <hr>
+                  </span> -->
+                  
                 </div>
 
               </ng-container>

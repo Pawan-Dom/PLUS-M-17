@@ -10,7 +10,6 @@ import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { Location } from '@angular/common';
 import { WizardComponent } from 'ng2-archwizard/dist/components/';
 
-
 import { ViewChild, ElementRef, NgZone } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { isStepOffset } from 'ng2-archwizard/dist';
@@ -127,7 +126,6 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   public show: boolean;
   panstr :any;
   panApprvedFlag = 0;
-  rejectedArray =[];
   pcgst: any;
   psgst: any;
   pigst: any;
@@ -172,7 +170,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
        
       }
     })
-
+    this.allSelectedLc
 
     this.route.params.subscribe(
       params => {
@@ -221,7 +219,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   cityLoading = false;
 
   pickuplocationLoading = false;
-
+  rejectedArray: any[] = []; 
   loading = false;
   loading1 = false;
   custTypeahead = new Subject<string>();
@@ -277,114 +275,78 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   }
 
   getData() {
-
     //get eventtypes
     this.masterService.metasearch('', 'EVENTTYPE').subscribe(
-      (      res: any) => {
+      (res: any) => {
         this.eventtypes = res;
-
       }
     );
-
+  
     //get eventtag
-
     this.masterService.metasearch('', 'EVENTTAG').subscribe(
-      (      res: any) => {
+      (res: any) => {
         this.eventtag = res;
-
       }
     );
-
+  
     //get pickuplocations
     this.masterService.metasearch('', 'PICKUPLOCATION').subscribe(
-      (      res: any) => {
+      (res: any) => {
         this.pickuplocations = res;
-
       }
     );
-
-     //get pickuplocations
-     this.masterService.metasearch('', 'PITAG').subscribe(
-       (      res: any) => {
+  
+    //get pickuplocations
+    this.masterService.metasearch('', 'PITAG').subscribe(
+      (res: any) => {
         this.tagpi = res;
-
       }
     );
-
-    // this.loading=true;
-
-    if (sessionStorage.getItem('users')) {
-
-      this.users = JSON.parse(sessionStorage.getItem('users'));
-     //if(this.currentUser.role.level >2) {
-        this.users=this.users
-      .filter((lc: any) => lc.active == 1);
-    //}
-
-    }
-    else {
-      //this.loading=true; 
+  
+    if (sessionStorage.getItem('users') !== null) {
+      this.users = JSON.parse(sessionStorage.getItem('users') as string);
+      if (this.currentUser.role.level > 2) {
+        this.users = this.users.filter((lc: any) => lc.active == 1);
+      }
+    } else {
       this.userService.list().subscribe(
-        (        res: any) => {
-          //    this.loading=false;       
-          this.users = res; 
-        //  if(this.currentUser.role.level >2) {
-            this.users=this.users
-          .filter((lc: any) => lc.active == 1);
-       // }
-
+        (res: any) => {
+          this.users = res;
+          if (this.currentUser.role.level > 2) {
+            this.users = this.users.filter((lc: any) => lc.active == 1);
+          }
         }
       );
     }
-
+  
     this.quotationService.genGststatecodes().subscribe(
-      (      res: any[]) => {
-        //      this.loading=false;       
+      (res: any[]) => {
         this.gststatecodes = res;
-        this.states = res.filter(
-          book => book.hidden == 0);
-
+        this.states = res.filter(book => book.hidden == 0);
       }
     );
-
-    /*this.customerService.list().subscribe(
-      res => {       
-  this.customers=res; 
+  
+    if (sessionStorage.getItem('lcs') !== null) {
+      let lcc = JSON.parse(sessionStorage.getItem('lcs') as string);
+      if (this.currentUser.role.level > 2) {
+        lcc = lcc.filter((lc: any) => lc.active == 1);
       }
-    );*/
-
-    //get License Categories
-    console.log(this.currentUser);
-    if (sessionStorage.getItem('lcs')) {
-      let lcc= JSON.parse(sessionStorage.getItem('lcs'));
-      
-      if(this.currentUser.role.level >2) {
-        lcc=lcc
-    .filter((lc: any) => lc.active == 1);
-  }
-
-       this.licenseCategories = lcc;
-          this.templicenseCategories = lcc;
-      // this.loading=false;
-    }
-    else {
+      this.licenseCategories = lcc;
+      this.templicenseCategories = lcc;
+    } else {
       this.licenseCategoryService.list().subscribe(
-        (        res: any[]) => {
-          let lcc=res;
-             if(this.currentUser.role.level >2) {
-              lcc=res
-          .filter((lc: any) => lc.active == 1);
-        } 
-
-          // this.loading=false;
+        (res: any[]) => {
+          let lcc = res;
+          if (this.currentUser.role.level > 2) {
+            lcc = res.filter((lc: any) => lc.active == 1);
+          }
           this.licenseCategories = lcc;
           this.templicenseCategories = lcc;
-
         }
       );
     }
-
   }
+  
   
   getcustomerdata(id: any){
 
@@ -448,7 +410,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     // return re;
   }
 
-  getQuotation(id: string,uuid: string) {
+  getQuotation(id: string,uuid: string):void {
     this.changeatds = false;
     this.loading = true;
     this.saveEvidanceBtn =false;
@@ -555,24 +517,35 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
         
 
         // get all evidence data
-        if(res.evidence){
-          this.evidence_id =res.evidence.id;
-          console.log('all cart',this.allSelectedLc);
-          let edj = JSON.parse(res.evidence.evdebugjson);
-          this.eviSelectedLc = edj.eviSelectedLc;
-          console.log('evd all cart',this.eviSelectedLc);
-          this.allevidence = edj.allevidence;
-          for (let i = 0; i < this.allSelectedLc.length; i++) {
-              for (let j = 0; j < this.eviSelectedLc.length; j++) {
-                if((this.allSelectedLc[i] == this.allSelectedLc[j]) && this.eviSelectedLc[j].cartevidence){
-                  let cartevidence = this.eviSelectedLc[j].cartevidence
-                  // this.allSelectedLc[i].push(cartevidence); 
-                  this.allSelectedLc[i].cartevidence = cartevidence;
-                }
-              }
-          }
-          console.log('final evd all cart',this.allSelectedLc);
-        }
+      // Assuming this is within a class or a context where 'this' is defined
+
+// First, make sure this.allSelectedLc is not undefined or null and it is indeed an array
+// if (res.evidence && Array.isArray(this.allSelectedLc)) {
+//   this.evidence_id = res.evidence.id;
+//   console.log('all cart', this.allSelectedLc);
+//   let edj = JSON.parse(res.evidence.evdebugjson);
+//   this.eviSelectedLc = edj.eviSelectedLc;
+//   console.log('evd all cart', this.eviSelectedLc);
+//   this.allevidence = edj.allevidence;
+
+//   for (let i = 0; i < this.allSelectedLc.length; i++) {
+//       for (let j = 0; j < this.eviSelectedLc.length; j++) {
+//           if (typeof this.allSelectedLc[i] === 'object' && typeof this.eviSelectedLc[j] === 'object' &&
+//               JSON.stringify(this.allSelectedLc[i]) === JSON.stringify(this.eviSelectedLc[j]) && this.eviSelectedLc[j].cartevidence) {
+//               let cartevidence = this.eviSelectedLc[j].cartevidence;
+//               // Assigning cartevidence to cartevidence property of allSelectedLc[i]
+//               if (typeof this.allSelectedLc[i] === 'object') {
+//                   (this.allSelectedLc[i] as any).cartevidence = cartevidence; // Use 'any' to bypass type checking
+//               }
+//           }
+//       }
+//   }
+//   console.log('final evd all cart', this.allSelectedLc);
+// } else {
+//   console.log('Evidence is not available or allSelectedLc is not an array.');
+// }
+
+      
         // else{
         //   this.eviSelectedLc = this.allSelectedLc; 
         // }
@@ -771,39 +744,44 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
           if (place.formatted_phone_number) { this.selectedCustomer.phone = place.formatted_phone_number; }
 
           if (place.name) { this.selectedCustomer.name = place.name; }
-          for (let i = 0; i < place.address_components.length; i++) {
-            for (let j = 0; j < place.address_components[i].types.length; j++) {
-              if (place.address_components[i].types[j] == "postal_code") {
-                //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-                console.log(place.address_components[i].long_name);
-                this.selectedCustomer.pincode = place.address_components[i].long_name;
-              }
-              if (place.address_components[i].types[j] == "country") {
-                //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-
-                this.selectedCustomer.country = place.address_components[i].long_name;
-              }
-
-              if (place.address_components[i].types[j] == "administrative_area_level_1") {
-                //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-
-                this.selectedCustomer.state = place.address_components[i].long_name;
-              }
-
-              if (place.address_components[i].types[j] == "administrative_area_level_2") {
-                //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-
-                this.selectedCustomer.city = place.address_components[i].long_name;
-              }
-
-              if (place.address_components[i].types[j] == "sublocality_level_1") {
-                //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-
-                this.selectedCustomer.address_line_3 = place.address_components[i].long_name;
-              }
-
+          if (place && place.address_components) {
+            for (let i = 0; i < place.address_components.length; i++) {
+                for (let j = 0; j < place.address_components[i].types.length; j++) {
+                    if (place.address_components[i].types[j] == "postal_code") {
+                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+                        console.log(place.address_components[i].long_name);
+                        this.selectedCustomer.pincode = place.address_components[i].long_name;
+                    }
+                    if (place.address_components[i].types[j] == "country") {
+                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+        
+                        this.selectedCustomer.country = place.address_components[i].long_name;
+                    }
+        
+                    if (place.address_components[i].types[j] == "administrative_area_level_1") {
+                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+        
+                        this.selectedCustomer.state = place.address_components[i].long_name;
+                    }
+        
+                    if (place.address_components[i].types[j] == "administrative_area_level_2") {
+                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+        
+                        this.selectedCustomer.city = place.address_components[i].long_name;
+                    }
+        
+                    if (place.address_components[i].types[j] == "sublocality_level_1") {
+                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+        
+                        this.selectedCustomer.address_line_3 = place.address_components[i].long_name;
+                    }
+        
+                }
             }
-          }
+        } else {
+            console.log("place or place.address_components is undefined.");
+        }
+        
 
         });
       });
@@ -962,30 +940,26 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
       console.log('its false');
       return false;
     }
-
+  
     console.log("event sub types", this.selectedSlc);
-        
+  
     //it checking required field
-    if(this.selectedSlc.custom_fields){
-
+    if (this.selectedSlc.custom_fields) {
+  
       let temp = this.selectedSlc.custom_fields;
-      console.log( typeof this.selectedSlc.custom_fields);
-
-    // if(typeof this.selectedSlc.custom_fields == 'object'){
-    //   temp = Object.values(this.selectedSlc.custom_fields);
-    //   //temp = [this.selectedSlc.custom_fields];
-    // }
-    console.log(temp);
-     
-      let rfs=temp.filter((el: { is_required: string; setcartvalue: any; }) =>  el.is_required == "1" && !el.setcartvalue && this._can_show_condition_field(this.selectedSlc,el));
+      console.log(typeof this.selectedSlc.custom_fields);
+  
+      console.log(temp);
+  
+      let rfs = temp.filter((el: { is_required: string; setcartvalue: any; }) => el.is_required == "1" && !el.setcartvalue && this._can_show_condition_field(this.selectedSlc, el));
       console.log(rfs);
-      if(rfs.length > 0){
+      if (rfs.length > 0) {
         this.commonService.notify('error', 'Please Provide all Information');
         console.log('A');
         return false;
       }
       console.log('rfs');
-
+  
       // let rfss=temp.filter(el => el.is_required ==1 && el.setcartvalue && parseInt(el.conditional_category_field_value_id) > 0 );
       // console.log(rfss);
       // if(rfss.length == 0){
@@ -994,107 +968,74 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
       //   return false;
       // }
     }
-
-    if(this.selectedSlc.id==148 || this.selectedSlc.id==149){
-
-
-      if(this.selectedSlc.custom_fields[0].setcartvalue > 60 &&  this.selectedSlc.custom_fields[1].setcartvalue.name=='Yes' ){
-        //console.log(this.selectedSlc.custom_fields[1].setcartvalue);
-        //this.selectedSlc.custom_fields[1].setcartvalue=null;
+  
+    if (this.selectedSlc.id == 148 || this.selectedSlc.id == 149) {
+      if (this.selectedSlc.custom_fields[0].setcartvalue > 60 && this.selectedSlc.custom_fields[1].setcartvalue.name == 'Yes') {
         this.commonService.notify('error', 'If Restaurant is serving Alcohol and seats mentioned are more than 60 kindly refer categroy 48');
         return false;
       }
-
-      
     }
-    
-    //check mandatory items for Events
+  
     if (this.selectedSlc.cat_type == 'event') {
-
-      if(this.selectedSlc.id != '46' && this.selectedSlc.event_name && this.selectedSlc.event_type && this.selectedSlc.event_tag && this.selectedSlc.event_state && this.selectedSlc.event_city && this.selectedSlc.l_state && this.selectedSlc.l_city && this.selectedSlc.event_venue && this.selectedSlc.event_start_datetime && this.selectedSlc.l_name && this.selectedSlc.l_pincode  ){
-        
-      }else if(this.selectedSlc.id == '46' && this.selectedSlc.event_name && this.selectedSlc.event_type  && this.selectedSlc.eventsubtypes && this.selectedSlc.event_state && this.selectedSlc.event_city && this.selectedSlc.l_state && this.selectedSlc.l_city && this.selectedSlc.event_venue && this.selectedSlc.event_start_datetime && this.selectedSlc.l_name && this.selectedSlc.l_pincode ){
-       
-      }else {
-      console.log('its event1');
-
-          this.commonService.notify('error', 'Please Provide all Information About Event');
-          return 0;
+  
+      if (this.selectedSlc.id != '46' && this.selectedSlc.event_name && this.selectedSlc.event_type && this.selectedSlc.event_tag && this.selectedSlc.event_state && this.selectedSlc.event_city && this.selectedSlc.l_state && this.selectedSlc.l_city && this.selectedSlc.event_venue && this.selectedSlc.event_start_datetime && this.selectedSlc.l_name && this.selectedSlc.l_pincode) {
+  
+      } else if (this.selectedSlc.id == '46' && this.selectedSlc.event_name && this.selectedSlc.event_type && this.selectedSlc.eventsubtypes && this.selectedSlc.event_state && this.selectedSlc.event_city && this.selectedSlc.l_state && this.selectedSlc.l_city && this.selectedSlc.event_venue && this.selectedSlc.event_start_datetime && this.selectedSlc.l_name && this.selectedSlc.l_pincode) {
+  
+      } else {
+        console.log('its event1');
+        this.commonService.notify('error', 'Please Provide all Information About Event');
+        return 0;
       }
-
-      if(this.selectedSlc.id == '112' && !this.selectedSlc.cat_description ){
-          this.commonService.notify('error', 'Please Provide category description Information About Event');
-          return 0;
-         } 
-
+  
+      if (this.selectedSlc.id == '112' && !this.selectedSlc.cat_description) {
+        this.commonService.notify('error', 'Please Provide category description Information About Event');
+        return 0;
+      }
+  
     } else {
-
+  
       if (this.selectedSlc.start_date && this.selectedSlc.end_date && this.selectedSlc.l_name && this.selectedSlc.l_address_line_1 && this.selectedSlc.l_pincode && this.selectedSlc.l_state && this.selectedSlc.l_city) {
+  
       } else {
         this.commonService.notify('error', 'Please Provide all Information About Background License');
         return 0;
       }
-      if((this.selectedSlc.id == '134' || this.selectedSlc.id == '153' ) && !this.selectedSlc.cat_description){
-          this.commonService.notify('error', 'Please Provide category description Information About Background License');
-          return 0;
-        } 
-
-        if(this.selectedSlc.id == '153' && !this.selectedSlc.penalty_pino){
-          this.commonService.notify('error', 'Please Provide PI No ');
-          return 0;
-        } 
-
+      if ((this.selectedSlc.id == '134' || this.selectedSlc.id == '153') && !this.selectedSlc.cat_description) {
+        this.commonService.notify('error', 'Please Provide category description Information About Background License');
+        return 0;
+      }
+  
+      if (this.selectedSlc.id == '153' && !this.selectedSlc.penalty_pino) {
+        this.commonService.notify('error', 'Please Provide PI No ');
+        return 0;
+      }
+  
     }
-
+  
     this.quotation.isPirChanged = 1;
     this.selectedSlc.cancel_license = 0;
     this.selectedSlc.cattotal = this.getCatTotal(this.selectedSlc);
     this.selectedSlc.cattotalff = this.selectedSlc.cattotal;
-    // if(this.cartevidence){
-    //   this.selectedSlc.cartevidence = this.cartevidence;
-    // }
-   console.log(this.selectedSlc.cattotal ,"test");
-    //this.selectedSlc.total_event_min=this.getCatTotal(this.selectedSlc,'total_event_min');
-    console.log(this.selectedSlc);
-    if (this.selectedSlc && this.selectedSlc.cattotal > 0) {
-      /*  let copiedItem :any;
-        copiedItem = Object.assign({}, copiedItem , this.selectedSlc );
-    
-        let copiedItem2 :any;
-        copiedItem2 = Object.assign({}, copiedItem2 , this.selectedSlc );
-    
-        let copiedItem3 :any;
-        copiedItem3 = Object.assign([], copiedItem3 , this.selectedSlc.custom_fields );
-       
-        copiedItem.custom_fields=copiedItem3;
-    */
-      let ss = JSON.parse(JSON.stringify(this.selectedSlc));
-      this.allSelectedLc.push(ss);
-
-      //this.selectedSlc=this.selectedLicenseCategory; 
-      this.premium_en = false;
-      //console.log(this.selectedSlc); 
-      this.commonService.notify("info", "Item Added");
-      this.activefilter = 'all';
-      this.selectedSlc = {};
-
-      // // for evidence upload array remove
-      // for (let i = 0; i < this.allevidence.length; i++) {
-      //   this.allevidence[i].checked = false;
-      // }
-      // console.log('cart files',  this.allevidence);
-
-      this.refreshCustomPremium();
-    }
-    else {
-      this.commonService.sa(
-        "Oops!", "No Category Specs Selected", "info"
-      );
-    }
+  
+    console.log(this.selectedSlc.cattotal, "test");
+  
+    let ss = JSON.parse(JSON.stringify(this.selectedSlc));
+    this.allSelectedLc.push(ss);
+  
+    this.premium_en = false;
+    this.commonService.notify("info", "Item Added");
+    this.activefilter = 'all';
+    this.selectedSlc = {};
+  
+    this.refreshCustomPremium();
+  
     console.log(this.allSelectedLc);
-    this.restrictcityclass='';
-
+    this.restrictcityclass = '';
+  
+    return false;
   }
+  
 
   checkcaneditcartitems() {
     console.log(this.quotation.status, this.authService.checkPermission(45));
@@ -1108,45 +1049,44 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     return false;
   }
 
-  cart_alldelete() {
 
+  cart_alldelete() {
     if (!this.checkcaneditcartitems()) {
       return 0;
     }
-
+  
     let that = this;
-    swal({
+    return Swal.fire({
       title: 'Are you sure to Empty Cart?',
       text: "All Custom Fields Will also be removed",
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, remove it!',
       cancelButtonText: 'No, cancel!',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: false
+      buttonsStyling: false // Remove buttonsStyling option
     }).then(function (result) {
       console.log(result);
-
-      //True Confirmation    
+  
+      // True Confirmation    
       if (result.value) {
         that.commonService.notify("info", "All Items Removed");
         that.allSelectedLc.splice(0, 10000);
-        this.rejectedArray = [];
-        this.commonService.hideModal('modalrejectcart');
-        if(that.quotation.id >0){
+        that.rejectedArray = [];
+        that.commonService.hideModal('modalrejectcart');
+        if (that.quotation.id > 0) {
           that.evidenceuploadfloag = 1;
         }
         that.refreshCustomPremium();
+      } else {
+        // Handle rejection (user clicked "No, cancel!")
+        console.log('Operation cancelled by user.');
       }
-
     });
-
-
-
   }
+  
+  
   cart_delete(index: any): 0 | undefined {
     if (!this.checkcaneditcartitems()) {
         return 0;
@@ -1201,21 +1141,20 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     })
     console.log(venueType)
   }
-
   setSelectedSlc(slcc: unknown) {
     console.log(slcc);
-    if(!slcc){
+    if (!slcc) {
       return 0;
     }
     //clear timer if any
     if (this.intervaltimer) {
       clearInterval(this.intervaltimer);
     }
-
-  //  console.log(slcc,);
-     this.selectedSlc=this.commonService.cloneWR(slcc);
+  
+    //  console.log(slcc,);
+    this.selectedSlc = this.commonService.cloneWR(slcc);
     this.selectedLicenseCategory = slcc;
-
+  
     //set fixed event name
     if (this.selectedSlc.event_fixedname) {
       this.selectedSlc.event_name = this.selectedSlc.event_fixedname;
@@ -1228,38 +1167,37 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     // if (this.selectedSlc.event_venue_tag) {
     //   this.selectedSlc.event_type = this.selectedSlc.event_fixedtype;
     // }
-
+  
     this.selectedSlc.quantity = 1;
     this.selectedSlc.no_of_usages = 1;
     this.selectedSlc.cattotal = 0;
     if (this.selectedSlc.ltype) { } else { this.selectedSlc.ltype = this.ltype; }
     //this.selectedSlc.ltype=this.ltype;
-
+  
     if (this.selectedSlc.start_date) { } else {
       this.selectedSlc.start_date = new Date().toISOString().slice(0, 10);
       this.selectedSlc.end_date = this.nextYearDate(this.selectedSlc.start_date);
     }
-
-
-
+  
     let addr = this.selectedCustomer.address_line_1 + ", " + this.selectedCustomer.address_line_2 + ", " + this.selectedCustomer.address_line_3 + ", " + this.selectedCustomer.city + ', ' + this.selectedCustomer.state + ', ' + this.selectedCustomer.pincode;
-
+  
     //this.selectedSlc.l_name=this.selectedCustomer.name;
     if (this.selectedSlc.l_name) { } else { this.selectedSlc.l_name = this.selectedCustomer.name; }
-
+  
     if (this.selectedSlc.l_address_line_1) { } else { this.selectedSlc.l_address_line_1 = this.selectedCustomer.address_line_1; }
     if (this.selectedSlc.l_address_line_2) { } else { this.selectedSlc.l_address_line_2 = this.selectedCustomer.address_line_2; }
     if (this.selectedSlc.l_address_line_3) { } else { this.selectedSlc.l_address_line_3 = this.selectedCustomer.address_line_3; }
-
+  
     if (this.selectedSlc.l_pincode) { } else { this.selectedSlc.l_pincode = this.selectedCustomer.pincode; }
     if (this.selectedSlc.l_city) { } else { this.selectedSlc.l_city = this.selectedCustomer.city; }
-    if (this.selectedSlc.l_state) { } else { this.selectedSlc.l_state = this.selectedCustomer.state;  }
+    if (this.selectedSlc.l_state) { } else { this.selectedSlc.l_state = this.selectedCustomer.state; }
     if (this.selectedSlc.l_franchise) { } else { this.selectedSlc.l_franchise = this.selectedCustomer.franchise; }
-    // if (this.selectedSlc.event_extra) { } else { this.selectedSlc.event_extra = this.selectedCustomer.event_extra; }
-    // if (this.selectedSlc.notes) { } else { this.selectedSlc.notes = this.selectedCustomer.notes; }
-    //  this.selectedSlc.l_address=addr;
-
+  
+    // Add any additional logic here...
+  
+    return undefined;
   }
+  
   updateSelectCatTotalCf($e: any, slc: any, cf: any, i: any, j = 0) {
     //  this.selectCatTotal += cf.amount * $e.target.value;
     //console.log("c",$e);
@@ -1497,46 +1435,36 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
 
     //prorate Calculation
     let ddf: any;
-    if (slc.start_date && slc.end_date && slc.cat_type === 'bg') {
-      if(!slc.hasOwnProperty('is_prorata') || (slc.hasOwnProperty('is_prorata') && slc.is_prorata==1) ){
-      //get no of days in between days
-      //console.log(slc.is_annual,'slc.is_annual');
-      let diff = Math.abs(new Date(slc.end_date).getTime() - new Date(slc.start_date).getTime());
-      let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-      diffDays = diffDays + 1;
-
-      //let dy = Math.floor((diff) / (1000 * 60 * 60 * 24 * 365));
-      //console.log('diffDays',diffDays);
-      ddf = this.dateDiff(slc.start_date, slc.end_date);
-      //console.log("Diff",diffDays,ddf);
-      if (ddf.years < 0 || ddf.months < 0 || ddf.days < 0) {
-        //slc.end_date=slc.start_date;
-      }
-
-      //console.log('years',ddf.years);
-      //get per day price
-      if (ddf.years > 0 && ddf.months === 0 && ddf.days === 0 && ddf.years < 4) {
-        //console.log('years',ddf.years);
-        temptotal = temptotal * ddf.years;
-        // console.log('FCheck1',diffDays,ddf);
-      } else if (ddf.years > -1 && ddf.years < 3) {
-        let pdp = temptotal / 365;
-        //console.log('FCheck2',diffDays,ddf,pdp);
-        //fpr 1 day befor case fix
-        if (diffDays < 5 && ddf.days === 0 && ddf.years > 3) {
-          //console.log('Fking2',diffDays);
-          temptotal = 0;
-        } else {
-          temptotal = diffDays * pdp;
+    if (typeof slc.start_date === 'string' && typeof slc.end_date === 'string' && slc.cat_type === 'bg') {
+      if (!slc.hasOwnProperty('is_prorata') || (slc.hasOwnProperty('is_prorata') && slc.is_prorata == 1)) {
+        let start_date_str = slc.start_date.toString();
+        let end_date_str = slc.end_date.toString();
+        let diff = Math.abs(new Date(end_date_str).getTime() - new Date(start_date_str).getTime());
+        let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+        diffDays = diffDays + 1;
+    
+        ddf = this.dateDiff(start_date_str, end_date_str);
+    
+        if (ddf.years < 0 || ddf.months < 0 || ddf.days < 0) {
+          // Handle negative values if necessary
         }
-
-      } else {
-        temptotal = 0;
+    
+        if (ddf.years > 0 && ddf.months === 0 && ddf.days === 0 && ddf.years < 4) {
+          temptotal = temptotal * ddf.years;
+        } else if (ddf.years > -1 && ddf.years < 3) {
+          let pdp = temptotal / 365;
+    
+          if (diffDays < 5 && ddf.days === 0 && ddf.years > 3) {
+            temptotal = 0;
+          } else {
+            temptotal = diffDays * pdp;
+          }
+        } else {
+          temptotal = 0;
+        }
       }
-
     }
-
-    }
+    
 
     //console.log('totoalmin',total_event_min);
     this.selectedSlc.total_event_min = total_event_min;
@@ -1551,10 +1479,12 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
       console.log('forcing premium');
       let fp = temptotal * slc.force_premium_percentage / 100;
       temptotal = temptotal + fp;
-      if(slc.force_premium_amount > 0){
-        temptotal =temptotal + parseInt(slc.force_premium_amount);
+      // Convert slc.force_premium_amount to a number before comparison
+      if (parseFloat(slc.force_premium_amount as string) > 0) {
+          temptotal = temptotal + parseFloat(slc.force_premium_amount as string);
       }
-    }
+  }
+  
 
 
     //preDiscount 
@@ -1599,7 +1529,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   }
 
 
-  dateDiff(sdate, edate) {
+  dateDiff(sdate:string, edate:string) {
     var date = sdate.split('-');
     var today = new Date(edate);
     today.setDate(today.getDate() + 1);
@@ -1680,19 +1610,24 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     return Math.round(tt);
   }
 
-  getCfValue(cff: { setcartvalue: { id: any; }; category_options: { [x: string]: { name: any; }; }; }) {
+  getcustomfields(cutmFields: unknown[]): unknown[] {
+    let tempCustmFields: unknown[] = [];
+    if (!cutmFields || cutmFields.length === 0) {
+      return tempCustmFields;
+    } else {
+      return Object.values(cutmFields);
+    }
+  }
 
-    //    console.log("CFCFCF",cf);
-
+  getCfValue(cff: { setcartvalue: { id: any }; category_options: { [x: string]: { id: any; name: any } } }): string | undefined {
     if (cff.setcartvalue) {
       for (let i in cff.category_options) {
         if (cff.category_options[i].id === cff.setcartvalue.id) {
-          //   console.log(cf.category_options[i]);
           return cff.category_options[i].name;
         }
       }
     }
-
+    return undefined;
   }
 
   validateMax($e: any, max: any) {
@@ -1710,16 +1645,14 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
 
   }
 
-  validate_add_max($e: { target: { value: number; }; }, max: string, model: string | number) {
-    console.log(max);
-    console.log($e.target.value);
-    if ($e.target.value > parseInt(max)) {
-      // model=parseInt(max);
-      this.selectedSlc.custom_fields[model].setaddcartvalue = max;
-      $e.target.value = parseInt(max);
-
-    }
+validate_add_max($e: any, max: string, model: string | number) {
+  console.log(max);
+  console.log($e.target['value']);
+  if (parseInt($e.target['value']) > parseInt(max)) {
+    this.selectedSlc.custom_fields[model].setaddcartvalue = max;
+    $e.target['value'] = max;
   }
+}
 
   refreshCustomPremium() {
     /*Custom Premium cat cinemas */
@@ -1760,11 +1693,8 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     /*end of custom premium cinemas */
   }
 
-
   saveQuotationIssuedLc(action: string) {
-
- 
-    if (action == 'save') {
+    if (action === 'save') {
       this.issuedLc.action = 'save';
       this.quotationService.addSaveIssuedLc(this.issuedLc)
         .subscribe(
@@ -1774,80 +1704,66 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
           },
           (error: any) => {
           });
-    }
-    else if (action == 'issue') {
+    } else if (action === 'issue') {
       let that = this;
-      swal({
+      swal.fire({
         title: 'Are you sure?',
         text: "Once Issued , You can not Edit the License",
-        type: 'warning',
+        icon: 'warning', // Use 'icon' instead of 'type'
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, Do it!',
         cancelButtonText: 'No, cancel!',
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false
-      }).then(function (result) {
+      }).then(function (result: any) {
         console.log(result);
-
-        //True Confirmation    
-        if (result.value) {
+  
+        // True Confirmation    
+        if (result && result.value) {
           that.issuedLc.action = 'issue';
-
+  
           that.quotationService.addSaveIssuedLc(that.issuedLc)
             .subscribe(
               (data: any) => {
                 that.commonService.notify('info', 'Licenses Issued Successfully');
-                //            this.quotation=data; 
-
               },
               (error: any) => {
               });
         }
-
       });
-
-    } else if (action == 'cancel') {
+  
+    } else if (action === 'cancel') {
       let that = this;
-      swal({
+      swal.fire({
         title: 'Are you sure?',
         text: "Once Cancelled , You can not Revert this Action",
-        type: 'warning',
+        icon: 'warning', // Use 'icon' instead of 'type'
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, Do it!',
         cancelButtonText: 'No, cancel!',
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false
-      }).then(function (result) {
+      }).then(function (result: any) {
         console.log(result);
-
-        //True Confirmation    
-        if (result.value) {
+  
+        // True Confirmation    
+        if (result && result.value) {
           that.issuedLc.action = 'cancel';
-
+  
           that.quotationService.addSaveIssuedLc(that.issuedLc)
             .subscribe(
-              data => {
+              (data: any) => {
                 that.commonService.notify('info', 'Licenses Cancelled Successfully');
-                //            this.quotation=data; 
-
               },
-              error => {
+              (error: any) => {
               });
         }
-
       });
-
     }
-
-
   }
-
+  
   applyDiscount() {
     let max = this.selectedUser.role.discount;
     console.log('max', max);
@@ -1866,85 +1782,70 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
         this.saveQuotation(true);
     } else {
         this.previewdiscount = max;
-        this.commonService.notify('error', 'Error', 'Applied Discount is More than Allowed');
+        this.commonService.notify('error', 'Error');
     }
     
     return undefined; // Added return statement here
 }
 
 
-  saveQuotation(statuschange = false) {
-
-    console.log("user_ids details",this.quotation );
+saveQuotation(statuschange = false): 0 | undefined {
+    console.log("user_ids details", this.quotation);
     this.quotation.qvalues = this.qvalues;
-    // console.log(" qvalue :",this.quotation.qvalues);
 
     if (this.saveinprogress) {
-
-      this.commonService.notify('Error', 'Please Wait', 'We are already processing on your last click');
-      return 0;
+        this.commonService.notify('Error', 'Please Wait');
+        return 0;
     }
 
     this.saveinprogress = true;
 
-    if (this.selectedCustomer.name) {
+    if (!this.selectedCustomer.name) {
+        this.commonService.notify('Error', 'Please Enter Customer Details');
+        return 0;
+    }
 
-    }
-    else {
-      this.commonService.notify('Error', 'Please Enter Customer Details');
-    }
-    //clear timer if any
     if (this.intervaltimer) {
-      clearInterval(this.intervaltimer);
+        clearInterval(this.intervaltimer);
     }
 
     let newq: any = {};
     if (this.quotation) {
-      //quotation Exists / Update existing quote / only if no payment made
-      this.quotation.debugjson = null;
-      newq = this.quotation;
-
-    }
-    else {
-
-    }
-    // console.log(newq);
-
-    if (this.quotation.lead_id) {
-
-    } else {
-      this.quotation.lead_id = 0;
+        this.quotation.debugjson = null;
+        newq = this.quotation;
     }
 
+    if (!this.quotation.lead_id) {
+        this.quotation.lead_id = 0;
+    }
 
     if (statuschange) {
-      newq.status = 'pending';
+        newq.status = 'pending';
     } else {
-      newq.status = 'draft';
+        newq.status = 'draft';
     }
-    // newq.is_miscellaneous=0;
-    // newq.is_penalty=0;
-    
-    let ff = 0; let x=0;
+
+    let ff = 0;
+    let x = 0;
     for (let p in this.allSelectedLc) {
-      this.allSelectedLc[p].cattotal = this.getCatTotal(this.allSelectedLc[p]);
-      ff = this.getCatTotal(this.allSelectedLc[p]) * this.allSelectedLc[p].no_of_usages * this.allSelectedLc[p].quantity * this.allSelectedLc[p].usage_multiplier;
-      this.allSelectedLc[p].cattotalfinalwithoutdiscount = ff;
-      this.allSelectedLc[p].cattotalfinalwithall = ff - Math.round(ff * this.discount / 100);
-      if(this.allSelectedLc[p].cat_idcode=='49' ||this.allSelectedLc[p].cat_idcode=='49 - V2022' || this.allSelectedLc[p].cat_idcode=='PD (1)' || this.allSelectedLc[p].cat_idcode=='33(L)'){
-        if(!this.allSelectedLc[p].is_misflag){
-            this.allSelectedLc[p].is_misflag='1';
-            newq.pir_status='pending';
-          }
-        if(this.allSelectedLc[p].cat_idcode=='PD (1)'){
-          newq.is_penalty=1;
-        }  
-        newq.is_miscellaneous=1;
-        x=1;
-      }      
+        this.allSelectedLc[p].cattotal = this.getCatTotal(this.allSelectedLc[p]);
+        ff = this.getCatTotal(this.allSelectedLc[p]) * this.allSelectedLc[p].no_of_usages * this.allSelectedLc[p].quantity * this.allSelectedLc[p].usage_multiplier;
+        this.allSelectedLc[p].cattotalfinalwithoutdiscount = ff;
+        this.allSelectedLc[p].cattotalfinalwithall = ff - Math.round(ff * this.discount / 100);
+        if (this.allSelectedLc[p].cat_idcode == '49' || this.allSelectedLc[p].cat_idcode == '49 - V2022' || this.allSelectedLc[p].cat_idcode == 'PD (1)' || this.allSelectedLc[p].cat_idcode == '33(L)') {
+            if (!this.allSelectedLc[p].is_misflag) {
+                this.allSelectedLc[p].is_misflag = '1';
+                newq.pir_status = 'pending';
+            }
+            if (this.allSelectedLc[p].cat_idcode == 'PD (1)') {
+                newq.is_penalty = 1;
+            }
+            newq.is_miscellaneous = 1;
+            x = 1;
+        }
     }
-    if(x==0){
-      newq.is_miscellaneous=0;
+    if (x == 0) {
+        newq.is_miscellaneous = 0;
     }
     console.log(this.allSelectedLc);
     this.refreshCustomPremium();
@@ -1952,85 +1853,69 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     newq.customer_id = this.selectedCustomer.id;
 
     if (this.selectedUser) {
-      newq.user_id = this.selectedUser.id;
+        newq.user_id = this.selectedUser.id;
     } else {
-      this.commonService.notify('error', 'Please Specify Leadowner');
-      return 0;
+        this.commonService.notify('error', 'Please Specify Leadowner');
+        return 0;
     }
-
 
     if (!this.selectedCustomer.country) {
-      this.selectedCustomer.country = 'India';
+        this.selectedCustomer.country = 'India';
     }
     if (!this.selectedCustomer.sez) {
-      this.selectedCustomer.sez = 'NO';
+        this.selectedCustomer.sez = 'NO';
     }
 
     newq.selectedCustomer = this.selectedCustomer;
-    // remove evidenc code
-    // newq.allevidence = this.allevidence;
-
-    newq.selectedLead= this.selectedLead;
+    newq.selectedLead = this.selectedLead;
     newq.selectedUser = this.selectedUser;
-
-
-
     newq.selectedTransaction = this.selectedTransaction;
-
     newq.tax = this.tax;
     newq.cgst = this.cgst;
     newq.sgst = this.sgst;
     newq.tds = this.tds;
     newq.igst = this.igst;
     newq.is_inmh = this.is_inmh();
-
     newq.cartamount = this.getQuoteTotal();
 
-    //apply patch for discount of only and above 100000
     if (newq.cartamount < this.minamountfordiscount) {
-      this.discount = 0;
+        this.discount = 0;
     }
 
     newq.discount = this.discount;
     newq.cartamountwithdiscount = this.getQuoteTotal() - Math.round(this.getQuoteTotal() * this.discount / 100);
     newq.totalamount = this.getQuoteFinalTotal();
-
     newq.nol = this.nol;
     newq.nol_bg = this.nol_bg;
     newq.nol_event = this.nol_event;
 
-    // Extended PI Flag set covid impact
-    if(newq.extended_pi && newq.extended_pi ==true ){
-      newq.extended_pi =1;
-    }else{
-      newq.extended_pi =0;
+    if (newq.extended_pi && newq.extended_pi == true) {
+        newq.extended_pi = 1;
+    } else {
+        newq.extended_pi = 0;
     }
 
-    this.commonService.notify('info', 'Please Wait', 'We are saving your Application');
-//console.log(newq);
+    this.commonService.notify('info', 'Please Wait');
 
-    //new Quotation
     this.quotationService.addSave(newq)
-      .subscribe(
-        (        data: { id: string; uuid: string; }) => {
-          this.saveinprogress = false;
-          this.commonService.notify('info', 'Application Added/Updated Successfully');
-          console.log('evidenceuploadfloag', this.evidenceuploadfloag);
-          if(this.evidenceuploadfloag == 1){
-            this.saveEvidence();
-          }
-          //this.quotation=data;
-          this.getQuotation(data.id,data.uuid);
-          if (this.is_addc) { this.router.navigate(['/quotation/view/' + data.id+'/'+data.uuid]); }
-        },
-        (        error: any) => {
-          this.saveinprogress = false;
-          // this.alertService.error(error);
+        .subscribe(
+            (data: { id: string; uuid: string; }) => {
+                this.saveinprogress = false;
+                this.commonService.notify('info', 'Application Added/Updated Successfully');
+                console.log('evidenceuploadfloag', this.evidenceuploadfloag);
+                if (this.evidenceuploadfloag == 1) {
+                    this.saveEvidence();
+                }
+                this.getQuotation(data.id, data.uuid);
+                if (this.is_addc) { this.router.navigate(['/quotation/view/' + data.id + '/' + data.uuid]); }
+            },
+            (error: any) => {
+                this.saveinprogress = false;
+            });
 
-        });
+    return undefined;
+}
 
-
-  }
 
 
   nextYearDate(date1: string | number | Date) {
@@ -2053,7 +1938,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
         this.commonService.notify('error', 'Too Big Discount Request !');
       } else {
         if (this.savedrinprogress) {
-          this.commonService.notify('info', 'Please Wait', 'Existing Request in Progress');
+          this.commonService.notify('info', 'Please Wait');
           return 0;
         }
   
@@ -2082,7 +1967,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   atir_request() {
     if (this.quotation.atir_comment) {
       if (this.saveatiinprogress) {
-        this.commonService.notify('info', 'Please Wait', 'Existing Request in Progress');
+        this.commonService.notify('info', 'Please Wait');
         return 0;
       }
   
@@ -2117,23 +2002,23 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   pitag_request() {
     if (this.tempitag.tag_remark) {
       if (this.saveatiinprogress) {
-        this.commonService.notify('info', 'Please Wait', 'Existing Request in Progress');
+        this.commonService.notify('info', 'Please Wait');
         return 0;
       }
       if (!this.tempitag.tag_name) {
-        this.commonService.notify('info', 'Required', 'Select at least One PI Tag ');
+        this.commonService.notify('info', 'Required');
         return 0;
       }
   
       if (this.tempitag.tag_name === "WILL PAY") { 
         if (!this.tempitag.tag_expected_date) {
-          this.commonService.notify('info', 'Required', 'Add Expected Date Of Payment');
+          this.commonService.notify('info', 'Required');
           return 0;
         }
   
         let currentDate = new Date();
         if (new Date(this.tempitag.tag_expected_date) < currentDate ) {
-          this.commonService.notify('info', 'Required', 'Expected Date Of Payment should be greater than today');
+          this.commonService.notify('info', 'Required');
           return 0;
         }
       }
@@ -2310,22 +2195,22 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
 }
 
   validate_start_end_date(slc: { end_date: string | number | Date; start_date: string | number | Date; }) {
-    let diff = Math.abs(new Date(slc.end_date).getTime() - new Date(slc.start_date).getTime());
-    let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-    //diffDays=diffDays+1;
+    let startDate = typeof slc.start_date === 'string' ? slc.start_date : String(slc.start_date);
+    let endDate = typeof slc.end_date === 'string' ? slc.end_date : String(slc.end_date);
 
-    //let dy = Math.floor((diff) / (1000 * 60 * 60 * 24 * 365));
-    //console.log(dy);
-    let ddf = this.dateDiff(slc.start_date, slc.end_date);
-    //console.log('df',ddf,diffDays);
+    let diff = Math.abs(new Date(endDate).getTime() - new Date(startDate).getTime());
+    let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+
+    let ddf = this.dateDiff(startDate, endDate);
+
     if (ddf.years < 0 || ddf.months < 0 || ddf.days < 0) {
-      this.commonService.notify('Error', 'End Date can not be Previous Than Start Date');
-      return false;
+        this.commonService.notify('Error', 'End Date cannot be earlier than Start Date');
+        return false;
     }
 
     return true;
+}
 
-  }
 
   validate_no_of_usages($event: any) {
     if (this.selectedSlc.no_of_usages) {
@@ -2360,7 +2245,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   addEditReturnTransaction() {
 
     if (this.selectedrTransaction.ref_no.length < 2) {
-      this.commonService.notify('info', 'Please Check', 'Ref No is Required');
+      this.commonService.notify('info', 'Please Check');
 
       return 0;
     }
@@ -2376,7 +2261,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
 
     this.selectedrTransaction.quotation_id = this.quotation.id;
     if (this.savetrinprogress) {
-      this.commonService.notify('info', 'Please Wait', 'Existing Transaction in Progress');
+      this.commonService.notify('info', 'Please Wait');
       return 0;
     }
 
@@ -2420,12 +2305,12 @@ addEditTransaction() {
 
   this.selectedTransaction.quotation_id = this.quotation.id;
   if (this.savetrinprogress) {
-    this.commonService.notify('info', 'Please Wait', 'Existing Transaction in Progress');
+    this.commonService.notify('info', 'Please Wait');
     return 0;
   }
 
   if (this.quotation.region_id == 25 && this.quotation.status != 'paid' && this.quotation.atir_status != 'approve') {
-    this.commonService.notify('error', 'Change to New Territory', 'Existing Territory belong to PUNEROM ');
+    this.commonService.notify('error', 'Change to New Territory');
     return 0;
   }
 
@@ -2455,125 +2340,99 @@ addEditTransaction() {
 }
 
 
-  deleteTransaction(trid: any) {
-    //    let params="id="+trid+"&quotation_id="+this.quotation.id;
-    let params = { id: trid, quotation_id: this.quotation.id };
+deleteTransaction(trid: any) {
+  let params = { id: trid, quotation_id: this.quotation.id };
+
+  let that = this;
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, remove it!',
+    cancelButtonText: 'No, cancel!',
+    buttonsStyling: false
+  }).then((result: SweetAlertResult<any>) => { // Adjust the parameter type
+    console.log(result);
+
+    // True Confirmation    
+    if (result.value) {
+      that.transactionService.delete(params)
+        .subscribe(
+          (data: any) => {
+            that.commonService.notify('info', 'Transaction deleted Successfully');
+            that.selectedTransaction = {};
+            that.getQuotation(that.quotation.id, that.quotation.uuid);
+          },
+          (error: any) => {
+            // Handle error
+          });
+    }
+  });
+}
 
 
-
-    let that = this;
-    swal({
-      title: 'Are you sure?',
-      text: "",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'No, cancel!',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: false
-    }).then(function (result: { value: any; }) {
-      console.log(result);
-
-      //True Confirmation    
-      if (result.value) {
-        that.transactionService.delete(params)
-          .subscribe(
-            ( data: any) => {
-              that.commonService.notify('info', 'Transaction deleted Successfully');
-              //         this.quotation=data;
-              that.selectedTransaction = {};
-              that.getQuotation(that.quotation.id,that.quotation.uuid);
-            },
-            ( error: any) => {
-            });
-      }
-
-    });
-
-
-
-
-  }
 
   /* Bulk Upload */
   onBUFileChange(event: any) {
-    this.commonService.notify('info', ' Please Wait , Analyzig File...');
-    //  console.log(fi);
+    this.commonService.notify('info', 'Please Wait, Analyzing File...');
     let reader = new FileReader();
-
-    // console.log(file);
     let fi = event.target.files[0];
     reader.readAsDataURL(fi);
     reader.onload = () => {
-      //   console.log(reader.result.split(',')[1]);
       this.quotationService.uploadfileandrunbu(fi)
         .subscribe(
           (bdata: { [x: string]: any; }) => {
-
-            this.rejectedArray=[];
-            let modiArray1=bdata['json1'];
-            let temparr1: unknown[] = [];
-            Object.values(modiArray1).forEach(a=>{
+            this.rejectedArray = [];
+            let modiArray1 = bdata['json1'];
+            let temparr1: any[] = []; // Specify the type as 'any[]' or 'unknown[]'
+            Object.values(modiArray1).forEach(a => {
               temparr1.push(a);
-            })
+            });
             this.rejectedArray = temparr1;
             console.log(this.rejectedArray);
-            let temparr=[]
+  
+            let temparr: any[] = []; // Specify the type as 'any[]'
             let c = 0;
             let modiArray = bdata['json'];
-            
-            if(modiArray){
-            Object.values(modiArray).forEach(a=>{
-              temparr.push(a);
-               this.bulkAddItem(a);
-              c++;
-            })
-          }
-
+            if (modiArray) {
+              Object.values(modiArray).forEach(a => {
+                temparr.push(a);
+                this.bulkAddItem(a);
+                c++;
+              });
+            }
             console.log('modiArray1 rejected', this.rejectedArray);
-            // this.search();
             this.commonService.notify('info', c + ' Cart Items Added');
           },
           (error: any) => {
-            // this.alertService.error(error);
-            //   this.loading = false;
-          });
-
+            // Handle error
+          }
+        );
     };
-    //reset file input
+    // Reset file input
     event.target.value = '';
   }
+  
   /* end of bulk Upload*/
-  getcustomfields(cutmFields: string | { [s: string]: unknown; } | ArrayLike<unknown> | null | undefined){
-    let tempCustmFields: unknown[]=[];
-    if(cutmFields==null || cutmFields=='' || cutmFields==undefined){
-      tempCustmFields=[];
-    }else{
-    Object.values(cutmFields).forEach(ele=>{
-      tempCustmFields.push(ele);
-    });
-  }
-    return tempCustmFields;
-  }
-  bulkAddItem(blc: unknown) {
-    //console.log('bAdd',blc); 
-    this.selectedSlc = blc;
-     if(this.selectedSlc.custom_fields && typeof this.selectedSlc.custom_fields == 'object'){
-      this.selectedSlc.custom_fields = Object.values(this.selectedSlc.custom_fields);
+  
+bulkAddItem(blc: unknown) {
+    let selectedSlc = blc as any; // Assuming YourType represents the type of selectedSlc
+    if(selectedSlc.custom_fields && typeof selectedSlc.custom_fields == 'object'){
+        selectedSlc.custom_fields = Object.values(selectedSlc.custom_fields);
     }
-    this.selectedSlc.start_date = blc.start_date;
-    this.selectedSlc.end_date = blc.end_date;
-      this.setSelectedSlc(blc)
-      this.cart_add();
-  }
+    selectedSlc.start_date = (blc as any).start_date; // Casting blc to 'any' temporarily for accessing start_date
+    selectedSlc.end_date = (blc as any).end_date; // Casting blc to 'any' temporarily for accessing end_date
+    this.setSelectedSlc(selectedSlc);
+    this.cart_add();
+}
 
   getPincodeinfo() {
-    this.commonService.notify('info', 'Please Wait', 'Fetching Pincode Information');
-    if (this.selectedCustomer.pincode) { } else {
-      this.commonService.notify('info', 'Error', 'Pincode is Mandatory');
+    this.commonService.notify('info', 'Please Wait');
+    if (!this.selectedCustomer.pincode) {
+      this.commonService.notify('info', 'Error');
       this.selectedCustomer.state = '';
       this.selectedCustomer.city = '';
       this.selectedCustomer.address_line_3 = '';
@@ -2585,30 +2444,21 @@ addEditTransaction() {
         .subscribe(
           (data: any) => {
             if (data) {
-              //depreciated
-              //  this.selectedCustomer.state=data.state;
-              //this.selectedCustomer.city=data.district;
-              //this.selectedCustomer.address_line_3=data.locality;
               this.selectedCustomer.country = 'India';
             }
-            //this.getList();
-            // this.search();
-
+            // Additional logic can be added here
           },
-          (          error: any) => {
-            // this.selectedCustomer.state='';
-            // this.selectedCustomer.city='';
-            // this.selectedCustomer.address_line_3='';
-            // this.alertService.error(error);
-            //   this.loading = false;
+          (error: any) => {
+            // Error handling logic can be added here
           });
     } else {
-      this.commonService.notify('error', 'Oops!', 'Pincode too Short');
-      //this.selectedCustomer.state='';
-      // this.selectedCustomer.city='';
-      // this.selectedCustomer.address_line_3='';
+      this.commonService.notify('error', 'Oops!');
     }
+    
+    // Add an explicit return statement here
+    return undefined;
   }
+  
 
   setst(r: any) {
     this.selectedTransaction = JSON.parse(JSON.stringify(r));
@@ -2648,32 +2498,25 @@ addEditTransaction() {
 
 
   confirmOpenCN() {
-
     let that = this;
-    swal({
+    Swal.fire({
       title: 'Are you sure to Create Credit Note?',
-      text: "Once Created , Credit Notes Can not be Deleted , This Action is NOT Reversible.",
-      type: 'warning',
+      text: "Once Created, Credit Notes Can not be Deleted, This Action is NOT Reversible.",
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, Proceed to Create',
       cancelButtonText: 'No, Cancel',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
       buttonsStyling: false
-    }).then(function (result: { value: any; }) {
-
-
-      //True Confirmation    
+    }).then(function (result) {
+      // True Confirmation    
       if (result.value) {
         that.commonService.openModal('modalcreditnote');
       }
-
     });
-
-
   }
+  
   createCreditNote() {
     let m: any = {};
     m.issuedLc = this.issuedLc;
@@ -2682,7 +2525,7 @@ addEditTransaction() {
     m.description = this.tempmodel.description;
   
     if (this.savecninprogress) {
-      this.commonService.notify('info', 'Please Wait', 'Existing Request in Progress');
+      this.commonService.notify('info', 'Please Wait');
       return 0;
     }
   
@@ -2724,7 +2567,7 @@ addEditTransaction() {
   //PI Request
   pir_request() {
     if (this.saveatiinprogress) {
-      this.commonService.notify('info', 'Please Wait', 'Existing Request in Progress');
+      this.commonService.notify('info', 'Please Wait');
       return 0;
     }
     if (!this.quotation.pir_comment || this.quotation.pir_comment === '') {
@@ -2783,7 +2626,7 @@ addEditTransaction() {
       (res: { leadstatusdata: any; qvalues: string; }) => {
         this.lead_lead_status_data=res;
         this.leadstatusdata=res.leadstatusdata;
-        this.leadstatusdata.questions.sort(function(x, y) {
+        this.leadstatusdata.questions.sort(function(x: { seq: number; }, y: { seq: number; }) {
           // Ascending: first age less than the previous
           return x.seq - y.seq;
         });
@@ -2943,76 +2786,66 @@ if(cf.canflagcityclass){
 
   // recreate Licenses 
   confirmrecreateLicenses() {
-
     let that = this;
-    swal({
+    Swal.fire({
       title: 'Do you Want to Reset the Licenses ?',
-      text: "Licenses will be cleared and synced with Cart Items , You need to Issue licences again.",
-      type: 'warning',
+      text: "Licenses will be cleared and synced with Cart Items, You need to Issue licences again.",
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, Do it!',
       cancelButtonText: 'No, Cancel',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
       buttonsStyling: false
-
-    }).then(function (result: { value: any; }) {
+    }).then(function (result) {
       if (result.value) {
-        // console.log("that.quotation.id data", that.quotation.id);
         that.quotationService.recreateLicenses(that.quotation.id)
-        .subscribe(
-          (data: any) => {
-            that.commonService.notify('info', 'Reset License Successfully');
-            // refresh page 
-            that.getQuotation(that.quotation.id,that.quotation.uuid);
-            that.router.navigate(['/quotation/view/' +that.quotation.id+'/'+that.quotation.uuid]);
-            //this.quotation=data;
-          },
-          ( error: any) => {  
-            console.log(error);
-          });
+          .subscribe(
+            (data: any) => {
+              that.commonService.notify('info', 'Reset License Successfully');
+              // refresh page 
+              that.getQuotation(that.quotation.id, that.quotation.uuid);
+              that.router.navigate(['/quotation/view/' + that.quotation.id + '/' + that.quotation.uuid]);
+            },
+            (error: any) => {
+              console.log(error);
+            });
       }
-
     });
   }
+  
+  
 
   // question upload file
-    onFileChange(event:any,question_id:any){
-    // alert("event");
-      this.commonService.notify('info',' Please Wait , File Upload in Progress...');
-      if(this.loading){
-        return 0;
-      }
-     
-      let reader = new FileReader();
-      let fi=event.target.files[0];
-       reader.readAsDataURL(fi);
-       reader.onload = () => {
-
-     this.loading=true;
-         this.transactionService.questionuploadfile(fi)
-         .subscribe(
-           (data: { file_url: any; }) => {
-            let question_file_url = data.file_url;
-
-            this.loading=false;
-              this.commonService.notify('info','File Uploaded Successfully');
-              if(question_id == 155){
-                this.qvalues._155 = question_file_url;
-              }else{
-                this.qvalues._168 = question_file_url;
-              }
-           },
-           (error: any) => {
-               // this.alertService.error(error);
-            //   this.loading = false;
-           });
-       };
+  onFileChange(event: any, question_id: any) {
+    this.commonService.notify('info', 'Please Wait, File Upload in Progress...');
+    if (this.loading) {
+      return; // No need to return a value here
+    }
   
-      }
-
+    let reader = new FileReader();
+    let fi = event.target.files[0];
+    reader.readAsDataURL(fi);
+    reader.onload = () => {
+      this.loading = true;
+      this.transactionService.questionuploadfile(fi)
+        .subscribe(
+          (data: { file_url: any }) => {
+            let question_file_url = data.file_url;
+            this.loading = false;
+            this.commonService.notify('info', 'File Uploaded Successfully');
+            if (question_id == 155) {
+              this.qvalues._155 = question_file_url;
+            } else {
+              this.qvalues._168 = question_file_url;
+            }
+          },
+          (error: any) => {
+            // Handle error if needed
+          });
+    };
+  }
+  
       // upload Evidence
 
       // onFileChangeUploadEvidence1(event:any){
@@ -3184,10 +3017,10 @@ if(cf.canflagcityclass){
           // console.log('find all cart file', allcartevidence);
           if (evdfile.length < 1) {
             // console.log('delete file finally', );
-            this.commonService.notify("info", "File Removed", "Evidence Removed from Proforma Invoice");
+            this.commonService.notify("info", "File Removed");
             this.allevidence.splice(index, 1);
           } else {
-            this.commonService.notify("error", "File Not Removed", "This evidence file is already used in cart item");
+            this.commonService.notify("error", "File Not Removed");
           }
       
         }
@@ -3213,38 +3046,34 @@ if(cf.canflagcityclass){
               }
           });
       }
-      
-      
-        openmodalselectfile(index: string | number){
-          this.cart_id = index;
-          console.log('cartt index', index);
-          console.log('cartt details index',this.allSelectedLc[index]);
-          let allcartevidencefiles = [];
-          for (let i = 0; i < this.allSelectedLc.length; i++) {
-            if (this.allSelectedLc[i].cartevidence && this.allSelectedLc[i].cartevidence.length > 0) {
-              for (let j = 0; j < this.allSelectedLc[i].cartevidence.length; j++) {
-                allcartevidencefiles.push(this.allSelectedLc[i].cartevidence[j]);
-                
-              }
+      openmodalselectfile(index: string | number) {
+        this.cart_id = index;
+        console.log('cartt index', index);
+        console.log('cartt details index', this.allSelectedLc[index]);
+        let allcartevidencefiles = [];
+        for (let i = 0; i < this.allSelectedLc.length; i++) {
+          if (this.allSelectedLc[i].cartevidence && this.allSelectedLc[i].cartevidence.length > 0) {
+            for (let j = 0; j < this.allSelectedLc[i].cartevidence.length; j++) {
+              allcartevidencefiles.push(this.allSelectedLc[i].cartevidence[j]);
             }
           }
-          var resArr: any[] = [];
-          allcartevidencefiles.forEach(function(item){
-            var i = resArr.findIndex(x => x.evidenceUrl == item.evidenceUrl);
-            if(i <= -1){
-              resArr.push(item);
-            }
-          });
-          console.log('resArr',resArr);
-
-          const results = this.allevidence.filter(({ evidenceUrl: id1 }) => !resArr.some(({ evidenceUrl: id2 }) => id2 === id1));
-          console.log('final resArr',results);
-
-          this.tempallevidence = results;
-          console.log('tempallevidence',this.tempallevidence);
-          
         }
-
+        var resArr: any[] = [];
+        allcartevidencefiles.forEach(function(item) {
+          var i = resArr.findIndex((x: { evidenceUrl: string }) => x.evidenceUrl == item.evidenceUrl);
+          if (i <= -1) {
+            resArr.push(item);
+          }
+        });
+        console.log('resArr', resArr);
+      
+        const results = this.allevidence.filter(({ evidenceUrl: id1 }: { evidenceUrl: string }) => !resArr.some(({ evidenceUrl: id2 }: { evidenceUrl: string }) => id2 === id1));
+        console.log('final resArr', results);
+      
+        this.tempallevidence = results;
+        console.log('tempallevidence', this.tempallevidence);
+      }
+      
         saveEvidence(){
           console.log("save evi",this.allSelectedLc);
           // this.allSelectedLc.cartevidence
@@ -3356,27 +3185,27 @@ if(cf.canflagcityclass){
       }
     }
     // Cancel Invoice popup
-    prepareCancelnvoice(){
+    prepareCancelnvoice() {
       let that = this;
-      swal({
+      swal.fire({
         title: 'Are you sure?',
         text: "You want to cancel this Invoice.",
-        type: 'warning',
+        icon: 'warning', // 'icon' should be of type SweetAlertIcon
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, Proceed to Cancel',
         cancelButtonText: 'No, Cancel',
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false
       }).then(function (result) {
         if (result.value) {
           that.cancelInvoice();
         }
-  
       });
     }
+    
+    
+    
 
   // cancel Invoice api
   cancelInvoice(){
@@ -3417,7 +3246,7 @@ if(cf.canflagcityclass){
 
     if (this.quotation.cpn_comment) {
         if (this.saveatiinprogress) {
-            this.commonService.notify('info', 'Please Wait', 'Existing Request in Progress');
+            this.commonService.notify('info', 'Please Wait');
         }
 
         this.saveatiinprogress = true;
@@ -3492,122 +3321,115 @@ if(cf.canflagcityclass){
     }
   }
 
-  _can_show_condition_field(sc:any={},cf:any={}){
-    let flag=true;
-    //let sc=this.selectedSlc;
-    try{
-    if(cf.conditional_category_field_value_id==0){
-      return true;
-    }
-    let category_fields=sc.custom_fields.filter((el: { f_type: string; }) => (el.f_type=='category_field' ));
-   // console.log(category_fields);
-    flag=false;
-    category_fields.forEach((element: { setcartvalue: { id: any; }; conditional_category_field_value_id: number; }) => {
-      if(element.setcartvalue){
-      //console.log(flag,element,element.setcartvalue.id,cf.conditional_category_field_value_id);
-      if(element.setcartvalue.id == cf.conditional_category_field_value_id){
-        flag=true;   
-        if(element.conditional_category_field_value_id != 0){
-       //   console.log('heirrrss',element.conditional_category_field_value_id);
-          let cpcf=category_fields.filter((el: { setcartvalue: { id: number; }; }) => el.setcartvalue.id == element.conditional_category_field_value_id);
-          cpcf.length>0 ? flag=true : flag=false;
-          //return this._can_show_condition_field(sc,element);
+  _can_show_condition_field(sc: any = {}, cf: any = {}): boolean {
+    let flag = true;
+    try {
+        if (cf.conditional_category_field_value_id == 0) {
+            return true;
         }
-       // console.log(flag,element,element.setcartvalue.id,cf.conditional_category_field_value_id);
-return true;
-      } 
-    }     
-    });
-    //let cf_value_fields=category_fields.filter(el => el.setcartvalue.id==cf.conditional_category_field_value_id);
-    //console.log(cf_value_fields,'cf_value_fields');
-    // if(category_fields.length == 0){
-    //   flag=false;
-    // }
-  }catch (e) {
-   // console.log('error',e);
-  }
+        let category_fields = sc.custom_fields.filter((el: { f_type: string; }) => (el.f_type == 'category_field'));
+        flag = false;
+        for (let element of category_fields) {
+            if (element.setcartvalue && element.setcartvalue.id == cf.conditional_category_field_value_id) {
+                flag = true;
+                if (element.conditional_category_field_value_id != 0) {
+                    let cpcf = category_fields.filter((el: { setcartvalue: { id: number; }; }) => el.setcartvalue.id == element.conditional_category_field_value_id);
+                    cpcf.length > 0 ? flag = true : flag = false;
+                }
+                return true; // Return from the enclosing function
+            }
+        }
+    } catch (e) {
+        // Handle any errors here
+        // console.log('error',e);
+        // If an error occurs, you may want to set flag to false or handle it in some other way
+        flag = false;
+    }
+    // Make sure to return a boolean value
     return flag;
+}
 
-  }
 
+
+ 
   conditionFieldNoCheck(cf: any = {}) {
     console.log(cf.id, cf.conditional_category_field_value_id, cf.setcartvalue.id);
   
     cf.category_options.forEach((element: { id: string; }) => {
-      if (element.id != cf.setcartvalue.id) {
-        let f2d = this.selectedSlc.custom_fields.filter((el: { conditional_category_field_value_id: string | number; }) => {
-          // Check if conditional_category_field_value_id is a number before comparison
-          if (typeof cf.conditional_category_field_value_id === 'number') {
-            return el.conditional_category_field_value_id > 0 && el.conditional_category_field_value_id == element.id;
-          }
-          return false;
-        });
-        console.log('delete for ' + element.id, f2d);
-        f2d.forEach((elementf2d: { id: any; }) => {
-          let fid = this.selectedSlc.custom_fields.findIndex((el: { id: any; }) => el.id == elementf2d.id);
-          console.log('fid', fid, this.selectedSlc.custom_fields[fid]);
-          this._deleteFieldvalue(fid);
-  
-          //Second Level Clearing
-          if (this.selectedSlc.custom_fields[fid].f_type == 'category_field') {
-            this.selectedSlc.custom_fields[fid].category_options.forEach((element2: { id: any; }) => {
-              let f2d2 = this.selectedSlc.custom_fields.filter((el: { conditional_category_field_value_id: number; }) => {
+        if (element.id != cf.setcartvalue.id) {
+            let f2d = this.selectedSlc.custom_fields.filter((el: { conditional_category_field_value_id: string | number; }) => {
                 // Check if conditional_category_field_value_id is a number before comparison
-                if (typeof cf.conditional_category_field_value_id === 'number') {
-                  return el.conditional_category_field_value_id > 0 && el.conditional_category_field_value_id == element2.id;
+                if (typeof el.conditional_category_field_value_id === 'number') {
+                    // Convert element.id to a number for comparison
+                    return el.conditional_category_field_value_id > 0 && Number(el.conditional_category_field_value_id) === Number(element.id);
+                } else if (typeof el.conditional_category_field_value_id === 'string') {
+                    // Perform string comparison
+                    return el.conditional_category_field_value_id === element.id;
                 }
                 return false;
-              });
-              f2d2.forEach((elementf2d2: { id: any; }) => {
-                let fid2 = this.selectedSlc.custom_fields.findIndex((el: { id: any; }) => el.id == elementf2d2.id);
-                console.log('fid2', fid2);
-  
-                this._deleteFieldvalue(fid2);
-              });
             });
-          }
-  
-          this._deleteFieldvalue(fid);
-        });
-      }
+            console.log('delete for ' + element.id, f2d);
+            f2d.forEach((elementf2d: { id: any; }) => {
+                let fid = this.selectedSlc.custom_fields.findIndex((el: { id: any; }) => el.id == elementf2d.id);
+                console.log('fid', fid, this.selectedSlc.custom_fields[fid]);
+                this._deleteFieldvalue(fid);
+    
+                //Second Level Clearing
+                if (this.selectedSlc.custom_fields[fid].f_type == 'category_field') {
+                    this.selectedSlc.custom_fields[fid].category_options.forEach((element2: { id: any; }) => {
+                        let f2d2 = this.selectedSlc.custom_fields.filter((el: { conditional_category_field_value_id: number; }) => {
+                            // Check if conditional_category_field_value_id is a number before comparison
+                            if (typeof el.conditional_category_field_value_id === 'number') {
+                                return el.conditional_category_field_value_id > 0 && el.conditional_category_field_value_id == element2.id;
+                            }
+                            return false;
+                        });
+                        f2d2.forEach((elementf2d2: { id: any; }) => {
+                            let fid2 = this.selectedSlc.custom_fields.findIndex((el: { id: any; }) => el.id == elementf2d2.id);
+                            console.log('fid2', fid2);
+    
+                            this._deleteFieldvalue(fid2);
+                        });
+                    });
+                }
+    
+                this._deleteFieldvalue(fid);
+            });
+        }
     });
-  }
-  
-  
-  
+}
+
+
 
   _deleteFieldvalue(i: string | number){
     delete this.selectedSlc.custom_fields[i].setvalue;
     delete this.selectedSlc.custom_fields[i].setcartvalue;
     delete this.selectedSlc.custom_fields[i].setValue; 
   }
-
-  conditionFieldvalidateCheck(selectSlc: { id: number; custom_fields: { setcartvalue: { name: string; }; }[]; }){
-
+conditionFieldvalidateCheck(selectSlc: { id: number; custom_fields: { setcartvalue: { name: string; }; }[]; }): true | undefined {
     console.log(selectSlc);
 
-      if(selectSlc.id==148 || selectSlc.id==149){
-
-        if(!selectSlc.custom_fields[0].setcartvalue){
-          
-          this.selectedSlc.custom_fields[1].setcartvalue=null;
-          
-          
-          this.commonService.notify('error', 'No. Of Seats dosenot empty');
-          
-        }
-        if(selectSlc.custom_fields[0].setcartvalue > 60 &&  selectSlc.custom_fields[1].setcartvalue.name=='Yes' ){
-          //console.log(this.selectedSlc.custom_fields[1].setcartvalue);
-          this.selectedSlc.custom_fields[1].setcartvalue=null;
-          this.commonService.notify('error', 'If Restaurant is serving Alcohol and seats mentioned are more than 60 kindly refer categroy 48');
-          
+    if (selectSlc.id == 148 || selectSlc.id == 149) {
+        if (!selectSlc.custom_fields[0].setcartvalue) {
+            this.selectedSlc.custom_fields[1].setcartvalue = null;
+            this.commonService.notify('error', 'No. Of Seats does not empty');
         }
 
-        
-      }else{
+        // Convert the name property to a number if it represents a numerical value
+        const seats = parseInt(selectSlc.custom_fields[0].setcartvalue.name);
+
+        if (seats > 60 && selectSlc.custom_fields[1].setcartvalue.name == 'Yes') {
+            this.selectedSlc.custom_fields[1].setcartvalue = null;
+            this.commonService.notify('error', 'If Restaurant is serving Alcohol and seats mentioned are more than 60 kindly refer to category 48');
+        }
+    } else {
         return true;
-      }
-  }
+    }
+
+    // Add a default return statement
+    return undefined;
+}
+
 
   setLeadInfo() {
     if(this.selectedLead){

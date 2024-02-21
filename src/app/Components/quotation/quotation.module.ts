@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ApplicationRoutingModule} from './quotation-routing.module';
 import {SharedModule} from '../../shared/shared.module';
@@ -8,6 +8,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { CommonService } from '../../Services/common.service';
 import { QuotationService } from '../../Services/quotation.service';
 import { TransactionService } from '../../Services/transaction.service';
+import { MapsAPILoader } from '@agm/core';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { TransactionService } from '../../Services/transaction.service';
     SharedModule,
   ],
   declarations: [],
-  providers: [NotificationsService,CommonService ,QuotationService,TransactionService] 
+  providers: [NotificationsService,CommonService ,QuotationService,TransactionService], 
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
 
 })
 export class ApplicationModule { }
