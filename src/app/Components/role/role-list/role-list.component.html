@@ -1,0 +1,195 @@
+<div class="page-body">
+    <div class="row">
+    <div class="col-sm-12">
+
+      <app-card >
+       <!-- <span class="code-header">use class <code>data-table </code> with ngx-datatable and set <code>search element</code>.</span>-->
+        <div class="row">
+          <div class="col-sm-12">
+         <label class="dt-cust-search f-right">
+                <div class="form-group">
+                <!--  <label>Search: </label>
+                <input
+                  type='text'
+                  class="form-control input-sm m-l-10"
+                  placeholder='Search Name'
+                  (keyup)='updateFilter($event)'
+                /> -->
+                 <button class="btn btn1 btn-info"  (click)="model.id=0;model.permissions=[];commonService.showModal('roleadd')">Add</button>
+              </div>
+            </label>
+          </div>
+        </div>   <div class="preloader3 loader-block" *ngIf="loading">
+          <div class="circ1"></div>
+          <div class="circ2"></div>
+          <div class="circ3"></div>
+          <div class="circ4"></div>
+        </div>
+
+        <ngx-datatable
+          #table
+          class='data-table'
+          [columnMode]="'flex'"
+          [headerHeight]="50"
+          [footerHeight]="55"
+          [rowHeight]="'auto'"
+          [scrollbarH]="true"
+          [limit]="10"
+          [rows]='tabrows'>
+          <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="123">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              {{row.id}} | <b>L{{row.level}}</b>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Name" [flexGrow]="1" [minWidth]="247">
+            <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+              <b>{{row.name}}</b>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Description" [flexGrow]="1.5" [minWidth]="371">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.description}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Max Discount" [flexGrow]="0.5" [minWidth]="130">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+             {{row.discount}}
+              </ng-template>
+            </ngx-datatable-column>
+
+          <ngx-datatable-column name="Max ATI" [flexGrow]="0.5" [minWidth]="100">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+           {{row.maxati}}
+            </ng-template>
+          </ngx-datatable-column>
+           <ngx-datatable-column name="Action" [flexGrow]="0.5" [minWidth]="153">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                <a  style="color: #6B05F9" *ngIf="row.id!=0" (click)="setModel(row);commonService.showModal('roleadd')">
+                    <i class="ti-pencil"></i>
+                  </a> <!--|  <a style="color: red" (click)="openSuccessCancelSwal()">
+                    <i class="ti-trash"></i>
+                  </a>-->
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+
+
+      </app-card>
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+<!-- Right Bar Org Signup Module-->
+<!--  <app-modal-basic #roleAdd  [dialogClass]="'modal-lg'"  >
+
+
+                    <div class="modal-header"> hm
+                            <h1 class="mrg-top-30 adduserd masterforma">
+                                    <span *ngIf="model.id!=0">Edit Role '{{model.name}}' in </span> <span *ngIf="model.id==0">Add New Role   </span>
+                           </h1>
+                        </div>
+
+                        <form name="form" (ngSubmit)="role_add($event)" ngNativeValidate>
+
+                <div class="modal-body">
+                    <div class="vertical-aligndepr">
+                        <div class="table-cell">
+                            <div class="pdd-horizon-15">
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                        <div class="row">
+                            <div class="col">
+                                <button  type="button" type=submit class="btn btn-primary btn-block border-radius-6"> <span *ngIf="model.id!=0">Edit Role </span> <span *ngIf="model.id==0">Create Role </span>  <img *ngIf="loading2" src="/assets/loaderwhite.png" width=20px ></button>
+                            </div> <div class="col">
+                                <button  type="button"  data-dismiss="modal" class="btn btn-danger btn-block border-radius-6">Cancel</button>
+                            </div>
+                            </div>
+                </div>
+            </form>
+
+</app-modal-basic> -->
+
+
+
+
+<app-modal-animation #modalRoleAdd  [modalClass]="'roleadd'"   [modalID]="'roleadd'">
+    <div class="app-modal-header">
+        <h4 class="modal-title">
+            <span *ngIf="model.id!=0">Edit Role '{{model.name}}'</span> <span *ngIf="model.id==0">Add New Role   </span>
+   </h4>
+      <button type="button" class="close basic-close" (click)="modalRoleAdd.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- <div class="app-modal-body" class="src">
+        <div class="row"> -->
+          <!-- <div class="col-sm-12 mobile-inputs">
+            <form name="form" (ngSubmit)="role_add($event)" ngNativeValidate>
+                <div class="form-group">
+                    <label class="text-normal text-dark"><b>Name *</b></label>
+                    <input placeholder="Name" type=text name="name" [(ngModel)]="model.name" #name="ngModel" required class="form-control">
+                </div>
+
+
+
+                <!-- <div class="form-group" *ngIf="permissions">
+                    <label class="text-normal text-dark"><b>Permissions</b> :  <div class="checkbox " style="display:inline">
+                            <input id="cb-call"   type="checkbox" (change)="checkall()" [checked]=checkallflag>
+                            <label for="cb-call">&nbsp;Check All</label>
+                        </div>
+                    </label>
+
+                    <!-- Acc start-->
+                    <!-- <div style="max-height:300px;overflow:scroll">
+                    <ngb-accordion #acc="ngbAccordion"   class="ngb-accordion" activeIds="ngb-open-25,ngb-open-16,ngb-open-24,ngb-open-33,ngb-open-31,ngb-open-4,ngb-open-30,ngb-open-12,ngb-open-23,ngb-open-37,ngb-open-8,ngb-open-19">
+
+
+                      <ng-container *ngFor="let itemp of permissions|keyvalue">
+                               <ngb-panel   id="ngb-open-{{itemp.value.id}}" title="{{itemp.value.model | titlecase}}">
+                                                <ng-template ngbPanelContent>
+
+                                                       <div class="row" style="margin-left:10px;margin-right:10px">    <div *ngFor="let permission of itemp.value.permissions" class="col-*" style="padding-right:15px">
+                                                                <div class="checkbox ">
+                                                                        <input id="cb-{{permission.id}}"   type="checkbox" (change)="changeModel($event, model.permissions, permission.id)" [checked]="check_includes(permission.id)">
+                                                                        <label for="cb-{{permission.id}}" title="Pid : {{permission.id}}">&nbsp; {{permission.name | titlecase}}</label>
+                                                                    </div>
+                                                        </div>
+                                                      </div>
+
+                                                </ng-template>
+                            </ngb-panel>
+                          </ng-container>
+
+              </ngb-accordion>
+            </div>
+                </div>  --> -->
+                <!-- </form> -->
+            <!-- </div>
+        </div>
+      </div> -->
+
+      <div class="app-modal-footer">
+          <div class="row">
+              <div class="col">
+                  <button  type="button" type=submit (click)=role_add($event) class="btn btn-primary btn-block border-radius-6">
+                     <span *ngIf="model.id!=0">Edit Role </span> <span *ngIf="model.id==0">Create Role </span>  <img *ngIf="loading2" src="/assets/loaderwhite.png" width=20px ></button>
+              </div> <div class="col">
+                  <button  type="button"  data-dismiss="modal" (click)="commonService.hideModal('roleadd');" class="btn btn-danger btn-block border-radius-6">Cancel</button>
+              </div>
+              </div>
+  </div>
+
+  </app-modal-animation>

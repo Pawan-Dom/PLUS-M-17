@@ -6,8 +6,8 @@ import { Subject } from 'rxjs';
 import { AlertService } from '../../../Services/alert.service';
 import { CommonService } from '../../../Services/common.service';
 import { AuthService } from '../../../Services/auth.service';
-import { QuotationService } from '../../../Services/quotation.service';
 import { MasterService } from '../../../Services/master.service';
+import { QuotationService } from '../../../Services/quotation.service';
 import { LeadService } from '../../../Services/lead.service';
 
 @Component({
@@ -37,9 +37,8 @@ searchqf='';
     orderBy: 'id',
     orderDir: 'desc'
   };
-  tabrows: any[] = [];
+  tabrows!: [];
   tempFilter :any ;
-  pageCallback: any;
 
   constructor(
     private alertService: AlertService,
@@ -61,10 +60,12 @@ searchqf='';
     this.pageCallback({ offset: 0 });
   }
 
-  PageCallback(pageInfo: { count?: number, pageSize?: number, limit?: number, offset?: number }) {
-    this.page.offset = pageInfo.offset!;
+
+  pageCallback(pageInfo: { count?: number, pageSize?: number, limit?: number, offset?: number }) {
+    this.page.offset = pageInfo.offset ?? 0; // Default value of 0 if pageInfo.offset is undefined
     this.getList();
 }
+
 
   filterq(cat_type: any){ 
   

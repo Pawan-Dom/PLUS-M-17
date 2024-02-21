@@ -10,8 +10,8 @@ const routes: Routes = [
     },
     children: [
       {
-        path: 'list',
-        loadChildren: () => import('./lead-list/lead-list.module').then(m => m.LeadListModule)      }
+        path: '',
+        loadChildren: () => import('./lead-list/lead-list.module').then(module => module.LeadListModule)      }
     ]
   }
 ];

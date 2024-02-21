@@ -1,0 +1,23 @@
+th, td {
+    white-space: unset!important;
+}
+
+table {
+    border-collapse: collapse; 
+    border: 1px solid #f3f3f3 !important;
+}
+
+.avoid-clicks {
+    pointer-events: none;
+    cursor: not-allowed;  
+  }
+
+.p {
+    margin-bottom: 6px !important;
+}
+
+
+.interestdiv table {
+    border-collapse: collapse; 
+    border: 1px solid #c0bcbc !important;
+}
