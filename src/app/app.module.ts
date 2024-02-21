@@ -30,7 +30,6 @@ import { AuthService } from './Services/auth.service';
 import { AppRoutingModule } from './app-routing.module'; // Correct import statement
 import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications'; // Import SimpleNotificationsModule for options
 import { ArchwizardModule } from 'ng2-archwizard/dist';
-import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
     declarations: [
@@ -54,10 +53,6 @@ import { AgmCoreModule } from '@agm/core';
         HttpClientModule,
         BrowserAnimationsModule,
         MatSnackBarModule,
-        AgmCoreModule.forRoot(  {
-            apiKey: 'AIzaSyCWTXhw6HKIlWY33OpKMvhCCmSh4i_uu-0',
-          libraries: ['places']
-          }),
         MatListModule,
         MatIconModule,
         MatToolbarModule,
