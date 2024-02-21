@@ -1270,7 +1270,7 @@
                 <span *ngIf="slc.cat_type=='bg'">
                   {{slc.ltype}}
                   <br></span>
-                  <div *ngFor="let cf of getcustomfields(slc.custom_fields)">
+                  <!-- <div *ngFor="let cf of getcustomfields(slc.custom_fields)">
                     <span *ngIf="(cf.f_type=='single_field' || cf.f_type=='range_field') && cf.setcartvalue && (!cf.is_show || (cf.is_show && cf?.is_show==1))">
                       {{ cf.f_name }}: {{ cf.setcartvalue }} {{ cf.single_field_desc }}
                     </span>
@@ -1282,7 +1282,7 @@
                       </span>
                     </span>
                   </div>
-                  
+                   -->
                 <span *ngIf="slc.setcartpremium_enable"><b> {{ slc.premium_name }}</b></span>
 
                 <span [hidden]="allSelectedLc[i].show_no_of_usages==0">
