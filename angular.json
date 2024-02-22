@@ -40,7 +40,8 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
               "src/assets/icon/themify-icons/themify-icons.css",
-              "node_modules/bootstrap/scss/bootstrap.scss"
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js"

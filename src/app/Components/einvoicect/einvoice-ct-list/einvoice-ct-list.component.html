@@ -39,7 +39,8 @@
         </div>
 
 
-        <ngx-datatable *ngIf="!loadingIndicator" #table class="data-table" [columnMode]="'flex'" [headerHeight]="50"
+        <ngx-datatable *ngIf="!loadingIndicator" #table       class="bootstrap"
+        [columnMode]="'flex'" [headerHeight]="50"
           [footerHeight]="55" [rowHeight]="'auto'" [externalPaging]="true" [count]="page.count" [offset]="page.offset"
           [limit]="page.limit" [rows]='tabrows' (page)="pageCallback($event)" [scrollbarH]="true">
           <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="101">

@@ -131,7 +131,8 @@
         </div>
 
         <br>
-        <ngx-datatable *ngIf="!loadingIndicator" #table class="data-table" [columnMode]="'flex'" [headerHeight]="50" [scrollbarH]="true"
+        <ngx-datatable *ngIf="!loadingIndicator" #table       class="bootstrap"
+        [columnMode]="'flex'" [headerHeight]="50" [scrollbarH]="true"
           [footerHeight]="55" [rowHeight]="'auto'" [externalPaging]="true" [count]="page.count" [offset]="page.offset"
           [limit]="page.limit" [rows]='tabrows' (page)="pageCallback($event)">
           <ngx-datatable-column name="Id" [flexGrow]="0.5" [minWidth]="189">
