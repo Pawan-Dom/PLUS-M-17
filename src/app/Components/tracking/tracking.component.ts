@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {DatatableComponent} from '@swimlane/ngx-datatable';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import swal from 'sweetalert2';
@@ -11,6 +11,10 @@ import { QuotationService } from '../../Services/quotation.service';
 import { UserService } from '../../Services/user.service';
 import { MapInfoWindow } from '@angular/google-maps'; // Import InfoWindow
 
+interface InfoWindowElement extends HTMLElement {
+  infoWindow: google.maps.InfoWindow; 
+}
+
 
 @Component({
   selector: 'app-tracking',
@@ -18,9 +22,7 @@ import { MapInfoWindow } from '@angular/google-maps'; // Import InfoWindow
    
 })
 export class TrackingComponent {
-  @ViewChild('infoWindow')
-  infoWindow!: MapInfoWindow; // Use @ViewChild to get InfoWindow instance
-    model:any={};
+  @ViewChild('infoWindowsgd') infoWindowElement!: ElementRef;    model:any={};
     loading=false;
     reports:any;
     users:any;
@@ -146,10 +148,12 @@ filterusers(){
         }
     );
 }
+onMouseOver(gm: any) {
+  // Retrieve the InfoWindow instance associated with the HTMLElement
+  const infoWindow = this.infoWindowElement.nativeElement.infoWindow;
 
- onMouseOver(infoWindow: google.maps.InfoWindow, gm: any) {
   if (gm.lastOpen != null) {
-      gm.lastOpen.close();
+    gm.lastOpen.close();
   }
 
   gm.lastOpen = infoWindow;

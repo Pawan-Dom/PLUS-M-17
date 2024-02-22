@@ -128,10 +128,13 @@
       </agm-marker> 
         <!-- other markers-->
        <ng-container *ngIf="ugd.gpsdatapoints">
-        <agm-marker (mouseOver)="onMouseOver(infoWindowsgd,gm)" *ngFor="let sgd of ugd.gpsdatapoints" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/singlegdpoint.png'">
-          <agm-info-window #infoWindowsgd><h4 style="font-size:large">{{ugd.name}} - {{ugd.region}}</h4><hr> TimeStamp : {{sgd.created_on|date:'medium'}}</agm-info-window>
-
+        <agm-marker (mouseOver)="onMouseOver(infoWindowsgd)" *ngFor="let sgd of ugd.gpsdatapoints" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/singlegdpoint.png'">
+          <agm-info-window #infoWindowsgd>
+            <h4 style="font-size:large">{{ ugd.name }} - {{ ugd.region }}</h4>
+            <hr> TimeStamp: {{ sgd.created_on | date: 'medium' }}
+          </agm-info-window>
         </agm-marker>
+        
 
         <agm-polyline [strokeColor]="'#0E71F3'" >
 
