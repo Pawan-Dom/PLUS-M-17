@@ -33,18 +33,18 @@ const routes: Routes = [
         path: 'noc/:shownoc',
         loadChildren: () => import('./application-list/application-list.module').then(m => m.ApplicationListModule)
     },
-    // {
-    //   path: 'add',
-    //      loadChildren: () => import('./application-add/application-add.module').then(m => m.ApplicationAddModule)
-    // },
-    // {
-    //      path: 'add/:type',
-    //      loadChildren: () => import('./application-add/application-add.module').then(m => m.ApplicationAddModule)
-    // },
-    // {
-    //    path: 'view/:id/:uuid',
-    //   loadChildren: () => import('./application-add/application-add.module').then(m => m.ApplicationAddModule)
-    // }
+    {
+        path: 'add',
+        loadChildren: () => import('./application-add/application-add.module').then(m => m.ApplicationAddModule)
+    },
+    {
+          path: 'add/:type',
+          loadChildren: () => import('./application-add/application-add.module').then(m => m.ApplicationAddModule)
+    },
+    {
+       path: 'view/:id/:uuid',
+      loadChildren: () => import('./application-add/application-add.module').then(m => m.ApplicationAddModule)
+    }
     /*,
       {
         path: 'row-details',

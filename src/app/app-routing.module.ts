@@ -21,6 +21,7 @@ const routes: Routes = [
   { path: 'leadstatus', loadChildren: () => import('./Components/leadstatus/leadstatus.module').then(m => m.LeadstatusModule) },
   { path: 'quotation', loadChildren: () => import('./Components/quotation/quotation.module').then(m => m.ApplicationModule) },
   { path: 'license', loadChildren: () => import('./Components/license/license.module').then(m => m.LicenseModule) },
+  { path: 'tracking', loadChildren: () => import('./Components/tracking/tracking.module').then(m => m.TrackingModule) },
 
 ];
 
