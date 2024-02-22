@@ -38,6 +38,7 @@ import { AgmCoreModule, MapsAPILoader } from '@agm/core';
     NgbModule,
     HttpClientModule,
     ClickOutsideModule,
+    
     NgSelectModule
   ],
   exports: [

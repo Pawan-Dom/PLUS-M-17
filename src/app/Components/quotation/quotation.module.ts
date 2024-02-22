@@ -14,6 +14,8 @@ import { TransactionService } from '../../Services/transaction.service';
     CommonModule,
     ApplicationRoutingModule,
     SharedModule,
+    
+    
   ],
   declarations: [],
   providers: [NotificationsService,CommonService ,QuotationService,TransactionService] 
