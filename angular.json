@@ -40,6 +40,7 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
               "src/assets/icon/themify-icons/themify-icons.css",
+              "src/assets/icon/themify-icons/themify-icons.css",
               "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss"
             ],
@@ -106,7 +107,10 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@swimlane/ngx-datatable/index.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/icon/themify-icons/themify-icons.css",
+              "node_modules/font-awesome-scss/scss/font-awesome.scss"
+
             ],
             "scripts": []
           }

@@ -9,7 +9,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'user', loadChildren: () => import('./Components/user/user.module').then(m => m.UserModule) },
   { path: 'lead', loadChildren: () => import('./Components/lead/lead.module').then(m => m.LeadModule) },
-  { path: 'customer`', loadChildren: () => import('./Components/customer/customer.module').then(m => m.CustomerModule) },
+  { path: 'customer', loadChildren: () => import('./Components/customer/customer.module').then(m => m.CustomerModule) },
+  { path: 'role', loadChildren: () => import('./Components/role/role.module').then(m => m.RoleModule) },
   { path: 'city', loadChildren: () => import('./Components/city/city.module').then(m => m.CityModule) },
   { path: 'metamaster', loadChildren: () => import('./Components/metamaster/metamaster.module').then(m => m.MetamasterModule) },
   { path: 'branch', loadChildren: () => import('./Components/branch/branch.module').then(m => m.BranchModule) },
@@ -20,7 +21,6 @@ const routes: Routes = [
   { path: 'leadstatus', loadChildren: () => import('./Components/leadstatus/leadstatus.module').then(m => m.LeadstatusModule) },
   { path: 'quotation', loadChildren: () => import('./Components/quotation/quotation.module').then(m => m.ApplicationModule) },
   { path: 'license', loadChildren: () => import('./Components/license/license.module').then(m => m.LicenseModule) },
-  { path: 'tracking', loadChildren: () => import('./Components/tracking/tracking.module').then(m => m.TrackingModule) },
 
 ];
 
