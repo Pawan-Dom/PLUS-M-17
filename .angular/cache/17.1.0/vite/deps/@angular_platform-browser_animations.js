@@ -4,10 +4,10 @@ import {
   NoopAnimationsModule,
   provideAnimations,
   provideNoopAnimations
-} from "./chunk-4FYVGV7T.js";
-import "./chunk-C2X6PMDL.js";
+} from "./chunk-J6ENO453.js";
 import "./chunk-ENZ3I2ZH.js";
 import "./chunk-G3ZVACMZ.js";
+import "./chunk-C2X6PMDL.js";
 import "./chunk-LB2JYOT4.js";
 import {
   ANIMATION_MODULE_TYPE

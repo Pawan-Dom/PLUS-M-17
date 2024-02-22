@@ -1,14 +1,14 @@
 import {
+  DomSanitizer
+} from "./chunk-ENZ3I2ZH.js";
+import "./chunk-G3ZVACMZ.js";
+import {
   animate,
   state,
   style,
   transition,
   trigger
 } from "./chunk-C2X6PMDL.js";
-import {
-  DomSanitizer
-} from "./chunk-ENZ3I2ZH.js";
-import "./chunk-G3ZVACMZ.js";
 import {
   CommonModule,
   NgClass,
