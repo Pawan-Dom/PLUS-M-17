@@ -9,7 +9,7 @@ import { LicenseCategoryService } from '../../Services/licensecategory.service';
 import { BranchService } from '../../Services/branches.service';
 import { QuotationService } from '../../Services/quotation.service';
 import { UserService } from '../../Services/user.service';
-
+import { MapInfoWindow } from '@angular/google-maps'; // Import InfoWindow
 
 
 @Component({
@@ -18,6 +18,8 @@ import { UserService } from '../../Services/user.service';
    
 })
 export class TrackingComponent {
+  @ViewChild('infoWindow')
+  infoWindow!: MapInfoWindow; // Use @ViewChild to get InfoWindow instance
     model:any={};
     loading=false;
     reports:any;

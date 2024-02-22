@@ -30,7 +30,7 @@ import { AuthService } from './Services/auth.service';
 import { AppRoutingModule } from './app-routing.module'; // Correct import statement
 import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications'; // Import SimpleNotificationsModule for options
 import { ArchwizardModule } from 'ng2-archwizard/dist';
-import { AgmCoreModule } from '@agm/core';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
     declarations: [
@@ -69,8 +69,7 @@ import { AgmCoreModule } from '@agm/core';
         SharedModule,
         AppRoutingModule,
         SimpleNotificationsModule.forRoot() ,
-       
-        // Add SimpleNotificationsModule.forRoot() to imports
+        GoogleMapsModule,
     ]
 })
 export class AppModule { }

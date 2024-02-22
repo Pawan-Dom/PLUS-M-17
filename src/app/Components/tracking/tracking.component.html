@@ -92,13 +92,13 @@
 
     </form>
  <hr>
- <!-- <ng-container *ngIf="usergpsdata && !loading">
+ <ng-container *ngIf="usergpsdata && !loading">
     <agm-map #gm [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="6" [latitude]="1*usergpsdata[0].gpsdata.lat" [longitude]="1*usergpsdata[0].gpsdata.lon" style="height:500px">
       <ng-container *ngFor="let ugd of usergpsdata">
 
         <!-- leadmarkers-->
-      <!-- <ng-container *ngIf="ugd.userleads">
-          <agm-marker  *ngFor="let sgd of ugd.userleads" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/lead.png'">
+     <ng-container *ngIf="ugd.userleads">
+           <agm-marker  *ngFor="let sgd of ugd.userleads" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/lead.png'">
             <agm-info-window><h4 style="font-size:large"><small>Lead #{{sgd.id}}</small><br>{{sgd.cname}}</h4><hr>
              <b>{{sgd.lead_status_name}}</b><br>
               Executive : {{sgd.uname}}<br>
@@ -106,28 +106,28 @@
               Created On : {{sgd.created_on|date:'medium'}}</agm-info-window>
 
           </agm-marker>
-        </ng-container> -->
+        </ng-container> 
 
 
 
         <!-- PImarkers-->
-      <!-- <ng-container *ngIf="ugd.userpis">
+      <ng-container *ngIf="ugd.userpis">
         <agm-marker  *ngFor="let sgd of ugd.userpis" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/lead.png'">
           <agm-info-window><h4 style="font-size:large"> <a target=_blank  href="{{commonService.apiUrl}}/pg/?id={{sgd.qid}}&invoice=2"><small>Proforma Invoice ID #{{sgd.qid}}</small></a><br>{{sgd?.customer_name}}</h4><hr>
             Executive : {{ugd.name}}-{{ugd.region}}<br>
             Created On : {{sgd.created_on|date:'medium'}}</agm-info-window>
 
         </agm-marker>
-      </ng-container> -->
+      </ng-container> 
 
         <!-- user markers-->
-      <!-- <agm-marker  [latitude]="ugd.gpsdata.lat" [longitude]="ugd.gpsdata.lon"  [label]="{color:'#FFFFFF',text:ugd.shortname}" [iconUrl]="'/assets/map/usermarker.png'" [title]="ugd.name" >
+      <agm-marker  [latitude]="ugd.gpsdata.lat" [longitude]="ugd.gpsdata.lon"  [label]="{color:'#FFFFFF',text:ugd.shortname}" [iconUrl]="'/assets/map/usermarker.png'" [title]="ugd.name" >
          <agm-info-window><h4 style="font-size:large">{{ugd.name}} - {{ugd.region}}</h4><hr>
         <span title="(Within Specified Date Range)"> Total Distance : {{ugd?.gpsdistance}} Km <br></span>
           Last Updated : {{ugd.gpsdata.created_on|date:'medium'}}</agm-info-window>
-      </agm-marker> -->
+      </agm-marker> 
         <!-- other markers-->
-        <!-- <ng-container *ngIf="ugd.gpsdatapoints">
+       <ng-container *ngIf="ugd.gpsdatapoints">
         <agm-marker (mouseOver)="onMouseOver(infoWindowsgd,gm)" *ngFor="let sgd of ugd.gpsdatapoints" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/singlegdpoint.png'">
           <agm-info-window #infoWindowsgd><h4 style="font-size:large">{{ugd.name}} - {{ugd.region}}</h4><hr> TimeStamp : {{sgd.created_on|date:'medium'}}</agm-info-window>
 
@@ -142,15 +142,15 @@
 
             </agm-polyline>
 
-      </ng-container> -->
+      </ng-container> 
 
 
 
 
-    <!-- </ng-container>
+     </ng-container>
 
     </agm-map>
-  </ng-container> --> -->
+  </ng-container> 
 
   </app-card>
 </div>

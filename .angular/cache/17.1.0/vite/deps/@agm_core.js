@@ -23,12 +23,12 @@ import {
   ɵɵdefineInjectable,
   ɵɵinject
 } from "./chunk-N2R53RNT.js";
+import "./chunk-2O3QRT26.js";
 import {
   bindCallback,
   fromEventPattern,
   merge
 } from "./chunk-SQRX3OJF.js";
-import "./chunk-2O3QRT26.js";
 import {
   BehaviorSubject,
   Observable,

@@ -79,10 +79,10 @@ import {
   ɵɵtextInterpolate2,
   ɵɵviewQuery
 } from "./chunk-N2R53RNT.js";
+import "./chunk-2O3QRT26.js";
 import {
   fromEvent
 } from "./chunk-SQRX3OJF.js";
-import "./chunk-2O3QRT26.js";
 import {
   BehaviorSubject,
   Subject,

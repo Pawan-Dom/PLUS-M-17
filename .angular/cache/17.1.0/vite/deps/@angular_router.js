@@ -79,11 +79,11 @@ import {
   ɵɵqueryRefresh,
   ɵɵsanitizeUrlOrResourceUrl
 } from "./chunk-N2R53RNT.js";
+import "./chunk-2O3QRT26.js";
 import {
   defer,
   isObservable
 } from "./chunk-SQRX3OJF.js";
-import "./chunk-2O3QRT26.js";
 import {
   BehaviorSubject,
   ConnectableObservable,

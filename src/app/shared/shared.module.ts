@@ -16,6 +16,7 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { ProgressBarComponent } from './progressbar/progressbar.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 
 
@@ -38,9 +39,10 @@ import { AgmCoreModule, MapsAPILoader } from '@agm/core';
     NgbModule,
     HttpClientModule,
     ClickOutsideModule,
+    GoogleMapsModule,
     
+    NgSelectModule,
     
-    NgSelectModule
   ],
   exports: [
     CommonModule,
