@@ -58,7 +58,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
         MatIconModule,
         MatToolbarModule,
         MatButtonModule,
-
         MatSidenavModule,
         RouterModule, 
         CommonModule,
@@ -68,10 +67,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
         NgxDatatableModule,
         NgSelectModule,
         SharedModule,
-        GoogleMapsModule,
         AppRoutingModule,
         SimpleNotificationsModule.forRoot() ,
-        // Add SimpleNotificationsModule.forRoot() to imports
+        GoogleMapsModule,
     ]
 })
 export class AppModule { }

@@ -10,14 +10,15 @@ import { NotificationsService } from 'angular2-notifications';
 import { CommonService } from '../../../Services/common.service';
 import { QuotationService } from '../../../Services/quotation.service';
 import { TransactionService } from '../../../Services/transaction.service';
-
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   imports: [
     CommonModule,
     RoleListRoutingModule,
     SharedModule,
     NgxDatatableModule,
-    FormsModule
+    FormsModule,
+    NgbAccordionModule
   ],
   declarations: [RoleListComponent],
   providers: [NotificationsService,CommonService ,QuotationService,TransactionService] 

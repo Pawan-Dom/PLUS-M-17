@@ -11,8 +11,9 @@ import { TransactionService } from '../../../Services/transaction.service';
 import { QuotationService } from '../../../Services/quotation.service';
 import { CommonService } from '../../../Services/common.service';
 import { NotificationsService } from 'angular2-notifications';
-import { MapsAPILoader } from '@agm/core/lib/services/maps-api-loader/maps-api-loader';
-import { AgmCoreModule } from '@agm/core';
+import { LicenseCategoryService } from '../../../Services/licensecategory.service';
+import { LeadService } from '../../../Services/lead.service';
+import { DocumentService } from '../../../Services/document.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -29,7 +30,7 @@ import { AgmCoreModule } from '@agm/core';
 
   ],
   declarations: [ApplicationAddComponent ] ,
-  providers: [NotificationsService,CommonService ,QuotationService,TransactionService], 
+  providers: [NotificationsService,CommonService ,QuotationService,TransactionService,LicenseCategoryService,DocumentService,LeadService], 
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
 
 }) 

@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import swal, { SweetAlertResult } from 'sweetalert2';
 // import {IOption} from 'ng-select';
 import { Subject } from 'rxjs';
-import { AgmCoreModule, MapsAPILoader } from '@agm/core';
+import { AgmCoreModule } from '@agm/core';
 //import {} from '@types/googlemaps';
 import { Location } from '@angular/common';
 import { WizardComponent } from 'ng2-archwizard/dist/components/';
@@ -132,7 +132,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   ptax: any;
   selectedLead :any = {};
 
-  constructor(private location: Location, public masterService: MasterService, public authService: AuthService, private mapsAPILoader: MapsAPILoader, private ngZone: NgZone, private route: ActivatedRoute,
+  constructor(private location: Location, public masterService: MasterService, public authService: AuthService, private ngZone: NgZone, private route: ActivatedRoute,
     private cd: ChangeDetectorRef, public router: Router, public userService: UserService, public commonService: CommonService, public quotationService: QuotationService,
     public customerService: CustomerService, public licenseCategoryService: LicenseCategoryService, public transactionService: TransactionService, public leadService : LeadService, public documentService:DocumentService,) {
     this.quotation.status = '';
@@ -720,73 +720,73 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
       componentRestrictions: { country: "in" }
     };
     //load Places Autocomplete
-    this.mapsAPILoader.load().then(() => {
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElement.nativeElement, options);
+    // this.mapsAPILoader.load().then(() => {
+    //   let autocomplete = new google.maps.places.Autocomplete(this.searchElement.nativeElement, options);
 
-      autocomplete.addListener("place_changed", () => {
-        this.ngZone.run(() => {
-          //get the place result
-          let place = autocomplete.getPlace();
+    //   autocomplete.addListener("place_changed", () => {
+    //     this.ngZone.run(() => {
+    //       //get the place result
+    //       let place = autocomplete.getPlace();
 
-          //verify result
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-          console.log(place);
+    //       //verify result
+    //       if (place.geometry === undefined || place.geometry === null) {
+    //         return;
+    //       }
+    //       console.log(place);
 
-          if (place.formatted_address) {
-            this.selectedCustomer.address = place.formatted_address;
-            let al = place.formatted_address.split(',');
-            this.selectedCustomer.address_line_1 = al[0];
-            this.selectedCustomer.address_line_2 = al[1];
-          }
+    //       if (place.formatted_address) {
+    //         this.selectedCustomer.address = place.formatted_address;
+    //         let al = place.formatted_address.split(',');
+    //         this.selectedCustomer.address_line_1 = al[0];
+    //         this.selectedCustomer.address_line_2 = al[1];
+    //       }
 
-          if (place.formatted_phone_number) { this.selectedCustomer.phone = place.formatted_phone_number; }
+    //       if (place.formatted_phone_number) { this.selectedCustomer.phone = place.formatted_phone_number; }
 
-          if (place.name) { this.selectedCustomer.name = place.name; }
-          if (place && place.address_components) {
-            for (let i = 0; i < place.address_components.length; i++) {
-                for (let j = 0; j < place.address_components[i].types.length; j++) {
-                    if (place.address_components[i].types[j] == "postal_code") {
-                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-                        console.log(place.address_components[i].long_name);
-                        this.selectedCustomer.pincode = place.address_components[i].long_name;
-                    }
-                    if (place.address_components[i].types[j] == "country") {
-                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+    //       if (place.name) { this.selectedCustomer.name = place.name; }
+    //       if (place && place.address_components) {
+    //         for (let i = 0; i < place.address_components.length; i++) {
+    //             for (let j = 0; j < place.address_components[i].types.length; j++) {
+    //                 if (place.address_components[i].types[j] == "postal_code") {
+    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+    //                     console.log(place.address_components[i].long_name);
+    //                     this.selectedCustomer.pincode = place.address_components[i].long_name;
+    //                 }
+    //                 if (place.address_components[i].types[j] == "country") {
+    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
         
-                        this.selectedCustomer.country = place.address_components[i].long_name;
-                    }
+    //                     this.selectedCustomer.country = place.address_components[i].long_name;
+    //                 }
         
-                    if (place.address_components[i].types[j] == "administrative_area_level_1") {
-                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+    //                 if (place.address_components[i].types[j] == "administrative_area_level_1") {
+    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
         
-                        this.selectedCustomer.state = place.address_components[i].long_name;
-                    }
+    //                     this.selectedCustomer.state = place.address_components[i].long_name;
+    //                 }
         
-                    if (place.address_components[i].types[j] == "administrative_area_level_2") {
-                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+    //                 if (place.address_components[i].types[j] == "administrative_area_level_2") {
+    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
         
-                        this.selectedCustomer.city = place.address_components[i].long_name;
-                    }
+    //                     this.selectedCustomer.city = place.address_components[i].long_name;
+    //                 }
         
-                    if (place.address_components[i].types[j] == "sublocality_level_1") {
-                        //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+    //                 if (place.address_components[i].types[j] == "sublocality_level_1") {
+    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
         
-                        this.selectedCustomer.address_line_3 = place.address_components[i].long_name;
-                    }
+    //                     this.selectedCustomer.address_line_3 = place.address_components[i].long_name;
+    //                 }
         
-                }
-            }
-        } else {
-            console.log("place or place.address_components is undefined.");
-        }
+    //             }
+    //         }
+    //     } else {
+    //         console.log("place or place.address_components is undefined.");
+    //     }
         
 
-        });
-      });
+    //     });
+    //   });
 
-    });
+    // });
   }
 
   is_inmh() {
