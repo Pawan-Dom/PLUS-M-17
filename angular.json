@@ -42,11 +42,14 @@
               "node_modules/@ng-select/ng-select/themes/default.theme.css",
               "src/assets/icon/themify-icons/themify-icons.css",
               "src/assets/icon/themify-icons/themify-icons.css",
-              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss"
+              
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/tether/dist/js/tether.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {
