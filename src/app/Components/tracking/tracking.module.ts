@@ -7,9 +7,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrackingComponent } from './tracking.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-
 import { GoogleMapsModule } from '@angular/google-maps';
-
 import { QuotationService } from '../../Services/quotation.service';
 import { TransactionService } from '../../Services/transaction.service';
 import { CommonService } from '../../Services/common.service';
