@@ -13,7 +13,8 @@ import { AuthService } from '../../../Services/auth.service';
 
 export class RoleListComponent implements OnInit {
     dtOptions: any = {};
-    model: any = { permissions: [] }; // Initialize model with permissions property
+    model: any; 
+    permissions: { [key: string]: any[] } = {}; 
     loading2 = false;
     showModal=true;
     currentUser:any;
@@ -25,8 +26,6 @@ export class RoleListComponent implements OnInit {
     tabrows = [];
     loading=false;
     expanded = {};
-    permissions: { [key: string]: Permissions } = {}; // This initializes permissions as an empty object
-
     timeout: any;
     rowsFilter = []; 
     tempFilter = [];
@@ -45,41 +44,30 @@ export class RoleListComponent implements OnInit {
     }
 
  // getCustomers
- getList() {
-  this.loading = true;
+     getList() {
+        this.loading = true;
+         this.roleService.list().subscribe(
+             res => {
+                this.settableconfig(res);
+                this.roles=res;
+                this.tabrows=res;
+                console.log(this.roles);
+                this.loading = false;
+             }
+     );
 
-  this.roleService.list().subscribe(
-      (roles: any) => {
-          this.settableconfig(roles);
-          this.roles = roles;
-          this.tabrows = roles;
-          console.log(this.roles);
-          this.loading = false;
-      },
-      (error) => {
-          console.error('Error fetching roles:', error);
-          this.loading = false;
-      }
-  );
+     this.roleService.listPermissions().subscribe(
+        res => {
+            
+           this.permissions=res.allps;
+           console.log(this.permissions);
+           this.allnos=res.allnos;
 
-  this.roleService.listPermissions().subscribe(
-      (permissionsResponse: any) => {
-          if (permissionsResponse && permissionsResponse.allps) {
-              this.permissions = permissionsResponse.allps;
-              console.log(this.permissions);
-              this.allnos = permissionsResponse.allnos;
-          } else {
-              console.error('Unexpected response format for permissions:', permissionsResponse);
-          }
-          this.loading = false;
-      },
-      (error) => {
-          console.error('Error fetching permissions:', error);
-          this.loading = false;
-      }
-  );
-}
+           this.loading = false;
+        }
+        );
 
+   }
 
     ngOnInit(): void {
         this.model.permissions=[];

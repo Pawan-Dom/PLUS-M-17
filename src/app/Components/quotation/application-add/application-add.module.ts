@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicationAddComponent } from './application-add.component';
 import {ApplicationAddRoutingModule} from './application-add-routing.module';
@@ -14,6 +14,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { LicenseCategoryService } from '../../../Services/licensecategory.service';
 import { LeadService } from '../../../Services/lead.service';
 import { DocumentService } from '../../../Services/document.service';
+import { WizardComponent as ArchWizardComponent } from 'ng2-archwizard/dist';
 @NgModule({
   imports: [
     CommonModule,
@@ -31,7 +32,6 @@ import { DocumentService } from '../../../Services/document.service';
   ],
   declarations: [ApplicationAddComponent ] ,
   providers: [NotificationsService,CommonService ,QuotationService,TransactionService,LicenseCategoryService,DocumentService,LeadService], 
-  schemas:[CUSTOM_ELEMENTS_SCHEMA],
-
+  schemas:[NO_ERRORS_SCHEMA]
 }) 
 export class ApplicationAddModule { }
