@@ -10,26 +10,26 @@
   </div>
   <hr>
 
-   <h4 *ngIf="quotation.id"> <a href="javascript:void(0)" (click)="goBack()">
+  <h4 *ngIf="quotation.id"> <a href="javascript:void(0)" (click)="goBack()">
       <i class="cr-icon fa fa-arrow-left"></i>
     </a> Application #{{quotation.id}} : <span *ngIf="quotation.noc == 1">NOC </span> {{ quotation.status | uppercase}}
     <a *ngIf="quotation.status=='pending'" (click)="stopInterval(); getQuotation(quotation.id, quotation.uuid)" class="btn btn-primary btn-xl" style="color:white">
       <i class="cr-icon fa fa-refresh"></i>
-   </a>
+  </a>
   
 
     <button *ngIf="quotation.invoice_no && quotation.noc == 0 && quotation.irn_no && quotation.irn_status != 'cancel' && authService.checkPermission(85)" style="margin-left:5px; float: right;" target=_blank class="btn btn-danger" (click)="prepareCancelnvoice()"> Cancel Invoice </button>
    
-   </h4>
-   <span style="color:red;" class="float-right" *ngIf="quotation.invoice_no && quotation.irn_status == 'cancel' "> This invoice already cancelled within 24 hour from  IRN generated </span>
-   <span *ngIf="quotation.status=='paid'">
+  </h4>
+  <span style="color:red;" class="float-right" *ngIf="quotation.invoice_no && quotation.irn_status == 'cancel' "> This invoice already cancelled within 24 hour from  IRN generated </span>
+  <span *ngIf="quotation.status=='paid'">
     <!--     <a *ngIf="quotation.status=='pending'" href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}" target=_blank class="btn btn-primary btn-xl"  >Pay Now</a>  -->
     <a *ngIf="quotation.status=='paid'" style="color:white" (click)="modalIssueLicenses.show()"
       class="btn btn-primary  ">Issue Licenses</a>
 
     <!--
-   <a *ngIf="quotation.status=='paid'" class="btn btn-primary btn-sm" target=_blank href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}">Quotation</a>
-   -->
+<a *ngIf="quotation.status=='paid'" class="btn btn-primary btn-sm" target=_blank href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}">Quotation</a>
+-->
     <a *ngIf="quotation.status=='paid'" style="margin-left:5px"
       href="{{commonService.apiUrl}}/pg/?invoice=2&id={{quotation.id}}&uuid={{quotation.uuid}}" target=_blank class="btn btn-primary  ">Proforma
       Invoice <i class="cr-icon fa fa-external-link"></i></a>
@@ -255,7 +255,7 @@
   <hr>-->
                 <div class="form-group row">
                   <div class="col-sm-6">
-                    <!--<input  type="text" class="form-control " name="address" placeholder="Enter Address" [(ngModel)]="selectedCustomer.address" required> -->
+                    <!--                <input  type="text" class="form-control " name="address" placeholder="Enter Address" [(ngModel)]="selectedCustomer.address" required> -->
                     Address Line 1 : <span style="color:red">*</span>
                     <input disabled type="text" class="form-control " name="address_line_1" placeholder="Address Line 1"
                       [(ngModel)]="selectedCustomer.address_line_1" required>
@@ -1012,14 +1012,14 @@
                         [(ngModel)]="selectedSlc.event_venue">
                       </ng-select> </span>
                       <br>
-                     <div > Event Venue Tag: 
-                     <br>
-                     <span>
-                     <input  class="form-control"  name=event_tag bindLabel="name"
-                     placeholder=""
-                     [(ngModel)]="selectedSlc.event_tag" required disabled> 
+                    <div > Event Venue Tag: 
+ <br>
+ <span>
+  <input  class="form-control"  name=event_tag bindLabel="name"
+  placeholder=""
+ [(ngModel)]="selectedSlc.event_tag" required disabled> 
 
-                     </span>
+ </span>
                      </div> <br>
 
                       <!-- <span> Event Venue Tag  : <ng-select bindLabel="name" [items]="event_venue_tag" [loading]="eventvenuetagLoading"
@@ -1244,6 +1244,7 @@
                 <a href="{{commonService.apiUrl}}/others/sampleBulkUpload_new.csv" target="_blank">Download Sample CSV</a>
               </div>
             </div>
+            </div>
           </div>
           <hr>
 
@@ -1261,7 +1262,7 @@
               <div class="col-3">Total</div>
             </div>
             <div class="row" *ngFor="let slc of allSelectedLc;let i = index" style="border: 1px solid #e4e4e4;
- /* padding: 10px;*/
+/* padding: 10px;*/
  box-shadow: 1px 1px 1px gray;">
               <div class="col-1"> {{i+1}}</div>
               <div class="col-7">
@@ -1424,7 +1425,7 @@
           </div>
         </div>
 
-      </div>
+      
     </wizard-step>
     <wizard-step stepTitle="Checkout">
       <div class="centered-content">
@@ -1903,7 +1904,7 @@
           <!--  <span>  <button style="margin-right: 5px;" type="button" [hidden]="allSelectedLc.length<1" class="btn btn-secondary btn-xl" (click)="saveQuotation(true)">Save Changes</button> &nbsp;</span>
         
       
- <span>          <button *ngIf="quotation.status=='draft'" type="button" class="btn btn-primary btn-xl" (click)="saveQuotation(true)">Buy Now</button></span>
+<span>          <button *ngIf="quotation.status=='draft'" type="button" class="btn btn-primary btn-xl" (click)="saveQuotation(true)">Buy Now</button></span>
   -->
         </div>
       </div>
@@ -1920,7 +1921,7 @@
             <a  class="btn btn-primary btn-xl" target=_blank href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}">Download Quotation</a> | <a *ngIf="quotation.status=='pending'"  href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}" target=_blank class="btn btn-danger btn-xl"  >Pay Now</a>
 
         </div>
- <hr>
+<hr>
         <div class="btn-group mt-10">
           <button type="button" class="btn btn-secondary btn-xl" previousStep>Back</button>
           <button type="button" class="btn btn-primary btn-xl" nextStep>Done !</button> 
@@ -2180,7 +2181,7 @@
 
   <!-- end of return tr -->
 
- <app-modal-basic #modalIssueLicenses [dialogClass]="'modal-lg'">
+<app-modal-basic #modalIssueLicenses [dialogClass]="'modal-lg'">
   <div class="app-modal-header">
     <h4 class="modal-title">Issue Licenses <small *ngIf="issuedLc.action=='cancel'" style="color:red">ALL LICENSES ARE
         CANCELLED</small></h4>
@@ -2317,9 +2318,9 @@
         (click)="saveQuotationIssuedLc('cancel')">Cancel all Licenses</a>
     </div>
   </div>
- </app-modal-basic>
+</app-modal-basic>
 
- <app-modal-animation #modaldrrequest [modalID]="'modaldrrequest'" [modalClass]="'modaldrrequest'">
+<app-modal-animation #modaldrrequest [modalID]="'modaldrrequest'" [modalClass]="'modaldrrequest'">
   <div class="app-modal-header">
     <h4 class="modal-title" *ngIf="quotation.dr_discount < 99"> Request For Discount </h4>
     <h4 class="modal-title" *ngIf="quotation.dr_discount > 99 && quotation.extended_pi == 0"> Request For NOC </h4>
@@ -2327,8 +2328,8 @@
     <button type="button" class="close basic-close" (click)="commonService.hideModal('modaldrrequest')">
       <span aria-hidden="true">&times;</span>
     </button>
-   </div>
-   <div class="app-modal-body">
+  </div>
+  <div class="app-modal-body">
     <!-- *ngIf="selectedUser?.approver_user"  ,,,,*ngIf="quotation.dr_discount < 99"-->
     <span *ngIf="quotation.noc == 0" style="font-weight:bold"> {{quotation?.user?.name}}'s Discount Approver
       : {{quotation?.user?.reporting_user?.name}}
@@ -2359,16 +2360,16 @@
     <hr>
     <button class="btn btn-primary " style="color:white" (click)="dr_request()"> Raise Request </button>
     <br> </div>
-   </app-modal-animation>
+</app-modal-animation>
 
-   <app-modal-animation #modalatirrequest [modalID]="'modalatirrequest'" [modalClass]="'modalatirrequest'">
-   <div class="app-modal-header">
+<app-modal-animation #modalatirrequest [modalID]="'modalatirrequest'" [modalClass]="'modalatirrequest'">
+  <div class="app-modal-header">
     <h4 class="modal-title">Request For Advance Tax Invoice</h4>
     <button type="button" class="close basic-close" (click)="commonService.hideModal('modalatirrequest')">
       <span aria-hidden="true">&times;</span>
     </button>
-   </div>
-   <div class="app-modal-body">
+  </div>
+  <div class="app-modal-body">
     <!-- *ngIf="selectedUser?.approver_user"-->
     <span *ngIf="quotation?.user?.role_id < 72 || (quotation?.user?.role_id > 71 && quotation?.user?.role_id ==78)" style="font-weight:bold"> {{quotation?.user?.name}}'s ATI Approver :
       {{quotation?.user?.reporting_user?.name}}
@@ -2384,41 +2385,41 @@
     <hr>
     <button class="btn btn-primary " style="color:white" (click)="atir_request()"> Raise Request </button>
     <br> </div>
-   </app-modal-animation>
+</app-modal-animation>
 
-    <!-- PI TAg Start-->
-   <app-modal-animation #modalpitag [modalID]="'modalpitag'" [modalClass]="'modalpitag'">
-   <div class="app-modal-header">
+<!-- PI TAg Start-->
+<app-modal-animation #modalpitag [modalID]="'modalpitag'" [modalClass]="'modalpitag'">
+  <div class="app-modal-header">
     <h4 class="modal-title">PI TAG</h4>
     <button type="button" class="close basic-close" (click)=" this.commonService.hideModal('modalpitag');">
       <span aria-hidden="true">&times;</span>
     </button>
-   </div>
-    <div class="app-modal-body">
+  </div>
+  <div class="app-modal-body">
     <span> Select PI Tag: <ng-select bindLabel="name" [items]="tagpi" 
        placeholder="Select PI tag" bindValue="name"
       [(ngModel)]="tempitag.tag_name" required>
-      </ng-select> </span>
-     <br>
+    </ng-select> </span>
+    <br>
     
-     <span *ngIf="tempitag.tag_name=='WILL PAY'">Expected Date : <input type=date class="form-control" [(ngModel)]="tempitag.tag_expected_date"
+  <span *ngIf="tempitag.tag_name=='WILL PAY'">Expected Date : <input type=date class="form-control" [(ngModel)]="tempitag.tag_expected_date"
       placeholder="Payment Schedule Date"> <br></span>
     <span>Remark : <textarea class="form-control" [(ngModel)]="tempitag.tag_remark"
       placeholder="Remark"></textarea></span>
     <hr>
     <button class="btn btn-primary " style="color:white" (click)="pitag_request()"> Save </button>
     <br> </div>
-   </app-modal-animation>
+</app-modal-animation>
 
-   <!-- Request PI  -->
-    <app-modal-animation #modalpirequest [modalID]="'modalpirequest'" [modalClass]="'modalpirequest'">
-   <div class="app-modal-header">
+<!-- Request PI  -->
+<app-modal-animation #modalpirequest [modalID]="'modalpirequest'" [modalClass]="'modalpirequest'">
+  <div class="app-modal-header">
     <h4 class="modal-title">Request For Proforma Invoice</h4>
     <button type="button" class="close basic-close" (click)="commonService.hideModal('modalpirequest')">
       <span aria-hidden="true">&times;</span>
     </button>
-   </div>
-   <div class="app-modal-body">
+  </div>
+  <div class="app-modal-body">
     <div class="btn-group col-12 col-md-12">
       <span *ngIf="quotation?.user?.role_id < 72 ||(quotation?.user?.role_id > 71 && quotation?.user?.role_id == 78)" style="font-weight:bold"> {{quotation?.user?.name}}'s Regional Manager :
         {{quotation?.user?.regional_user?.name}}
@@ -2436,19 +2437,19 @@
 
     </div>
     <br>
-    </div>
-   </app-modal-animation>
+  </div>
+</app-modal-animation>
 
 
-   <app-modal-animation #modaladdreturntransaction [modalID]="'modaladdreturntransaction'"
-   [modalClass]="'modaladdreturntransaction'">
-   <div class="app-modal-header">
+<app-modal-animation #modaladdreturntransaction [modalID]="'modaladdreturntransaction'"
+  [modalClass]="'modaladdreturntransaction'">
+  <div class="app-modal-header">
     <h4 class="modal-title">Add Refund Transaction</h4>
     <button type="button" class="close basic-close" (click)="commonService.hideModal('modaladdreturntransaction')">
       <span aria-hidden="true">&times;</span>
     </button>
-   </div>
-    <div class="app-modal-body">
+  </div>
+  <div class="app-modal-body">
     <!-- <select class="form-control" placeholder="Select Remark" [(ngModel)]=selectedTransaction.remark >
           <ng-container *ngIf="selectedTransaction.payment_method=='REFUND'">
           <option>Cancellation of Event</option>
@@ -2480,18 +2481,18 @@
       Add Transaction</button>
 
     <br> </div>
-   </app-modal-animation>
+</app-modal-animation>
 
 
-   <app-modal-animation #modalcreditnote [modalID]="'modalcreditnote'" [modalClass]="'modalcreditnote'">
-   <div class="app-modal-header">
+<app-modal-animation #modalcreditnote [modalID]="'modalcreditnote'" [modalClass]="'modalcreditnote'">
+  <div class="app-modal-header">
     <h4 class="modal-title">Create Credit Note</h4>
     <p style="color:red;font-weight:bold">NOTE : Once Created , CN can not be Cancelled</p>
     <button type="button" class="close basic-close f-right" (click)="commonService.hideModal('modalcreditnote')">
       <span aria-hidden="true">&times;</span>
     </button>
-   </div>
-   <div class="app-modal-body" *ngIf="quotation">
+  </div>
+  <div class="app-modal-body" *ngIf="quotation">
     <!--  <ng-container *ngIf="quotation?.issuedlcjson?.length < 2">
             No Licenses Issued , If You Still Create Credit Note - It will be Full Reversal of This PI.
         </ng-container> -->
@@ -2556,20 +2557,20 @@
       Cancel</button>
 
     <br>
-    </div>
-   </app-modal-animation>
+  </div>
+</app-modal-animation>
 
-    <!-- Select Evidence  -->
+<!-- Select Evidence  -->
 
 
-   <app-modal-basic #modalevidence [dialogClass]="'modal-lg'">
-   <div class="app-modal-header">
+<app-modal-basic #modalevidence [dialogClass]="'modal-lg'">
+  <div class="app-modal-header">
     <h4 class="modal-title">Select Evidence</h4>
     <button type="button" class="close basic-close" (click)="cancelmodel(); modalevidence.hide();">
       <span aria-hidden="true">&times;</span>
     </button>
-   </div>
-   <div class="app-modal-body">
+  </div>
+  <div class="app-modal-body">
     <div *ngIf="tempallevidence.length <1">
       <span style="color: #d34e47;">All Files are used, Kindly add new file.</span>
     </div>
@@ -2600,10 +2601,10 @@
         (click)="Addevidencetocart(); modalevidence.hide()">
         Add &nbsp; </button>
     </div>
-   </div>
-   </app-modal-basic>
+  </div>
+</app-modal-basic>
 
-   <app-modal-animation #modalpanrequest [modalID]="'modalpanrequest'" [modalClass]="'modalpanrequest'">
+<app-modal-animation #modalpanrequest [modalID]="'modalpanrequest'" [modalClass]="'modalpanrequest'">
   <div class="app-modal-header">
     <h4 class="modal-title">Request For Change PAN No</h4>
     <button type="button" class="close basic-close" (click)="commonService.hideModal('modalpanrequest')">
@@ -2637,12 +2638,12 @@
     <button class="btn btn-primary " style="color:white" (click)="cpn_request()"> Raise Request </button>
     <br>
   </div>
-  </app-modal-animation>
+</app-modal-animation>
 
 
- <!-- Rejected CART Items -->
+<!-- Rejected CART Items -->
 
- <app-modal-basic #modalrejectcart [dialogClass]="'modal-lg'">
+<app-modal-basic #modalrejectcart [dialogClass]="'modal-lg'">
   <div class="app-modal-header">
     <h4 class="modal-title">Rejected Cart Items</h4>
     <button type="button" class="close basic-close" (click)="cancelmodel(); modalrejectcart.hide();">
@@ -2682,9 +2683,9 @@
         Add &nbsp; </button>
     </div>
   </div>
- </app-modal-basic>
+</app-modal-basic>
 
- <app-modal-animation #modalapirstrict [modalID]="'modalapirstrict'" [modalClass]="'modalapirstrict'">
+<app-modal-animation #modalapirstrict [modalID]="'modalapirstrict'" [modalClass]="'modalapirstrict'">
   <div class="app-modal-header">
     <h4 class="modal-title">Note : GST Update 18%</h4>
     <button type="button" class="close basic-close" (click)="commonService.hideModal('modalapirstrict')">
@@ -2708,4 +2709,4 @@
     </div>
     <br>
   </div>
- </app-modal-animation>
+</app-modal-animation>

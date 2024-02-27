@@ -14,7 +14,7 @@ import { AuthService } from '../../../Services/auth.service';
 export class RoleListComponent implements OnInit {
     dtOptions: any = {};
     model: any; 
-    permissions: { [key: string]: any[] } = {}; 
+    permissions: { [key: string]: any[] } = {}; // Define permissions as an object with string keys and any[] values
     loading2 = false;
     showModal=true;
     currentUser:any;

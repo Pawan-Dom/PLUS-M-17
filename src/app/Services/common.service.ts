@@ -58,7 +58,6 @@ export class CommonService {
   notify(type: string, title: string, msg = null) {
     this.servicePNotify.notify(type, title, msg);
   }
-
   getCurrentUser() {
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser !== null) {

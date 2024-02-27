@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {DatatableComponent} from '@swimlane/ngx-datatable';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import swal from 'sweetalert2';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonService } from '../../Services/common.service';
@@ -105,47 +105,45 @@ filterusers(){
 }
 
 genReport(): void {
-  if (this.model.report_type) {
-      // Add your logic here if needed
-  } else {
-      this.model.report_type = 'tallyinvoice';
+  if (!this.model.report_type) {
+    this.model.report_type = 'tallyinvoice';
   }
-  
+
   if (this.loading) {
-      return;
+    return;
   }
-  
+
   this.loading = true;
-  //let params = "report_type=" + this.model.report_type + "&start_date=" + this.model.start_date + "&end_date=" + this.model.end_date;
-  
+
   this.quotationService.genReport(this.model).subscribe(
-      res => {
-          this.loading = false;
-          this.commonService.notify('info', 'Report Generated');
-          window.open(res['file_url'], '_blank');
-      },
-      error => {
-          this.loading = false;
-      }
+    (res: any) => {
+      this.loading = false;
+      // this.commonService.notify('info', 'Report Generated'); // Call notify method from CommonService
+      window.open(res['file_url'], '_blank');
+    },
+    (error: any) => {
+      this.loading = false;
+      console.error("Error occurred during genReport:", error);
+    }
   );
 }
 
-
-  logevent(){
-    this.model.action = 'Report_' +  this.model.report_type;
-    console.log('action', this.model);
-    this.authService.logevent(this.model).subscribe(
-      (    res: any) => {
-      console.log("logevent",res);
-              // this.loading=false;
-              // this.commonService.notify('info','Report Generated','Please Allow Popups in case of NoShow');
-            
-    },(error: any)=>{
-              // this.loading=false;
-          }
+logevent(): void {
+  this.model.action = 'Report_' +  this.model.report_type;
+  console.log('action', this.model);
+  this.authService.logevent(this.model).subscribe(
+    (res: any) => {
+      console.log("logevent", res);
+    },
+    (error: any) => {
+      console.error("Error occurred during logevent:", error);
+      if (error instanceof HttpErrorResponse) {
+        console.error("Status:", error.status);
+        console.error("Message:", error.message);
+      }
+    }
   );
-
-  }
+}
 
   // mother child regions
  motherRegion(){
