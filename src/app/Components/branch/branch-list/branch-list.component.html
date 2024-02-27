@@ -10,16 +10,14 @@
             <div class="form-group">
               <label>Search: </label>
               <input  type='search'
-              autocomplete="off"
-              [readonly]="!roflag"
-              (focus)="roflag=true;"
-              class="form-control input-sm m-l-10"
-              placeholder='Search Name'
-              #searchInput
-              (keyup)="updateFilter({ target: { value: searchInput.value } })"
-      />
-      
-      
+               autocomplete="off"
+
+               [readonly]=!roflag
+               (focus)="roflag=true;"
+                class="form-control input-sm m-l-10"
+                placeholder='Search Name'
+                (keyup)='updateFilter($event)'
+              />
                <button class="btn btn1 btn-info"  (click)="model={};modalAdd.show()">Add</button>
             </div>
           </label>
@@ -33,7 +31,7 @@
 
       <ngx-datatable
         #table
-        class="bootstrap"
+        class='bootstrap'
         [columnMode]="'flex'"
         [headerHeight]="50"
         [footerHeight]="55"
@@ -91,7 +89,7 @@
       <button type="button" class="close basic-close" (click)="modalAdd.hide()">
         <span aria-hidden="true">&times;</span>
       </button>
-    </div>
+    
     <div class="app-modal-body" class="src">
         <div class="row">
           <div class="col-sm-12 mobile-inputs">
@@ -161,5 +159,5 @@
             </div>
         </div>
       </div>
-
+    </div>
   </app-modal-basic>

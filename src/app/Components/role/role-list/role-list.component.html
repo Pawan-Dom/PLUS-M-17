@@ -154,26 +154,24 @@
 
                     <!-- Acc start-->
                     <div style="max-height:300px;overflow:scroll">
-                    <!-- <ngb-accordion #acc="ngbAccordion"   class="ngb-accordion" activeIds="ngb-open-25,ngb-open-16,ngb-open-24,ngb-open-33,ngb-open-31,ngb-open-4,ngb-open-30,ngb-open-12,ngb-open-23,ngb-open-37,ngb-open-8,ngb-open-19">
-
-
-                      <ng-container *ngFor="let itemp of permissions|keyvalue">
-                               <ngb-panel   id="ngb-open-{{itemp.value.id}}" title="{{itemp.value.model | titlecase}}">
-                                                <ng-template ngbPanelContent>
-
-                                                       <div class="row" style="margin-left:10px;margin-right:10px">    <div *ngFor="let permission of itemp.value.permissions" class="col-*" style="padding-right:15px">
-                                                                <div class="checkbox ">
-                                                                        <input id="cb-{{permission.id}}"   type="checkbox" (change)="changeModel($event, model.permissions, permission.id)" [checked]="check_includes(permission.id)">
-                                                                        <label for="cb-{{permission.id}}" title="Pid : {{permission.id}}">&nbsp; {{permission.name | titlecase}}</label>
-                                                                    </div>
-                                                        </div>
-                                                      </div>
-
-                                                </ng-template>
+                      <!-- <ngb-accordion  class="ngb-accordion" activeIds="ngb-open-25,ngb-open-16,ngb-open-24,ngb-open-33,ngb-open-31,ngb-open-4,ngb-open-30,ngb-open-12,ngb-open-23,ngb-open-37,ngb-open-8,ngb-open-19">
+                        <ng-container *ngFor="let itemp of permissions | keyvalue">
+                            <ngb-panel id="ngb-open-{{itemp.key}}" >
+                                <ng-template ngbPanelContent>
+                                    <div class="row" style="margin-left:10px;margin-right:10px">
+                                        <div *ngFor="let permission of itemp.value?.permissions" class="col-*" style="padding-right:15px">
+                                            <div class="checkbox">
+                                                <input id="cb-{{permission.id}}" type="checkbox" (change)="changeModel($event, model?.permissions, permission.id)" [checked]="check_includes(permission.id)">
+                                                <label for="cb-{{permission.id}}" title="Pid : {{permission.id}}">&nbsp; {{permission.name | titlecase}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
                             </ngb-panel>
-                          </ng-container>
-
-              </ngb-accordion> -->
+                        </ng-container>
+                    </ngb-accordion> -->
+                    
+                    
             </div>
                 </div> 
                 </form> 

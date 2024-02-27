@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router'; 
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; 
 import { NgChartsModule } from 'ng2-charts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -22,7 +22,6 @@ import { ErrorInterceptor } from './Services/error.interceptor';
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { SideMenuComponent } from './Components/side-menu/side-menu.component';
 import { NavBarComponent } from './Components/nav-bar/nav-bar.component';
-import { LicensesComponent } from './Components/licenses/licenses.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { LoginComponent } from './Components/login/login.component';
 import { AppComponent } from './app.component';
@@ -31,7 +30,6 @@ import { AppRoutingModule } from './app-routing.module'; // Correct import state
 import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications'; // Import SimpleNotificationsModule for options
 import { ArchwizardModule } from 'ng2-archwizard/dist';
 import { GoogleMapsModule } from '@angular/google-maps';
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -39,7 +37,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
         DashboardComponent,
         SideMenuComponent,
         NavBarComponent,
-        LicensesComponent,
     ],
     providers: [
         AuthService,
@@ -70,6 +67,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
         AppRoutingModule,
         SimpleNotificationsModule.forRoot() ,
         GoogleMapsModule,
+        NgbModule
     ]
 })
 export class AppModule { }

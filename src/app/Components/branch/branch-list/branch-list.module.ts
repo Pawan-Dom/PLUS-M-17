@@ -6,9 +6,7 @@ import {SharedModule} from '../../../shared/shared.module';
 import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import { FormsModule  } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NotificationsService } from 'angular2-notifications';
 import { CommonService } from '../../../Services/common.service';
-import { QuotationService } from '../../../Services/quotation.service';
 
 @NgModule({
   imports: [
@@ -20,7 +18,6 @@ import { QuotationService } from '../../../Services/quotation.service';
     NgSelectModule
   ],
   declarations: [BranchListComponent],
-  providers: [CommonService ] 
-
+  providers:[CommonService]
 })
 export class BranchListModule { }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RoleListComponent } from './role-list.component';
 import {RoleListRoutingModule} from './role-list-routing.module';
@@ -10,7 +10,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { CommonService } from '../../../Services/common.service';
 import { QuotationService } from '../../../Services/quotation.service';
 import { TransactionService } from '../../../Services/transaction.service';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   imports: [
     CommonModule,
@@ -18,10 +18,11 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
     SharedModule,
     NgxDatatableModule,
     FormsModule,
-    NgbAccordionModule
+    NgbModule,
   ],
   declarations: [RoleListComponent],
-  providers: [NotificationsService,CommonService ,QuotationService,TransactionService] 
+  providers: [NotificationsService,CommonService ,QuotationService,TransactionService] ,
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 
 })
 export class RoleListModule { }

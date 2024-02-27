@@ -3,9 +3,10 @@ import {DatatableComponent} from '@swimlane/ngx-datatable';
 import { distinctUntilChanged, debounceTime, switchMap, tap } from 'rxjs/operators';
 import swal from 'sweetalert2';
 import { Subject } from 'rxjs';
+import { AlertService } from '../../../Services/alert.service';
+import { AuthService } from '../../../Services/auth.service';
 import { BranchService } from '../../../Services/branches.service';
 import { CommonService } from '../../../Services/common.service';
-import { AlertService } from '../../../Services/alert.service';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-branch-list',
@@ -22,17 +23,17 @@ export class BranchListComponent implements OnInit {
   loadingIndicator = true;
   reorderable = true;
   branch : any={};
+  tempFilter: { name: string }[] = [];  
   region : any=[];
+  tabrows: any[] = [];
   model :any={}; 
   selectedBranch : any = {};
 selectedRegion : any={};
   rows = [];
-  tabrows = [];
   loading=false;
   expanded = {};
   timeout: any;
   rowsFilter = []; 
-  tempFilter = []; 
   page = {
     limit: 7,
     count: 0,
@@ -43,8 +44,9 @@ selectedRegion : any={};
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
 
-  constructor(public branchService: BranchService, public commonService:CommonService,
-     private alertService: AlertService) {
+  constructor(
+     private alertService: AlertService, public branchService: BranchService, public commonService:CommonService,
+     private authService: AuthService) {
    
     /*this.fetchBasicData((data) => {
       this.rowsBasic = data;
@@ -160,22 +162,24 @@ selectedRegion : any={};
     req.send();
   }
 
-
-  updateFilter(event: { target: { value: string; }; }) {
-    console.log('called');
-    let tempf =this.tempFilter;
-    const val = event.target.value.toLowerCase();
-   
-    // filter our data
-    const temp = tempf.filter(function(d: { name: string; }) {
-      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
+  updateFilter(event: KeyboardEvent) { 
+    const val = (event.target as HTMLInputElement).value.toLowerCase();
+  
+    let tempf = this.tempFilter;
+  
+    const temp = tempf.filter(d => {
+      if (typeof d === 'object' && d !== null && 'name' in d) {
+        return d.name.toLowerCase().includes(val);
+      }
+      return false;
     });
-
-    // update the rows
+  
     this.tabrows = temp;
-    // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;
   }
+  
+  
+
   onPage(event: any) {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
@@ -203,11 +207,10 @@ selectedRegion : any={};
     return row.height;
   }
 
-  
   openSuccessCancelSwal() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You not be able to revert this!',
+      text: 'You will not be able to revert this!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -219,13 +222,13 @@ selectedRegion : any={};
         cancelButton: 'btn btn-danger mr-sm'
       }
     }).then((result: any) => {
-      if (result.value) {
+      if (result.isConfirmed) {
         Swal.fire(
           'Deleted!',
           'Your file has been deleted.',
           'success'
         );
-      } else if (result.dismiss) {
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire(
           'Cancelled',
           'Your imaginary file is safe :)',

@@ -10,7 +10,7 @@ const routes: Routes = [
     },
     children: [
       {
-        path: '',
+        path: 'list',
         loadChildren: () => import('./branch-list/branch-list.module').then(m => m.BranchListModule)
       },
       {
