@@ -40,7 +40,6 @@ import { MatStepperModule } from '@angular/material/stepper';
         DashboardComponent,
         SideMenuComponent,
         NavBarComponent,
-
         // LicensesComponent,
     ],
     providers: [

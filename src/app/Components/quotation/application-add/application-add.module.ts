@@ -43,6 +43,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 
   ],
   declarations: [ApplicationAddComponent ] ,
+  providers: [NotificationsService,CommonService ,QuotationService,TransactionService,LicenseCategoryService,DocumentService,LeadService, {
+    provide: STEPPER_GLOBAL_OPTIONS,
+    useValue: { showError: true },
+  },], 
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
 
 }) 
