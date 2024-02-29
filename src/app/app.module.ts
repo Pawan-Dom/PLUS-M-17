@@ -30,12 +30,9 @@ import { AppRoutingModule } from './app-routing.module'; // Correct import state
 import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications'; // Import SimpleNotificationsModule for options
 import { ArchwizardModule } from 'ng2-archwizard/dist';
 import { GoogleMapsModule } from '@angular/google-maps';
-<<<<<<< Updated upstream
-=======
 import { StepperErrorsExampleComponent } from './stepper-errors-example/stepper-errors-example.component';
 import { MatStepperModule } from '@angular/material/stepper';
 
->>>>>>> Stashed changes
 @NgModule({
     declarations: [
         AppComponent,
@@ -43,14 +40,10 @@ import { MatStepperModule } from '@angular/material/stepper';
         DashboardComponent,
         SideMenuComponent,
         NavBarComponent,
-<<<<<<< Updated upstream
-=======
-        LicensesComponent,
-        // StepperErrorsExampleComponent
->>>>>>> Stashed changes
+
+        // LicensesComponent,
     ],
     providers: [
-        AuthService,
         NotificationsService, 
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
@@ -78,11 +71,7 @@ import { MatStepperModule } from '@angular/material/stepper';
         AppRoutingModule,
         SimpleNotificationsModule.forRoot() ,
         GoogleMapsModule,
-<<<<<<< Updated upstream
-        NgbModule
-=======
         MatStepperModule
->>>>>>> Stashed changes
     ]
 })
 export class AppModule { }
