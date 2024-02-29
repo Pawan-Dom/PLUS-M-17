@@ -1,8 +1,21 @@
 import {
+<<<<<<< Updated upstream
   BrowserModule,
   DomRendererFactory2
 } from "./chunk-5GWHQTK6.js";
 import "./chunk-NW7XH5N2.js";
+=======
+  BrowserAnimationsModule,
+  InjectableAnimationEngine,
+  NoopAnimationsModule,
+  provideAnimations,
+  provideNoopAnimations
+} from "./chunk-7G7WHJWB.js";
+import "./chunk-5GWHQTK6.js";
+import "./chunk-OE4ADNMU.js";
+import "./chunk-NW7XH5N2.js";
+import "./chunk-LVUAMDWL.js";
+>>>>>>> Stashed changes
 import {
   AUTO_STYLE,
   AnimationGroupPlayer,
@@ -30,8 +43,8 @@ import {
   ɵɵdefineNgModule,
   ɵɵinject
 } from "./chunk-R32D6M7N.js";
-import "./chunk-QOAHSALO.js";
 import "./chunk-GFVJDENN.js";
+import "./chunk-QOAHSALO.js";
 import "./chunk-LOA65BFQ.js";
 import {
   __objRest,
