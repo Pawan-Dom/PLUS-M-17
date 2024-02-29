@@ -40,7 +40,12 @@ import { MatStepperModule } from '@angular/material/stepper';
         DashboardComponent,
         SideMenuComponent,
         NavBarComponent,
+<<<<<<< Updated upstream
         // LicensesComponent,
+=======
+        LicensesComponent,
+        // StepperErrorsExampleComponent
+>>>>>>> Stashed changes
     ],
     providers: [
         NotificationsService, 
