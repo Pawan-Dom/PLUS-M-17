@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'quotation', loadChildren: () => import('./Components/quotation/quotation.module').then(m => m.ApplicationModule) },
   { path: 'license', loadChildren: () => import('./Components/license/license.module').then(m => m.LicenseModule) },
   { path: 'tracking', loadChildren: () => import('./Components/tracking/tracking.module').then(m => m.TrackingModule) },
-  {path:'stepper',component:StepperErrorsExampleComponent},
+  { path: 'quotation', loadChildren: () => import('./Components/quotation/quotation.module').then(m => m.ApplicationModule) },
 
 ];
 

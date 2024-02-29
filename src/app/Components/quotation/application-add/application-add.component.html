@@ -83,9 +83,7 @@
     <div class="circ3"></div>
     <div class="circ4"></div>
   </div>
-  <!-- <wizard #wizard class="arc-wizard"
-    [hidden]="(quotation?.status == 'paid' && !authService.checkPermission(44))|| quotation?.status == 'cancelled' ||  loading"
-    [defaultStepIndex]=defaultStepIndex>  -->
+  
     <!-- ################################################################## new stepper code start #################################################################### -->
     <mat-stepper #stepper>
       <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
@@ -804,7 +802,7 @@
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button (click)="stepper.reset()">Reset</button>
         </div>
-      </mat-step>
+      </mat-step> 
     </mat-stepper>
     <!-- ################################################################## new stepper code end #################################################################### -->
 
