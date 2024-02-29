@@ -10,12 +10,31 @@ import {
   ScrollDispatcher,
   ScrollingModule,
   ViewportRuler
+<<<<<<< Updated upstream
 } from "./chunk-R642FOMI.js";
 import "./chunk-2TMEAQ6E.js";
 import {
   MatButton,
   MatButtonModule
 } from "./chunk-APUUGG6Z.js";
+=======
+} from "./chunk-P3XWGDEO.js";
+import "./chunk-2TMEAQ6E.js";
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from "./chunk-OE4ADNMU.js";
+import {
+  MatButton,
+  MatButtonModule
+} from "./chunk-BJFG4DWY.js";
+import {
+  MatCommonModule
+} from "./chunk-HZL2H7R3.js";
+>>>>>>> Stashed changes
 import {
   BidiModule,
   BreakpointObserver,
@@ -23,7 +42,6 @@ import {
   Directionality,
   ESCAPE,
   LiveAnnouncer,
-  MatCommonModule,
   Platform,
   _getEventTarget,
   _isTestEnvironment,
@@ -31,6 +49,7 @@ import {
   coerceCssPixelValue,
   hasModifierKey,
   supportsScrollBehavior
+<<<<<<< Updated upstream
 } from "./chunk-BBJSWQ5V.js";
 import "./chunk-7G7WHJWB.js";
 import "./chunk-5GWHQTK6.js";
@@ -42,6 +61,9 @@ import {
   transition,
   trigger
 } from "./chunk-OE4ADNMU.js";
+=======
+} from "./chunk-PZT5BBJK.js";
+>>>>>>> Stashed changes
 import {
   DOCUMENT,
   Location
@@ -1483,12 +1505,15 @@ var FlexibleConnectedPositionStrategy = class {
     if (position.panelClass) {
       this._addPanelClasses(position.panelClass);
     }
-    this._lastPosition = position;
     if (this._positionChanges.observers.length) {
-      const scrollableViewProperties = this._getScrollVisibility();
-      const changeEvent = new ConnectedOverlayPositionChange(position, scrollableViewProperties);
-      this._positionChanges.next(changeEvent);
+      const scrollVisibility = this._getScrollVisibility();
+      if (position !== this._lastPosition || !this._lastScrollVisibility || !compareScrollVisibility(this._lastScrollVisibility, scrollVisibility)) {
+        const changeEvent = new ConnectedOverlayPositionChange(position, scrollVisibility);
+        this._positionChanges.next(changeEvent);
+      }
+      this._lastScrollVisibility = scrollVisibility;
     }
+    this._lastPosition = position;
     this._isInitialRender = false;
   }
   /** Sets the transform origin based on the configured selector and the passed-in position.  */
@@ -1845,6 +1870,12 @@ function getRoundedBoundingClientRect(clientRect) {
     width: Math.floor(clientRect.width),
     height: Math.floor(clientRect.height)
   };
+}
+function compareScrollVisibility(a, b) {
+  if (a === b) {
+    return true;
+  }
+  return a.isOriginClipped === b.isOriginClipped && a.isOriginOutsideView === b.isOriginOutsideView && a.isOverlayClipped === b.isOverlayClipped && a.isOverlayOutsideView === b.isOverlayOutsideView;
 }
 var wrapperClass = "cdk-global-overlay-wrapper";
 var GlobalPositionStrategy = class {
@@ -2324,6 +2355,7 @@ var _CdkConnectedOverlay = class _CdkConnectedOverlay {
     this._detachSubscription = Subscription.EMPTY;
     this._positionSubscription = Subscription.EMPTY;
     this._disposeOnNavigation = false;
+    this._ngZone = inject(NgZone);
     this.viewportMargin = 0;
     this.open = false;
     this.disableClose = false;
@@ -2471,7 +2503,7 @@ var _CdkConnectedOverlay = class _CdkConnectedOverlay {
     this._positionSubscription.unsubscribe();
     if (this.positionChange.observers.length > 0) {
       this._positionSubscription = this._position.positionChanges.pipe(takeWhile(() => this.positionChange.observers.length > 0)).subscribe((position) => {
-        this.positionChange.emit(position);
+        this._ngZone.run(() => this.positionChange.emit(position));
         if (this.positionChange.observers.length === 0) {
           this._positionSubscription.unsubscribe();
         }

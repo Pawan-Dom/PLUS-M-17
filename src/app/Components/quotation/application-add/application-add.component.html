@@ -85,6 +85,7 @@
   </div>
   <wizard #wizard class="arc-wizard"
     [hidden]="(quotation?.status == 'paid' && !authService.checkPermission(44))|| quotation?.status == 'cancelled' ||  loading"
+<<<<<<< Updated upstream
     [defaultStepIndex]=defaultStepIndex>  
     <wizard-step stepTitle="Customer Info">
       <div>
@@ -245,341 +246,474 @@
                  Mobile :
                 <input (change)="selectedCustomer.contact_no=selectedCustomer.mobile"  type="number" class="form-control " name="mobile" placeholder="Mobile" [(ngModel)]="selectedCustomer.mobile" required>
                </div>
+=======
+    [defaultStepIndex]=defaultStepIndex>  -->
+    <!-- ################################################################## new stepper code start #################################################################### -->
+    <mat-stepper #stepper>
+      <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>CUSTOMER INFO</ng-template>
+          <!-- <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+          </mat-form-field>
+          <div class="centered-content">
+            <h4>Customer Info</h4>
+>>>>>>> Stashed changes
           </div> -->
-
-
-
-
-                <!--  Complete Address : 
-          <textarea  [(ngModel)]="selectedCustomer.address" class="form-control " name="formatted_address" placeholder="Complete Address" >   </textarea>
-  <hr>-->
-                <div class="form-group row">
-                  <div class="col-sm-6">
-                    <!--                <input  type="text" class="form-control " name="address" placeholder="Enter Address" [(ngModel)]="selectedCustomer.address" required> -->
-                    Address Line 1 : <span style="color:red">*</span>
-                    <input disabled type="text" class="form-control " name="address_line_1" placeholder="Address Line 1"
-                      [(ngModel)]="selectedCustomer.address_line_1" required>
-
-                  </div>
-                  <div class="col-sm-6">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-6">
-                    Address Line 2 : <span style="color:red">*</span>
-                    <input disabled type="text" class="form-control " name="address_line_2" placeholder="Address Line 2"
-                      [(ngModel)]="selectedCustomer.address_line_2" required>
-                  </div>
-
-                  <div class="col-sm-6">
-                    Town / Locality : <span style="color:red">*</span>
-                    <input disabled type="text" class="form-control " name="address_line_3" placeholder="Address Line 3"
-                      [(ngModel)]="selectedCustomer.address_line_3" required>
-                  </div>
-
-
-
-                </div>
-
-
-                <div class="form-group row">
-
-                  <div class="col-sm-6" *ngIf=states><br>
-                    State : <span style="color:red">*</span>
-                    <!--  <input placeholder = "State" class="form-control  " disabled [(ngModel)]="selectedCustomer.state" name="state" required>
-            -->
-                    <ng-select disabled placeholder="Select State" name="state"
-                      (change)="cities = [];selectedCustomer.city='';" required bindLabel="state" bindValue="state"
-                      [items]="states" [(ngModel)]="selectedCustomer.state">
-                    </ng-select>
-                  </div>
-
-
-                  <div class="col-sm-6"><br>
-                    City : <span style="color:red">*</span>
-                    <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
-              -->
-
-                    <ng-select disabled bindLabel="name" bindValue="name" [items]="cities" [loading]="cityLoading"
-                      [typeahead]="custTypeaheadCity" placeholder="Search Existing City"
-                      [(ngModel)]="selectedCustomer.city" required>
-                    </ng-select>
-
-                  </div>
-
-                </div>
-
-                <div class="form-group row">
-                  <div class="col-sm-6">
-                    Pincode : <span style="color:red">*</span>
-                    <!-- (change)="getPincodeinfo()"-->
-                    <input disabled type="number" class="form-control " name="pincode" placeholder="Search Pincode"
-                      [(ngModel)]="selectedCustomer.pincode" required>
-                  </div>
-                  <div class="col-sm-6">
-                    Country : <span style="color:red">*</span>
-                    <input disabled placeholder="India" class="form-control " [(ngModel)]="selectedCustomer.country"
-                      name="country" required>
-
-                  </div>
-                </div>
-                <hr>
-
-                <div class="form-group row">
-                  <div class="col-sm-6">
-                    PAN :
-                    <!-- (change)="field_validate($event,'pan',selectedCustomer.pan)" -->
-                    <input disabled (change)="field_validate($event,'pan',selectedCustomer.pan)" type="text"
-                      class="form-control " name="pan" placeholder="Enter PAN" [(ngModel)]="selectedCustomer.pan">
-                    <br>
-                    <!--
-    TAN :
-    <input type="text" class="form-control " name="tan" (change)="field_validate($event,'tan',selectedCustomer.tan)"  placeholder="TAN" [(ngModel)]="selectedCustomer.tan" required> -->
-
-
-                  </div>
-                  <div class="col-sm-6">
-                    GST :
-                    <input disabled type="text" class="form-control " name="gst"
-                      (change)="field_validate($event ,'gst',selectedCustomer.gst)" placeholder="Enter GST"
-                      [(ngModel)]="selectedCustomer.gst" required>
-
-                    <br>
-                    <!--    TDS (%) : <input class="form-control " (change)="checkIfTan($event)"  type=number min=0 [(ngModel)]="tds"> -->
-
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <div class="col-sm-6">
-                    SEZ Unit :
-                    <ng-select disabled placeholder="Select SEZ Status" name=SEZ [(ngModel)]=selectedCustomer.sez
-                      [items]="['NO','LUT','IGST']">
-
-                    </ng-select>
-                  </div>
-                  <div class="col-sm-6">
-                    Customer Additional information : 
-                    <input  type="text" class="form-control " name="additional_info" placeholder="Enter Customer Additional information"
-                    [(ngModel)]="selectedCustomer.additional_info"  >
-                  </div>
-                </div>
-
-                <hr>
-                <h5 style="font-size: 14px;font-weight: 600;">Contact Person Information :</h5>
-                <hr>
-                <div class="form-group row">
-
-                  <div class="col-sm-6">
-                    Contact Person Name : <span style="color:red">*</span>
-                    <input disabled type="text" class="form-control " name="contact_person" placeholder="Contact Person"
-                      [(ngModel)]="selectedCustomer.contact_person" required (keyup)="qvalues ={};">
-                    <br>
-                    Contact Person Email : <span style="color:red">*</span>
-                    <input disabled type="email" (change)="field_validate($event,'contact_email');qvalues ={};"
-                      class="form-control " name="contact_email" placeholder="Contact Email"
-                      [(ngModel)]="selectedCustomer.contact_email" required>
-                  </div>
-                  <div class="col-sm-6">
-                    Contact Person Designation : <span style="color:red">*</span>
-                    <input disabled type="text" class="form-control " name="contact_designation"
-                      placeholder="Contact Person Designation" [(ngModel)]="selectedCustomer.contact_designation"
-                      required (keyup)="qvalues ={};">
-                    <br>
-                    Contact Person Mobile : <span style="color:red">*</span>
-                    <input disabled type="text" (change)="field_validate($event ,'mobile');" (keyup)="qvalues ={};"
-                      class="form-control " name="contact_no" placeholder="Contact No"
-                      [(ngModel)]="selectedCustomer.contact_no" required>
-                  </div>
-                </div>
-
-
-
-                <br>
-                <!--<label>Save This Customer : <select  [(ngModel)]="selectedCustomer.action" placeholder="Set Customer Action">
-            <option value="ignore" selected >Ignore | Use only For this Quotation</option>
-            <option value="addnew">Add as New Customer</option>
-            <option value="update" *ngIf="selectedCustomer.id">Update Existing Customer</option>
-          </select></label> -->
-
-                <!-- que -->
-
-
-                <!-- Manual Question handling-->
-                <!-- <ng-container *ngFor="let row of leadstatusdata?.questions ">
-
-                  <div class="card" style="padding: 0px;" *ngIf="row.id==118">
-                    <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
-                      <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
-                    <div class="card-body col-sm-12">
-                      <div *ngIf="row.input_type=='radio'">
-                        <ul>
-                          <li>
-                            <div *ngFor="let op of row.input_options_array;let i = index">
-                              <label> <input type="radio" slot="start" [checked]="qvalues['_'+row.id]==op" [value]="op"
-                                  [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" name="q_{{row.id}}">
-                                &nbsp;&nbsp;{{op}}</label>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="card" style="padding: 0px;" *ngIf=" qvalues._118 == 'Radio' && row.id == 142">
-                    <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
-                      <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
-                    <div class="card-body col-sm-12">
-                      <div *ngIf="row.input_type=='select'">
-                        <ng-select bindLabel="Select One" [items]="row.input_options_array"
-                          [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" multiple="true">
-                          <ng-template ng-option-tmp let-item="item">
-                            <span>{{ item }}</span>
-                          </ng-template>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="card" style="padding: 0px;" *ngIf=" qvalues._118 == 'Others' && row.id==143">
-                    <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
-                      <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
-                    <div class="card-body col-sm-12">
-                      <div *ngIf="row.input_type=='radio'">
-                        <ul>
-                          <li>
-                            <div *ngFor="let op of row.input_options_array;let i = index">
-                              <label> <input type="radio" slot="start" [checked]="qvalues['_'+row.id]==op" [value]="op"
-                                  [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" name="q_{{row.id}}">
-                                &nbsp;&nbsp;{{op}}</label>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="card" style="padding: 0px;"
-                    *ngIf="qvalues._118 == 'Others' && qvalues._143 == 'Others' && row.id == 145">
-                    <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
-                      <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
-                    <div class="card-body col-sm-12">
-                      <div *ngIf="row.input_type=='text'">
-                        <input type="text" class="form-control " [name]="'q_'+row.id" [required]="row.is_required==1"
-                          [(ngModel)]="qvalues['_'+row.id]" placeholder="please enter">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="card" style="padding: 0px;" *ngIf="qvalues._118 == 'Others' && row.id == 144">
-                    <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
-                      <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
-                    <div class="card-body col-sm-12">
-                      <div *ngIf="row.input_type=='select'">
-                        <ng-select bindLabel="Select One" [items]="row.input_options_array"
-                          [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" multiple="true">
-                          <ng-template ng-option-tmp let-item="item">
-                            <span>{{ item }}</span>
-                          </ng-template>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-
-
-
-                </ng-container> -->
-                <!-- que close -->
-
-                <!-- sarvye Question handling-->
-                <ng-container *ngFor="let row of leadstatusdata?.questions ">
-                  <div class="card" style="padding: 0px;" *ngIf="row.id ==166 && row">
-                    <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
-                      <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
-                    <div class="card-body col-sm-12">
-                      <!-- radio -->
-                      <div *ngIf="row.input_type=='radio'">
-                        <ul>
-                          <li>
-                            <div *ngFor="let op of row.input_options_array;let i = index">
-                              <label> <input type="radio" slot="start" [checked]="qvalues['_'+row.id]==op" [value]="op"
-                                  [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" name="q_{{row.id}}"
-                                  (change)="contactpersonvalidation(); ">
-                                &nbsp;&nbsp;{{op}}</label>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <!-- start of child element-->
-                      <ng-container *ngFor="let childrow of getChildQuestions(row)">
-                        <ng-container *ngIf="childrow && contactinfoflag ==1">
-                          <div class="card" style="padding: 0px;">
-                            <div class="card-header"><b style="font-size:1.2em">{{childrow?.title}}</b>
-                              <small *ngIf="childrow.description"><br>{{childrow?.description}}</small> </div>
-                            <div class="card-body col-sm-12">
-                              <!-- text -->
-                              <!-- <div *ngIf="childrow.input_type=='text'">
-                              <input type="text" class="form-control " [name]="'q_'+childrow.id"
-                                [required]="childrow.is_required==1" [(ngModel)]="qvalues['_'+childrow.id]"
-                                placeholder="please enter">
-                            </div> -->
-                              <!-- file -->
-                              <!-- <div *ngIf="childrow.input_type=='file'">
-                              <input type="file" class="form-control " [name]="'q_'+childrow.id"
-                                [required]="childrow.is_required==1" [(ngModel)]="qvalues['_'+childrow.id]" (change)="onFileChange($event,'document','add')"
-                                placeholder="Attach Media Files..">
-                            </div> -->
-                              <!-- radio -->
-                              <div *ngIf="childrow.input_type=='radio'">
-                                <ul>
-                                  <li>
-                                    <div *ngFor="let op of childrow.input_options_array;let i = index">
-                                      <label> <input type="radio" slot="start" [checked]="qvalues['_'+childrow.id]==op"
-                                          [value]="op" [(ngModel)]="qvalues['_'+childrow.id]"
-                                          [required]="childrow.is_required==1" name="q_{{childrow.id}}">
-                                        &nbsp;&nbsp;{{op}}</label>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
+          <!-- ==================================================================== customer info first step ========================================== -->
+          <div>
+            <div class="centered-content">
+              <h4>Customer Info</h4>
+            </div>
+    
+            <hr>
+            <div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <hr>
+                  <h4 class="sub-title" style="padding-bottom: 2px">Enter Lead ID :  
+                    <!-- (For PALM Sync) -->
+                    <!-- <input
+                      class="form-control" type=number min=0 step=1 name=lead_id [(ngModel)]="quotation.lead_id"
+                      (change)="getLeadstatusquestions(0,quotation.lead_id,1)"><br> -->
+                      <ng-select bindLabel="id" [items]="leads" [loading]="leadLoading" [typeahead]="leadTypeahead"
+                      placeholder="Select Lead" (change)="setLeadInfo()"
+                      [(ngModel)]="selectedLead"
+                      (clear)="selectedLead={};selectedCustomer={};selectedUser={};quotation.lead_id =0;">
+                      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div style="margin: 2px 0;" class="card">
+                          <div class="card-body" style="padding: 5px">
+                              <h5 class="card-title" style="font-size: 14px; font-weight: 400;">
+                                  #{{item?.id}} : {{item?.cname}}
+                              </h5>
+                      
+                              <h6 class="card-subtitle text-muted" style="margin-top: 0px;">
+                                  <span *ngIf="item?.user">Lead Owner : {{item?.user?.name}}</span>
+                              </h6>
                           </div>
-                          <!-- start of child2 element-->
-                          <ng-container *ngFor="let childrow2 of getChildQuestions(childrow)">
-                            <ng-container *ngIf="childrow2">
+                      </div>
+                      
+                      </ng-template>
+        
+                    </ng-select>
+                    <!-- <small> <b>Note : You should enter Lead Id for Renewals , Otherwise New Lead ID will be created for
+                        same.</b></small> -->
+                        <small> <b>Note : You should enter Lead Id Mandatory</b></small>
+                  </h4>
+               
+    
+                </div>
+    
+                <div class="col-sm-12">
+                  <hr>
+                  <h4 class="sub-title" style="padding-bottom: 18px">Select Lead Owner :</h4>
+                  <ng-select bindLabel="userdisplayname" [items]="users" [(ngModel)]="selectedUser" placeholder="Select Lead Owner" (change)="this.quotation.subregion =null; regionvalidation(); ">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span *ngIf="item.active==0" style="color:red">{{ item.userdisplayname  }}</span>
+                      <span *ngIf="item.active==1">{{ item.userdisplayname  }}</span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <div *ngIf="selectedUser?.region_ids" class="col-sm-12">
+                  <hr>
+                  <h4 class="sub-title" style="padding-bottom: 18px">Select Region(New method) :</h4>
+                  <ng-select bindLabel="displayname" [items]="selectedUser?.region_ids_info" [(ngModel)]="quotation.subregion" placeholder="Select Region" (change)="regionvalidation()">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span>{{ item.displayname  }}</span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+    
+                <div  class="col-sm-12">
+                  <hr>
+                  <h4 class="sub-title">
+                    Select Customer :
+                     <label> <input type=radio name="lcustfilter" checked (change)="selectedCustomer.lcustfilter=0;selectedCustomer.action='update'"> Existing</label> &nbsp;&nbsp; <label  > 
+                      <input  (change)="selectedCustomer.lcustfilter=1;selectedCustomer.action='addnew';selectedCustomer.id=-1;showC=1" type=radio name="lcustfilter"> New</label> 
+                  </h4>
+                  <!-- [hidden]="selectedCustomer?.lcustfilter==1" -->
+                  <ng-select bindLabel="displayname" [items]="customers" [loading]="custLoading" [typeahead]="custTypeahead"
+                    placeholder="Select Existing Customer"
+                    (change)="tdspatch(selectedCustomer.tds);quotation.isPirChanged = 1;" [(ngModel)]="selectedCustomer"
+                    (clear)="selectedCustomer={};">
+                    <!-- (clear)="selectedCustomer={};selectedCustomer.tds=0;selectedCustomer.address_search='';"-->
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+    
+                      <div style="margin: 2px 0;" class="card">
+                        <div class="card-body" style="padding: 5px">
+                            <h5 class="card-title" style="font-size: 14px; font-weight: 400;">
+                                #{{item?.id}} : {{item?.name}} - {{item.city}}
+                            </h5>
+                    
+                            <h6 class="card-subtitle text-muted" style="margin-top: 0px;">
+                                <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
+                                <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
+                            </h6>
+                            <!--  <p class="card-text">
+                                 {{item?.address_line_1}},{{item.address_line_2}},{{item?.address_line_3}},<br> 
+                                  ,{{item?.state}} ,{{item.pincode}} 
+                                 </p> -->
+                    
+                        </div>
+                    </div>
+                    
+                    </ng-template>
+    
+                  </ng-select>
+                  <a style="color: purple" *ngIf="selectedCustomer?.id > 0 && showC==0" (click)="showC=1">Show Details</a>
+                  <a style="color: purple"
+                    *ngIf="showC==1 && selectedCustomer?.id > 0  && selectedCustomer?.action!='addnew' "
+                    (click)="showC=0">Hide Details</a>
+                  <span [hidden]="true"> TDS : <input (change)="checkIfTan($event)" style="width:50px" type=number min=0
+                      [(ngModel)]="tds"> % </span>
+    
+                  <span [hidden]="selectedCustomer?.pan"><br> <br>
+                    <h4 *ngIf="selectedCustomer?.action==='addnew'">Add New Customer</h4>
+                              <h4 *ngIf="showC==1 && selectedCustomer?.id>0">Customer Information : <a [routerLink]="['/customer']" target=_blank>Manage Customers <i class="fa fa-external-link" aria-hidden="true"></i></a></h4>
+    
+    
+    
+                  </span>
+    
+                  <!-- Depreciated google search [(ngModel)]="selectedCustomer.address_search" -->
+                  <span [hidden]="selectedCustomer?.action!='addnew'"> Search Address/Business on Google : <input
+                      autocorrect="off" #search type="text" class="form-control " name="address_search"
+                      placeholder="Search Address" required></span>
+    
+                  <!-- (selectedCustomer.id && selectedCustomer.pan.length > 2 ) || (!selectedCustomer.id && selectedCustomer.action !='addnew')-->
+                  <div [hidden]="showC!=1" *ngIf="selectedCustomer?.id" class="avoid-clickss">
+                    <h4 *ngIf="selectedCustomer?.id>0"><br>Customer Information : </h4>
+                    <small>For Managing Customer Information , Please Check 'Customers' Tab</small>
+    
+                    <hr>
+    
+    
+    
+    
+    
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        Customer Name : <span style="color:red">*</span>
+                        <input disabled style="text-transform:uppercase" type="text" class="form-control " name="name"
+                          placeholder="Enter Name" [(ngModel)]="selectedCustomer.name" required>
+                      </div>
+                      <!-- <div class="col-sm-6"> 
+                     Customer Email :
+                    <input type="email" (change)="selectedCustomer.contact_email=selectedCustomer.email" class="form-control " name="email" placeholder="Company Email" [(ngModel)]="selectedCustomer.email" required>
+                   </div> -->
+    
+                      <div class="col-sm-6">
+                        Franchise / Brand :
+                        <input disabled type="text" class="form-control " name="franchise"
+                          placeholder="Enter Franchise/Brand" [(ngModel)]="selectedCustomer.franchise">
+    
+                      </div>
+                    </div>
+    
+                    <!-- <div class="form-group row">
+                  <div class="col-sm-6">
+                    Phone :
+                      <input type="text" class="form-control " name="phone" placeholder="Enter Phone" [(ngModel)]="selectedCustomer.phone" required>
+                   </div>
+                   <div class="col-sm-6"> 
+                     Mobile :
+                    <input (change)="selectedCustomer.contact_no=selectedCustomer.mobile"  type="number" class="form-control " name="mobile" placeholder="Mobile" [(ngModel)]="selectedCustomer.mobile" required>
+                   </div>
+              </div> -->
+    
+    
+    
+    
+                    <!--  Complete Address : 
+              <textarea  [(ngModel)]="selectedCustomer.address" class="form-control " name="formatted_address" placeholder="Complete Address" >   </textarea>
+      <hr>-->
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        <!--                <input  type="text" class="form-control " name="address" placeholder="Enter Address" [(ngModel)]="selectedCustomer.address" required> -->
+                        Address Line 1 : <span style="color:red">*</span>
+                        <input disabled type="text" class="form-control " name="address_line_1" placeholder="Address Line 1"
+                          [(ngModel)]="selectedCustomer.address_line_1" required>
+    
+                      </div>
+                      <div class="col-sm-6">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        Address Line 2 : <span style="color:red">*</span>
+                        <input disabled type="text" class="form-control " name="address_line_2" placeholder="Address Line 2"
+                          [(ngModel)]="selectedCustomer.address_line_2" required>
+                      </div>
+    
+                      <div class="col-sm-6">
+                        Town / Locality : <span style="color:red">*</span>
+                        <input disabled type="text" class="form-control " name="address_line_3" placeholder="Address Line 3"
+                          [(ngModel)]="selectedCustomer.address_line_3" required>
+                      </div>
+    
+    
+    
+                    </div>
+    
+    
+                    <div class="form-group row">
+    
+                      <div class="col-sm-6" *ngIf=states><br>
+                        State : <span style="color:red">*</span>
+                        <!--  <input placeholder = "State" class="form-control  " disabled [(ngModel)]="selectedCustomer.state" name="state" required>
+                -->
+                        <ng-select disabled placeholder="Select State" name="state"
+                          (change)="cities = [];selectedCustomer.city='';" required bindLabel="state" bindValue="state"
+                          [items]="states" [(ngModel)]="selectedCustomer.state">
+                        </ng-select>
+                      </div>
+    
+    
+                      <div class="col-sm-6"><br>
+                        City : <span style="color:red">*</span>
+                        <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
+                  -->
+    
+                        <ng-select disabled bindLabel="name" bindValue="name" [items]="cities" [loading]="cityLoading"
+                          [typeahead]="custTypeaheadCity" placeholder="Search Existing City"
+                          [(ngModel)]="selectedCustomer.city" required>
+                        </ng-select>
+    
+                      </div>
+    
+                    </div>
+    
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        Pincode : <span style="color:red">*</span>
+                        <!-- (change)="getPincodeinfo()"-->
+                        <input disabled type="number" class="form-control " name="pincode" placeholder="Search Pincode"
+                          [(ngModel)]="selectedCustomer.pincode" required>
+                      </div>
+                      <div class="col-sm-6">
+                        Country : <span style="color:red">*</span>
+                        <input disabled placeholder="India" class="form-control " [(ngModel)]="selectedCustomer.country"
+                          name="country" required>
+    
+                      </div>
+                    </div>
+                    <hr>
+    
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        PAN :
+                        <!-- (change)="field_validate($event,'pan',selectedCustomer.pan)" -->
+                        <input disabled (change)="field_validate($event,'pan',selectedCustomer.pan)" type="text"
+                          class="form-control " name="pan" placeholder="Enter PAN" [(ngModel)]="selectedCustomer.pan">
+                        <br>
+                        <!--
+        TAN :
+        <input type="text" class="form-control " name="tan" (change)="field_validate($event,'tan',selectedCustomer.tan)"  placeholder="TAN" [(ngModel)]="selectedCustomer.tan" required> -->
+    
+    
+                      </div>
+                      <div class="col-sm-6">
+                        GST :
+                        <input disabled type="text" class="form-control " name="gst"
+                          (change)="field_validate($event ,'gst',selectedCustomer.gst)" placeholder="Enter GST"
+                          [(ngModel)]="selectedCustomer.gst" required>
+    
+                        <br>
+                        <!--    TDS (%) : <input class="form-control " (change)="checkIfTan($event)"  type=number min=0 [(ngModel)]="tds"> -->
+    
+                      </div>
+                    </div>
+    
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        SEZ Unit :
+                        <ng-select disabled placeholder="Select SEZ Status" name=SEZ [(ngModel)]=selectedCustomer.sez
+                          [items]="['NO','LUT','IGST']">
+    
+                        </ng-select>
+                      </div>
+                      <div class="col-sm-6">
+                        Customer Additional information : 
+                        <input  type="text" class="form-control " name="additional_info" placeholder="Enter Customer Additional information"
+                        [(ngModel)]="selectedCustomer.additional_info"  >
+                      </div>
+                    </div>
+    
+                    <hr>
+                    <h5 style="font-size: 14px;font-weight: 600;">Contact Person Information :</h5>
+                    <hr>
+                    <div class="form-group row">
+    
+                      <div class="col-sm-6">
+                        Contact Person Name : <span style="color:red">*</span>
+                        <input disabled type="text" class="form-control " name="contact_person" placeholder="Contact Person"
+                          [(ngModel)]="selectedCustomer.contact_person" required (keyup)="qvalues ={};">
+                        <br>
+                        Contact Person Email : <span style="color:red">*</span>
+                        <input disabled type="email" (change)="field_validate($event,'contact_email');qvalues ={};"
+                          class="form-control " name="contact_email" placeholder="Contact Email"
+                          [(ngModel)]="selectedCustomer.contact_email" required>
+                      </div>
+                      <div class="col-sm-6">
+                        Contact Person Designation : <span style="color:red">*</span>
+                        <input disabled type="text" class="form-control " name="contact_designation"
+                          placeholder="Contact Person Designation" [(ngModel)]="selectedCustomer.contact_designation"
+                          required (keyup)="qvalues ={};">
+                        <br>
+                        Contact Person Mobile : <span style="color:red">*</span>
+                        <input disabled type="text" (change)="field_validate($event ,'mobile');" (keyup)="qvalues ={};"
+                          class="form-control " name="contact_no" placeholder="Contact No"
+                          [(ngModel)]="selectedCustomer.contact_no" required>
+                      </div>
+                    </div>
+    
+    
+    
+                    <br>
+                    <!--<label>Save This Customer : <select  [(ngModel)]="selectedCustomer.action" placeholder="Set Customer Action">
+                <option value="ignore" selected >Ignore | Use only For this Quotation</option>
+                <option value="addnew">Add as New Customer</option>
+                <option value="update" *ngIf="selectedCustomer.id">Update Existing Customer</option>
+              </select></label> -->
+    
+                    <!-- que -->
+    
+    
+                    <!-- Manual Question handling-->
+                    <!-- <ng-container *ngFor="let row of leadstatusdata?.questions ">
+    
+                      <div class="card" style="padding: 0px;" *ngIf="row.id==118">
+                        <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
+                          <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
+                        <div class="card-body col-sm-12">
+                          <div *ngIf="row.input_type=='radio'">
+                            <ul>
+                              <li>
+                                <div *ngFor="let op of row.input_options_array;let i = index">
+                                  <label> <input type="radio" slot="start" [checked]="qvalues['_'+row.id]==op" [value]="op"
+                                      [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" name="q_{{row.id}}">
+                                    &nbsp;&nbsp;{{op}}</label>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="card" style="padding: 0px;" *ngIf=" qvalues._118 == 'Radio' && row.id == 142">
+                        <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
+                          <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
+                        <div class="card-body col-sm-12">
+                          <div *ngIf="row.input_type=='select'">
+                            <ng-select bindLabel="Select One" [items]="row.input_options_array"
+                              [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" multiple="true">
+                              <ng-template ng-option-tmp let-item="item">
+                                <span>{{ item }}</span>
+                              </ng-template>
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+    
+    
+                      <div class="card" style="padding: 0px;" *ngIf=" qvalues._118 == 'Others' && row.id==143">
+                        <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
+                          <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
+                        <div class="card-body col-sm-12">
+                          <div *ngIf="row.input_type=='radio'">
+                            <ul>
+                              <li>
+                                <div *ngFor="let op of row.input_options_array;let i = index">
+                                  <label> <input type="radio" slot="start" [checked]="qvalues['_'+row.id]==op" [value]="op"
+                                      [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" name="q_{{row.id}}">
+                                    &nbsp;&nbsp;{{op}}</label>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+    
+    
+                      <div class="card" style="padding: 0px;"
+                        *ngIf="qvalues._118 == 'Others' && qvalues._143 == 'Others' && row.id == 145">
+                        <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
+                          <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
+                        <div class="card-body col-sm-12">
+                          <div *ngIf="row.input_type=='text'">
+                            <input type="text" class="form-control " [name]="'q_'+row.id" [required]="row.is_required==1"
+                              [(ngModel)]="qvalues['_'+row.id]" placeholder="please enter">
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class="card" style="padding: 0px;" *ngIf="qvalues._118 == 'Others' && row.id == 144">
+                        <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
+                          <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
+                        <div class="card-body col-sm-12">
+                          <div *ngIf="row.input_type=='select'">
+                            <ng-select bindLabel="Select One" [items]="row.input_options_array"
+                              [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" multiple="true">
+                              <ng-template ng-option-tmp let-item="item">
+                                <span>{{ item }}</span>
+                              </ng-template>
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+    
+    
+    
+                    </ng-container> -->
+                    <!-- que close -->
+    
+                    <!-- sarvye Question handling-->
+                    <ng-container *ngFor="let row of leadstatusdata?.questions ">
+                      <div class="card" style="padding: 0px;" *ngIf="row.id ==166 && row">
+                        <div class="card-header"><b style="font-size:1.2em">{{row?.title}}</b>
+                          <small *ngIf="row.description"><br>{{row?.description}}</small> </div>
+                        <div class="card-body col-sm-12">
+                          <!-- radio -->
+                          <div *ngIf="row.input_type=='radio'">
+                            <ul>
+                              <li>
+                                <div *ngFor="let op of row.input_options_array;let i = index">
+                                  <label> <input type="radio" slot="start" [checked]="qvalues['_'+row.id]==op" [value]="op"
+                                      [(ngModel)]="qvalues['_'+row.id]" [required]="row.is_required==1" name="q_{{row.id}}"
+                                      (change)="contactpersonvalidation(); ">
+                                    &nbsp;&nbsp;{{op}}</label>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- start of child element-->
+                          <ng-container *ngFor="let childrow of getChildQuestions(row)">
+                            <ng-container *ngIf="childrow && contactinfoflag ==1">
                               <div class="card" style="padding: 0px;">
-                                <div class="card-header"><b style="font-size:1.2em">{{childrow2?.title}}</b>
-                                  <small *ngIf="childrow2.description"><br>{{childrow2?.description}}</small> </div>
+                                <div class="card-header"><b style="font-size:1.2em">{{childrow?.title}}</b>
+                                  <small *ngIf="childrow.description"><br>{{childrow?.description}}</small> </div>
                                 <div class="card-body col-sm-12">
                                   <!-- text -->
-                                  <div *ngIf="childrow2.input_type=='text'">
-                                    <input type="text" class="form-control " [name]="'q_'+childrow2.id"
-                                      [required]="childrow2.is_required==1" [(ngModel)]="qvalues['_'+childrow2.id]"
-                                      placeholder="please enter">
-                                  </div>
+                                  <!-- <div *ngIf="childrow.input_type=='text'">
+                                  <input type="text" class="form-control " [name]="'q_'+childrow.id"
+                                    [required]="childrow.is_required==1" [(ngModel)]="qvalues['_'+childrow.id]"
+                                    placeholder="please enter">
+                                </div> -->
                                   <!-- file -->
-                                  <div *ngIf="childrow2.input_type=='file'">
-                                    <input type="file" class="form-control " [name]="'q_'+childrow2.id"
-                                      [required]="childrow2.is_required==1" accept=".csv"
-                                      (change)="onFileChange($event, childrow2.id)" placeholder="Attach Media Files..">
-                                    <!-- [(ngModel)]="qvalues['_'+childrow2.id]" -->
-                                    <br><small><a *ngIf="qvalues['_'+childrow2.id]" target=_blank
-                                        href="{{qvalues['_'+childrow2.id]}}" style="color: #6B05F9">
-                                        {{qvalues['_'+childrow2.id]}}<i class="ti-download"></i>
-                                      </a></small>
-
-                                  </div>
+                                  <!-- <div *ngIf="childrow.input_type=='file'">
+                                  <input type="file" class="form-control " [name]="'q_'+childrow.id"
+                                    [required]="childrow.is_required==1" [(ngModel)]="qvalues['_'+childrow.id]" (change)="onFileChange($event,'document','add')"
+                                    placeholder="Attach Media Files..">
+                                </div> -->
                                   <!-- radio -->
-                                  <div *ngIf="childrow2.input_type=='radio'">
+                                  <div *ngIf="childrow.input_type=='radio'">
                                     <ul>
                                       <li>
-                                        <div *ngFor="let op of childrow2.input_options_array;let i = index">
-                                          <label> <input type="radio" slot="start"
-                                              [checked]="qvalues['_'+childrow2.id]==op" [value]="op"
-                                              [(ngModel)]="qvalues['_'+childrow2.id]"
-                                              [required]="childrow2.is_required==1" name="q_{{childrow2.id}}">
+                                        <div *ngFor="let op of childrow.input_options_array;let i = index">
+                                          <label> <input type="radio" slot="start" [checked]="qvalues['_'+childrow.id]==op"
+                                              [value]="op" [(ngModel)]="qvalues['_'+childrow.id]"
+                                              [required]="childrow.is_required==1" name="q_{{childrow.id}}">
                                             &nbsp;&nbsp;{{op}}</label>
                                         </div>
                                       </li>
@@ -587,35 +721,40 @@
                                   </div>
                                 </div>
                               </div>
-
-                              <!-- start of child3 element-->
-                              <ng-container *ngFor="let childrow3 of getChildQuestions(childrow2)">
-                                <ng-container *ngIf="childrow3">
+                              <!-- start of child2 element-->
+                              <ng-container *ngFor="let childrow2 of getChildQuestions(childrow)">
+                                <ng-container *ngIf="childrow2">
                                   <div class="card" style="padding: 0px;">
-                                    <div class="card-header"><b style="font-size:1.2em">{{childrow3?.title}}</b>
-                                      <small *ngIf="childrow3.description"><br>{{childrow3?.description}}</small> </div>
+                                    <div class="card-header"><b style="font-size:1.2em">{{childrow2?.title}}</b>
+                                      <small *ngIf="childrow2.description"><br>{{childrow2?.description}}</small> </div>
                                     <div class="card-body col-sm-12">
                                       <!-- text -->
-                                      <div *ngIf="childrow3.input_type=='text'">
-                                        <input type="text" class="form-control " [name]="'q_'+childrow3.id"
-                                          [required]="childrow3.is_required==1" [(ngModel)]="qvalues['_'+childrow3.id]"
+                                      <div *ngIf="childrow2.input_type=='text'">
+                                        <input type="text" class="form-control " [name]="'q_'+childrow2.id"
+                                          [required]="childrow2.is_required==1" [(ngModel)]="qvalues['_'+childrow2.id]"
                                           placeholder="please enter">
                                       </div>
                                       <!-- file -->
-                                      <!-- <div *ngIf="childrow3.input_type=='file'">
-                                <input type="file" class="form-control " [name]="'q_'+childrow3.id"
-                                  [required]="childrow3.is_required==1" [(ngModel)]="qvalues['_'+childrow3.id]" 
-                                  placeholder="Attach Media Files..">
-                              </div> -->
+                                      <div *ngIf="childrow2.input_type=='file'">
+                                        <input type="file" class="form-control " [name]="'q_'+childrow2.id"
+                                          [required]="childrow2.is_required==1" accept=".csv"
+                                          (change)="onFileChange($event, childrow2.id)" placeholder="Attach Media Files..">
+                                        <!-- [(ngModel)]="qvalues['_'+childrow2.id]" -->
+                                        <br><small><a *ngIf="qvalues['_'+childrow2.id]" target=_blank
+                                            href="{{qvalues['_'+childrow2.id]}}" style="color: #6B05F9">
+                                            {{qvalues['_'+childrow2.id]}}<i class="ti-download"></i>
+                                          </a></small>
+    
+                                      </div>
                                       <!-- radio -->
-                                      <div *ngIf="childrow3.input_type=='radio'">
+                                      <div *ngIf="childrow2.input_type=='radio'">
                                         <ul>
                                           <li>
-                                            <div *ngFor="let op of childrow3.input_options_array;let i = index">
+                                            <div *ngFor="let op of childrow2.input_options_array;let i = index">
                                               <label> <input type="radio" slot="start"
-                                                  [checked]="qvalues['_'+childrow3.id]==op" [value]="op"
-                                                  [(ngModel)]="qvalues['_'+childrow3.id]"
-                                                  [required]="childrow3.is_required==1" name="q_{{childrow3.id}}">
+                                                  [checked]="qvalues['_'+childrow2.id]==op" [value]="op"
+                                                  [(ngModel)]="qvalues['_'+childrow2.id]"
+                                                  [required]="childrow2.is_required==1" name="q_{{childrow2.id}}">
                                                 &nbsp;&nbsp;{{op}}</label>
                                             </div>
                                           </li>
@@ -623,120 +762,169 @@
                                       </div>
                                     </div>
                                   </div>
-
+    
+                                  <!-- start of child3 element-->
+                                  <ng-container *ngFor="let childrow3 of getChildQuestions(childrow2)">
+                                    <ng-container *ngIf="childrow3">
+                                      <div class="card" style="padding: 0px;">
+                                        <div class="card-header"><b style="font-size:1.2em">{{childrow3?.title}}</b>
+                                          <small *ngIf="childrow3.description"><br>{{childrow3?.description}}</small> </div>
+                                        <div class="card-body col-sm-12">
+                                          <!-- text -->
+                                          <div *ngIf="childrow3.input_type=='text'">
+                                            <input type="text" class="form-control " [name]="'q_'+childrow3.id"
+                                              [required]="childrow3.is_required==1" [(ngModel)]="qvalues['_'+childrow3.id]"
+                                              placeholder="please enter">
+                                          </div>
+                                          <!-- file -->
+                                          <!-- <div *ngIf="childrow3.input_type=='file'">
+                                    <input type="file" class="form-control " [name]="'q_'+childrow3.id"
+                                      [required]="childrow3.is_required==1" [(ngModel)]="qvalues['_'+childrow3.id]" 
+                                      placeholder="Attach Media Files..">
+                                  </div> -->
+                                          <!-- radio -->
+                                          <div *ngIf="childrow3.input_type=='radio'">
+                                            <ul>
+                                              <li>
+                                                <div *ngFor="let op of childrow3.input_options_array;let i = index">
+                                                  <label> <input type="radio" slot="start"
+                                                      [checked]="qvalues['_'+childrow3.id]==op" [value]="op"
+                                                      [(ngModel)]="qvalues['_'+childrow3.id]"
+                                                      [required]="childrow3.is_required==1" name="q_{{childrow3.id}}">
+                                                    &nbsp;&nbsp;{{op}}</label>
+                                                </div>
+                                              </li>
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      </div>
+    
+                                    </ng-container>
+                                  </ng-container>
+                                  <!--  -->
+    
                                 </ng-container>
                               </ng-container>
                               <!--  -->
-
+    
                             </ng-container>
                           </ng-container>
                           <!--  -->
-
-                        </ng-container>
-                      </ng-container>
-                      <!--  -->
-                    </div>
+                        </div>
+                      </div>
+    
+                    </ng-container>
+                    <ng-container *ngIf="quotation.noc ==1 && quotation.lead_id >0">
+                      <div class="checkbox-fade fade-in-primary -d">
+                        <label><input type=checkbox name="extended_pi" [(ngModel)]="quotation.extended_pi" >
+                          <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                          <span style="font-size: 15px;font-weight: 600;">Do you want to create Extended PI under COVID Impact</span>
+                        </label>
+    
+                        <!-- <label><input type=checkbox name="extended_pi" [checked]="show" (change)="showdiv()" style="width: 20px;height: 20px;">
+                          <span style="color:purple;font-weight:bold"> I confirm that I have checked content of Proforma Invoice. </span>
+                        </label> -->
+                      </div>
+                    </ng-container>
+                    <!-- sarvye que close -->
+                    <!-- upload Evidence-->
+                    <!-- <ng-container>
+                      <div class="row">
+                        <h4 style="font-size: 15px;font-weight: 600;margin-top: 10px;margin-left:25px;">Evidence Upload : </h4> 
+                        <div class="col-sm-6 col-12 col-md-4">
+                          <input type="file" class="form-control" name="photo_upload" placeholder="Select files"(change)="onFileChangeUploadEvidence($event)"  accept=".png,.jpg,.jpeg,.mp3, .mpeg , .mp4, .webm, .wmv" multiple>
+                        </div>
+                        <br>
+                       <span style="color: #d34e47; margin-top: 5px;">Note: File type supporting only png, jpg, jpeg, mp3, mpeg, mp4, webm, wmv
+                      </span> 
+                      </div>
+                      <div class="col-sm-8 col-8 row mx-auto " style="display: inline-block;" *ngIf="isloading" >
+                        <div class="progress" style="margin-top: 10px;margin-bottom: 10px;">
+                          <div class="progress-bar progress-bar-striped"  role="progressbar" [style.width.%]="imgprogress" attr.aria-valuenow="{{imgprogress}}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                       
+                      
+                      <br>
+    
+                      <div *ngIf="allevidence.length > 0" class="col-12 col-md-12 col-sm-12 ">
+                        <table class="col-12 col-md-12 col-sm-12 " style="width: 100%;"  border=1 cellpadding=3
+                        cellspacing=3>
+                        <tr>
+                          <th class="text-center" style="width: 10%;">Sr.No.</th>
+                          <th style="width: 80%;">File Name</th>
+                          <th class="text-center" style="width: 10%;" >Action</th>
+                        </tr>
+                        <tr *ngFor="let tr of allevidence; let i = index">
+                          <td class="text-center">{{i+1}}</td>
+                          <td><a href="{{tr?.evidenceUrl}}" target="_blank">{{tr?.filename}} </a>
+                          </td>
+                          <td class="text-center"><a style="color: red" (click)="deleteEvidencefilePopup(tr, i)">
+                            <i class="ti-trash"></i>
+                          </a></td>
+                        </tr>
+                        </table>
+                        <br>
+                      </div>
+                    </ng-container> -->
                   </div>
-
-                </ng-container>
-                <ng-container *ngIf="quotation.noc ==1 && quotation.lead_id >0">
-                  <div class="checkbox-fade fade-in-primary -d">
-                    <label><input type=checkbox name="extended_pi" [(ngModel)]="quotation.extended_pi" >
-                      <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
-                      <span style="font-size: 15px;font-weight: 600;">Do you want to create Extended PI under COVID Impact</span>
-                    </label>
-
-                    <!-- <label><input type=checkbox name="extended_pi" [checked]="show" (change)="showdiv()" style="width: 20px;height: 20px;">
-                      <span style="color:purple;font-weight:bold"> I confirm that I have checked content of Proforma Invoice. </span>
-                    </label> -->
-                  </div>
-                </ng-container>
-                <!-- sarvye que close -->
-                <!-- upload Evidence-->
-                <!-- <ng-container>
-                  <div class="row">
-                    <h4 style="font-size: 15px;font-weight: 600;margin-top: 10px;margin-left:25px;">Evidence Upload : </h4> 
-                    <div class="col-sm-6 col-12 col-md-4">
-                      <input type="file" class="form-control" name="photo_upload" placeholder="Select files"(change)="onFileChangeUploadEvidence($event)"  accept=".png,.jpg,.jpeg,.mp3, .mpeg , .mp4, .webm, .wmv" multiple>
-                    </div>
-                    <br>
-                   <span style="color: #d34e47; margin-top: 5px;">Note: File type supporting only png, jpg, jpeg, mp3, mpeg, mp4, webm, wmv
-                  </span> 
-                  </div>
-                  <div class="col-sm-8 col-8 row mx-auto " style="display: inline-block;" *ngIf="isloading" >
-                    <div class="progress" style="margin-top: 10px;margin-bottom: 10px;">
-                      <div class="progress-bar progress-bar-striped"  role="progressbar" [style.width.%]="imgprogress" attr.aria-valuenow="{{imgprogress}}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                   
-                  
-                  <br>
-
-                  <div *ngIf="allevidence.length > 0" class="col-12 col-md-12 col-sm-12 ">
-                    <table class="col-12 col-md-12 col-sm-12 " style="width: 100%;"  border=1 cellpadding=3
-                    cellspacing=3>
-                    <tr>
-                      <th class="text-center" style="width: 10%;">Sr.No.</th>
-                      <th style="width: 80%;">File Name</th>
-                      <th class="text-center" style="width: 10%;" >Action</th>
-                    </tr>
-                    <tr *ngFor="let tr of allevidence; let i = index">
-                      <td class="text-center">{{i+1}}</td>
-                      <td><a href="{{tr?.evidenceUrl}}" target="_blank">{{tr?.filename}} </a>
-                      </td>
-                      <td class="text-center"><a style="color: red" (click)="deleteEvidencefilePopup(tr, i)">
-                        <i class="ti-trash"></i>
-                      </a></td>
-                    </tr>
-                    </table>
-                    <br>
-                  </div>
-                </ng-container> -->
+                </div>
               </div>
+    
+    
             </div>
-          </div>
-
-
-        </div>
-
-        <div class="centered-content">
-          <div class="btn-group mt-10">
-            <span *ngIf="!selectedCustomer?.name">
-              <button type="button" class="btn btn-primary btn-xl"
-                (click)="commonService.windowpopup('/customer/add')"><i class="fa fa-external-link"
-                  aria-hidden="true"></i> Add new Customer</button>
-              <hr>
-            </span>
-
-            <!--  <a  (click)="commonService.windowpopup('/customer/add')">+ Add New <i class="fa fa-external-link" aria-hidden="true"></i></a>-->
-            <!-- <span
-              *ngIf="selectedUser?.id && selectedCustomer?.name && selectedCustomer?.pincode && selectedCustomer?.state  && selectedCustomer?.address_line_1 && selectedCustomer?.contact_no && selectedCustomer?.contact_person && selectedCustomer?.contact_email  && selectedCustomer.contact_designation && checkQvalues() &&  queFlag == 1 && regionflag ==1"> -->
+    
+            <div class="centered-content">
+              <div class="btn-group mt-10">
+                <span *ngIf="!selectedCustomer?.name">
+                  <button type="button" class="btn btn-primary btn-xl"
+                    (click)="commonService.windowpopup('/customer/add')"><i class="fa fa-external-link"
+                      aria-hidden="true"></i> Add new Customer</button>
+                  <hr>
+                </span>
+    
+                <!--  <a  (click)="commonService.windowpopup('/customer/add')">+ Add New <i class="fa fa-external-link" aria-hidden="true"></i></a>-->
+                <!-- <span
+                  *ngIf="selectedUser?.id && selectedCustomer?.name && selectedCustomer?.pincode && selectedCustomer?.state  && selectedCustomer?.address_line_1 && selectedCustomer?.contact_no && selectedCustomer?.contact_person && selectedCustomer?.contact_email  && selectedCustomer.contact_designation && checkQvalues() &&  queFlag == 1 && regionflag ==1"> -->
+                  <span
+                  *ngIf="selectedUser?.id && selectedCustomer?.name && selectedCustomer?.pincode && selectedCustomer?.state  && selectedCustomer?.address_line_1 && selectedCustomer?.contact_no && selectedCustomer?.contact_person && selectedCustomer?.contact_email  && selectedCustomer.contact_designation && regionflag ==1 && quotation.lead_id > 0 ">
+                  <!-- && checkQvalues() &&  queFlag == 1-->
+                  <button [disabled]="!selectedCustomer" type="button" class="btn btn-primary btn-xl" nextStep>Continue <i
+                      class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                </span>
+    
+              </div>
               <span
-              *ngIf="selectedUser?.id && selectedCustomer?.name && selectedCustomer?.pincode && selectedCustomer?.state  && selectedCustomer?.address_line_1 && selectedCustomer?.contact_no && selectedCustomer?.contact_person && selectedCustomer?.contact_email  && selectedCustomer.contact_designation && regionflag ==1 && quotation.lead_id > 0 ">
-              <!-- && checkQvalues() &&  queFlag == 1-->
-              <button [disabled]="!selectedCustomer" type="button" class="btn btn-primary btn-xl" nextStep>Continue <i
-                  class="fa fa-arrow-right" aria-hidden="true"></i></button>
-            </span>
-
+                *ngIf="!selectedCustomer?.name || !selectedCustomer?.address_line_1 || !selectedCustomer?.contact_no || !selectedCustomer?.pincode || !selectedCustomer?.contact_person || !selectedCustomer?.contact_email">
+                <br>
+                <hr>
+                <span style="color:red">*</span> Fields are Mandatory <br>
+                <!-- <b>Tax invoice will be printed in the name and address of the customer
+                  provided here</b> -->
+                <!-- <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; -->
+              </span>
+    
+            </div>
+    
+    
           </div>
-          <span
-            *ngIf="!selectedCustomer?.name || !selectedCustomer?.address_line_1 || !selectedCustomer?.contact_no || !selectedCustomer?.pincode || !selectedCustomer?.contact_person || !selectedCustomer?.contact_email">
-            <br>
-            <hr>
-            <span style="color:red">*</span> Fields are Mandatory <br>
-            <b>Tax invoice will be printed in the name and address of the customer
-              provided here</b>
-            <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp;
-          </span>
-
-        </div>
-
-
-      </div>
-    </wizard-step>
-    <wizard-step stepTitle="License Categories" optionalStep>
-      <div class="centered-contentt">
-        <div>
+          <!-- ======================================= customer info first step end ================================================================ -->
+  
+          <div>
+            <!-- <p>Go to a different step to see the error state</p> -->
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <!-- ========================================= LICENSE CATEGORIES second setp start ============================================================= -->
+      <mat-step [stepControl]="secondFormGroup" errorMessage="Address is required.">
+        <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>LICENSE CATEGORIES</ng-template>
+          <mat-form-field>
+            <mat-label>Address</mat-label>
+            <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
+                   required>
+          </mat-form-field>
           <div class="centered-content">
             <h4>Select License Category</h4>
           </div>
@@ -761,6 +949,33 @@
           </div>
           
         </span>
+
+          <div>
+            <p>Go to a different step to see the error state</p>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- ========================================= LICENSE CATEGORIES second setp end ============================================================= -->
+      
+      <mat-step>
+        <ng-template matStepLabel>CHECKOUT</ng-template>
+        <p>You are now done.</p>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+    <!-- ################################################################## new stepper code end #################################################################### -->
+
+   
+    <wizard-step stepTitle="License Categories" optionalStep>
+      <div class="centered-contentt">
+        <div>
+         
         
 
           <!-- try -->
@@ -1248,9 +1463,9 @@
           </div>
           <hr>
 
-          <div class="centered-content" *ngIf="allSelectedLc.length<1">
+          <!-- <div class="centered-content" *ngIf="allSelectedLc.length<1">
             Cart is Empty
-          </div>
+          </div> -->
           <div class="centered-contentt" *ngIf="allSelectedLc.length>0">
             <div class="centered-content" style="font-size: 1.3em">Cart Items - <small style="color:red;cursor:pointer"
                 (click)="cart_alldelete()">Clear all </small></div>
@@ -1416,8 +1631,8 @@
         <hr>
         <div class=centered-content>
           <div class="btn-group mt-10 ">
-            <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
-                class="ti-arrow-left"></i></button>
+            <!-- <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
+                class="ti-arrow-left"></i></button> -->
             <span> <button style="margin-right: 5px;" type="button" [hidden]="allSelectedLc.length<1"
                 class="btn btn-primary btn-xl" (click)="saveQuotation()">Save Changes</button> &nbsp;</span>
             <button type="button" class="btn btn-primary btn-xl" [hidden]="allSelectedLc.length<1"
@@ -1894,9 +2109,12 @@
         <div class="btn-group mt-10 centered-content text-center">
 
           <div class=" centered-content text-center" style="padding-top:10px">
-            <span *ngIf="quotation.atir_status!='pending' && quotation.atir_status!='approve' "><button
+            <span *ngIf="quotation.atir_status!='pending' && quotation.atir_status!='approve' ">
+              <!-- <button
                 style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
-                  class="ti-arrow-left"></i> </button> &nbsp;</span>
+                  class="ti-arrow-left"></i> </button>  -->
+                  &nbsp;
+                </span>
             <a *ngIf="quotation?.id && quotation.pir_status=='approve'" class="btn btn-primary btn-xl" target=_blank
               href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&invoice=2&uuid={{quotation.uuid}}">Download Proforma Invoice</a>
           </div>

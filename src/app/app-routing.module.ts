@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './Components/login/login.component';
 import { LeadModule } from './Components/lead/lead.module'; 
+import { StepperErrorsExampleComponent } from './stepper-errors-example/stepper-errors-example.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'quotation', loadChildren: () => import('./Components/quotation/quotation.module').then(m => m.ApplicationModule) },
   { path: 'license', loadChildren: () => import('./Components/license/license.module').then(m => m.LicenseModule) },
   { path: 'tracking', loadChildren: () => import('./Components/tracking/tracking.module').then(m => m.TrackingModule) },
+  {path:'stepper',component:StepperErrorsExampleComponent},
 
 ];
 

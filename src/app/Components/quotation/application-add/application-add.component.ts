@@ -24,6 +24,13 @@ import { LicenseCategoryService } from '../../../Services/licensecategory.servic
 import { UserService } from '../../../Services/user.service';
 import { CustomerService } from '../../../Services/customer.service';
 import { CommonService } from '../../../Services/common.service';
+import {  NgModule } from '@angular/core';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-application-add',
@@ -31,6 +38,12 @@ import { CommonService } from '../../../Services/common.service';
   styleUrls: ['./application-add.component.scss']
 })
 export class ApplicationAddComponent implements OnInit, OnDestroy {
+  firstFormGroup = this._formBuilder.group({
+    firstCtrl: ['', Validators.required],
+  });
+  secondFormGroup = this._formBuilder.group({
+    secondCtrl: ['', Validators.required],
+  });
 
   @ViewChild('search')
   public searchElement!: ElementRef;
@@ -132,7 +145,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   ptax: any;
   selectedLead :any = {};
 
-  constructor(private location: Location, public masterService: MasterService, public authService: AuthService, private ngZone: NgZone, private route: ActivatedRoute,
+  constructor(private _formBuilder: FormBuilder,private location: Location, public masterService: MasterService, public authService: AuthService, private ngZone: NgZone, private route: ActivatedRoute,
     private cd: ChangeDetectorRef, public router: Router, public userService: UserService, public commonService: CommonService, public quotationService: QuotationService,
     public customerService: CustomerService, public licenseCategoryService: LicenseCategoryService, public transactionService: TransactionService, public leadService : LeadService, public documentService:DocumentService,) {
     this.quotation.status = '';
