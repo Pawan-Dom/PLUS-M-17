@@ -752,44 +752,689 @@
       </mat-step>
       <!-- ========================================= LICENSE CATEGORIES second setp start ============================================================= -->
       <mat-step [stepControl]="secondFormGroup" errorMessage="Address is required.">
-        <form [formGroup]="secondFormGroup">
-          <ng-template matStepLabel>LICENSE CATEGORIES</ng-template>
-          <mat-form-field>
-            <mat-label>Address</mat-label>
-            <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
-                   required>
-          </mat-form-field>
-          <div class="centered-content">
-            <h4>Select License Category</h4>
+        <div class="centered-contentt">
+          <div>
+            <div class="centered-content">
+              <h4>Select License Category</h4>
+            </div>
+            <hr>
+            <span *ngIf="licenseCategories">
+              Filter : <label style="display:none"> <input type=radio name="lcatfilter" [checked]="activefilter=='all'"
+                  (change)="filterlc('all');activefilter='all'"> All</label> &nbsp;&nbsp; <label> <input
+                  (change)="filterlc('bg');activefilter='bg'" type=radio name="lcatfilter"> Background</label> 
+              &nbsp;&nbsp; <label> <input (change)="filterlc('event');activefilter='event';ltype='New'" type=radio
+                  name="lcatfilter"> Events</label>
+                  &nbsp;&nbsp; <label> <input (change)="filterlc('penalty');activefilter='penalty';ltype='New'" type=radio
+                    name="lcatfilter"> Damages</label>
+  
+                  <!-- <div [hidden]="activefilter=='event' || rejectedArray.length<1" *ngIf="rejectedArray.length>0 && ( activefilter!='event' || activefilter!='all')" class="col-md-2 col-xl-2" style="float: right;" (click)="checkRejectedCart(); modalrejectcart.show();"><button type="button" class="btn btn-primary btn-sm">Rejected Cart</button></div> -->
+  
+            </span>
+  
+            <!-- try -->
+            <!-- <span *ngIf="licenseCategories && (this.qvalues._166 == 'Multiple Outlets' || qvalues._166 == 'Stand-alone store')">
+                Filter : <label style="display:none"> <input type=radio name="lcatfilter" [checked]="activefilter=='all'" 
+                    (change)="filterlc('all');activefilter='all'"> All</label> &nbsp;&nbsp; 
+                    <label> <input
+                    (change)="filterlc('bg');activefilter='bg'" type=radio name="lcatfilter" [checked]="activefilter=='bg'" value ="bg"> Background</label>
+                
+              </span>
+              <span *ngIf="licenseCategories && this.qvalues._166 == 'Event'">
+                  Filter : <label style="display:none"> <input type=radio name="lcatfilter" [checked]="activefilter=='all'"
+                      (change)="filterlc('all');activefilter='all'"> All</label> &nbsp;&nbsp; 
+          
+                 
+                   <label> <input (change)="filterlc('event');activefilter='event';ltype='New'" type=radio
+                      name="lcatfilter" [checked]="activefilter=='event'" value ="event"> Events</label>
+                </span> -->
+            <!-- close -->
+  
+            <div class="row" *ngIf="false && licenseCategories && (activefilter=='bg' || activefilter=='event'|| activefilter=='penalty')">
+              <div class="col-md-1 col-xl-1">Sn.</div>
+              <div class="col-md-5 col-xl-5">License Category</div>
+              <div class="col-md-2 col-xl-2">No. Of Licenses</div> |
+              <div class="col-md-2 col-xl-2">Total</div>
+  
+            </div>
+           
+  
+  
+  
+            <div class="row" style="border: 1px solid #e4e4e4;
+   padding: 5px;
+   box-shadow: 2px 2px 2px skyblue;" *ngIf="licenseCategories && (activefilter=='bg' || activefilter=='event' || activefilter=='penalty')">
+  
+  
+  
+              <div class="col-1">*</div>
+  
+              <div class="col-md-6">
+  
+                <span >
+                  <!-- <b [hidden]="activefilter=='event' || activefilter=='penalty'"><label><input type=radio name="ltype" [checked]="ltype=='New'"
+                        [(ngModel)]="ltype" value="New"> New</label> &nbsp;&nbsp;
+                    <label><input type=radio name="ltype" [checked]="ltype=='Renewal'" [(ngModel)]="ltype"
+                        value="Renewal"> Renewal </label>
+                  </b> -->
+                  <hr [hidden]="activefilter=='event'">
+  
+                  <!--  [groupBy]="catGroupByFn" -->
+                  <ng-select placeholder="Select License Category" (change)="setSelectedSlc($event)"
+                    bindLabel="displayname" [items]="licenseCategories" autocomplete="off">
+                    <!-- [(ngModel)]="selectedSlc"-->
+  
+                    <ng-template ng-option-tmp let-item="item">
+                      <span *ngIf="item.active==0" style="color:red">{{ item.displayname  }}</span>
+                      <span *ngIf="item.active==1">{{ item.displayname  }}</span>
+                    </ng-template>
+  
+                  </ng-select>
+                </span>
+  
+                <div *ngIf="selectedSlc?.id > 0">
+                  <!--              <small> {{selectedSlc.desc1}} </small>-->
+                  <hr>
+  
+                  <div *ngFor="let cf of selectedSlc.custom_fields; let i = index">
+                    <span *ngIf="cf.is_premium==0">
+                      
+                      <div *ngIf="cf.f_type=='range_field' && (_can_show_condition_field(selectedSlc,cf)) ">
+                        {{cf.f_name}} : <input type=number [min]="selectedSlc.custom_fields[i].min_value" value="1"
+                          step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                          [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue" [required]="cf?.is_required==1" /> {{cf.single_field_desc}}
+                      </div>
+  
+                      <!-- (change)="updateSelectCatTotalCf($event,selectedSlc, cf,i)" -->
+                      <div *ngIf="cf.f_type=='category_field' && (_can_show_condition_field(selectedSlc,cf))" style="border:1px solid #e4e4e4;padding:10px">
+                        {{cf.name}} : <ng-select (change)="conditionFieldNoCheck(cf);checkForCityClass(selectedSlc.custom_fields[i]);conditionFieldvalidateCheck(selectedSlc);"
+                          [searchable]="false" [clearable]="false" placeholder="{{cf.name}}" bindLabel="name"
+                          [items]="cf.category_options" [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue">
+                        </ng-select> {{cf.single_field_desc}}
+                        <div *ngIf="cf.addfield_f_name.length > 1 && selectedSlc.custom_fields[i].setcartvalue"
+                          style="padding:3px">
+  
+                          <span *ngIf="selectedSlc.custom_fields[i].setcartvalue.addfield_desc.length > 1">
+                            {{cf.addfield_f_name}} : <input type=number min=0
+                              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                              (change)="validate_add_max($event,selectedSlc.custom_fields[i].setcartvalue.addfield_max_value,i)"
+                              max="selectedSlc.custom_fields[i].setcartvalue.addfield_max_value"
+                              [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue">
+                            {{selectedSlc.custom_fields[i].setcartvalue.addfield_desc}} </span>
+  
+  
+                        </div>
+                      </div>
+                      <div *ngIf="cf.f_type=='single_field' && (_can_show_condition_field(selectedSlc,cf))" style="padding:5px;">
+                        {{cf.f_name}} : <input type=number [min]="selectedSlc.custom_fields[i].min_value"
+                          [max]="selectedSlc.custom_fields[i].max_value" value="1" step="1"
+                          oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                          [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue" [required]="cf?.is_required==1" /> {{cf.single_field_desc}}
+                      </div>
+                      <div *ngIf="cf.f_type=='matrix_field'" style="border:1px solid #e4e4e4;padding:10px">
+                        {{cf.name}} : <ng-select (change)="checkForCityClass(selectedSlc.custom_fields[i])"
+                          [searchable]="false" [clearable]="false"
+                          (change)="selectedSlc.custom_fields[i].setaddcartvalue=0" placeholder="{{cf.name}}"
+                          bindLabel="name" [items]="cf.category_options"
+                          [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue"> </ng-select> {{cf.single_field_desc}}
+                        <div *ngIf="cf.addfield_desc.length > 1 && selectedSlc.custom_fields[i].setcartvalue"
+                          style="padding:3px">
+                          <span *ngIf="selectedSlc.custom_fields[i].setcartvalue.addfield_desc.length > 1">
+                            {{cf.addfield_f_name}} : <input type=number min=0 step="1"
+                              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                              [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue"> {{cf.addfield_desc}} </span>
+                        </div>
+                      </div>
+  
+                    </span>
+  
+                  </div>
+  
+                  <span *ngIf="selectedSlc.premium_enable==1">
+                    <hr>
+                    <div class="checkbox-fade fade-in-primary d-">
+                      <label><input type=checkbox [(ngModel)]="selectedSlc.setcartpremium_enable">
+                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                        <span> {{selectedSlc.premium_name}} </span>
+                      </label>
+                    </div>
+                    <br>
+  
+                    <div *ngFor="let cf of selectedSlc.custom_fields; let i = index">
+                      <span *ngIf="cf.is_premium==1 && selectedSlc.setcartpremium_enable== true">
+                        <div *ngIf="cf.f_type=='single_field'">
+                          {{cf.f_name}} : <input type=number min=0 step="1"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                            [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue" /> {{cf.single_field_desc}}
+                        </div>
+                        <!-- (change)="updateSelectCatTotalCf($event,selectedSlc, cf,i)" -->
+                        <div *ngIf="cf.f_type=='category_field'" style="border:1px solid #e4e4e4;padding:10px">
+                          {{cf.name}} : <ng-select [searchable]="false" [clearable]="false" placeholder="{{cf.name}}"
+                            bindLabel="name" [items]="cf.category_options"
+                            [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue"> </ng-select> {{cf.single_field_desc}}
+                          <div
+                            *ngIf="cf.addfield_f_name.length > 1 && selectedSlc.custom_fields[i].setcartvalue.addfield_desc!='0' && selectedSlc.custom_fields[i].setcartvalue"
+                            style="padding:3px">
+                            {{cf.addfield_f_name}} : <input type=number min=0 step="1"
+                              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                              [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue">
+                            {{selectedSlc.custom_fields[i].setcartvalue.addfield_desc}}
+                          </div>
+                        </div>
+                        <div *ngIf="cf.f_type=='matrix_field'" style="border:1px solid #e4e4e4;padding:10px">
+                          {{cf.name}} : <ng-select [searchable]="false" [clearable]="false" placeholder="{{cf.name}}"
+                            bindLabel="name" [items]="cf.category_options"
+                            [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue"> </ng-select> {{cf.single_field_desc}}
+                          <div
+                            *ngIf="cf.addfield_desc.length > 1 && cf.addfield_desc!='0' && selectedSlc.custom_fields[i].setcartvalue"
+                            style="padding:3px">
+                            {{cf.addfield_f_name}} : <input type=number min=0 step="1"
+                              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                              [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue"> {{cf.addfield_desc}}
+                          </div>
+                        </div>
+  
+                      </span>
+  
+                    </div>
+                  </span>
+  
+                </div>
+  
+  
+                <div class="row" *ngIf="selectedSlc?.id > 0">
+                  <hr>
+  
+                  <div class="col-sm-12 col-md-12 col-xl-12">
+                    <span [hidden]="selectedSlc.show_no_of_usages==0">
+                      {{selectedSlc.no_of_usages_f_name}} : <input (change)=validate_no_of_usages($event) type=number
+                        min=1 placehodeler="usages/days/year" step="1"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'');" value=1 style="width:50px"
+                        [(ngModel)]="selectedSlc.no_of_usages">
+                      <!--  {{selectedSlc.no_of_usages * selectedSlc.usage_multiplier}} Total Usages --> </span>
+                    <br>
+                    <hr>
+                    <div *ngIf="selectedSlc.cat_idcode == '49'  || selectedSlc.cat_idcode == '49 - V2022' || selectedSlc.cat_idcode == '33(L)'" style="padding-bottom:10px"> 
+                        Category Description :
+                        <!-- <input class="form-control" type="textarea" placeholder="Category Description"  [(ngModel)]="selectedSlc.cat_description"> -->
+                        <textarea class="form-control" [(ngModel)]="selectedSlc.cat_description"
+                        placeholder="Category Description" required></textarea>
+                    <hr>
+                    </div>
+                    <div *ngIf="selectedSlc.cat_idcode == 'PD (1)'" style="padding-bottom:10px"> 
+                      Additional Remarks :
+                      <!-- <input class="form-control" type="textarea" placeholder="Category Description"  [(ngModel)]="selectedSlc.cat_description"> -->
+                      <textarea class="form-control" [(ngModel)]="selectedSlc.cat_description"
+                      placeholder="Category Description" required></textarea>
+                  
+                  </div>
+  
+                    <div *ngIf="selectedSlc.cat_idcode == 'PD (1)'" style="padding-bottom:10px"> 
+                      Proforma Invoice No. , If any  :
+                      <!-- <input class="form-control" type="textarea" placeholder="Category Description"  [(ngModel)]="selectedSlc.cat_description"> -->
+                      <input class="form-control" type="number" [(ngModel)]="selectedSlc.penalty_pino"
+                      placeholder="PI Number" required >
+                  
+                  </div>
+                  <div  *ngIf="selectedSlc.cat_type==='penalty'"><br>
+                      
+                    <input class="form-control" type="text" placeholder="Internal Notes"
+                      [(ngModel)]="selectedSlc.notes">
+                      <hr>
+                  </div>
+  
+                    <div *ngIf="selectedSlc.cat_type==='event'">
+                      <span> Event Type : <span style="color:red">*</span><ng-select  bindLabel="name"
+                          [items]="eventtypes" [loading]="eventtypesLoading" [typeahead]="custTypeaheadEventtypes"
+                          placeholder="Search Event Type" bindValue="name" [(ngModel)]="selectedSlc.event_type">
+                        </ng-select>
+                        <hr> </span>
+  
+                      <span *ngIf="selectedSlc.id== 46">
+                        <!-- *ngIf="selectedSlc.id== 46 && quotation.noc == 1" -->
+                        Event Sub Type :
+                        <br>
+                        <label> <input type=radio name="eventsubtype" value="Wedding Event"
+                            [(ngModel)]="selectedSlc.eventsubtypes"> Wedding Event</label> &nbsp;
+                        <label> <input type=radio name="eventsubtype" value="Wedding Related Event"
+                            [(ngModel)]="selectedSlc.eventsubtypes"> Wedding Related Event</label> &nbsp;
+                        <label> <input type=radio name="eventsubtype" value="Birthday"
+                            [(ngModel)]="selectedSlc.eventsubtypes"> Birthday </label> &nbsp;
+                        <label> <input type=radio name="eventsubtype" value="Others"
+                            [(ngModel)]="selectedSlc.eventsubtypes"> Others</label> &nbsp;
+                        <hr>
+                      </span>
+  
+                      <!-- [disabled]="selectedSlc.event_fixedname"-->
+                      <input  class="form-control" type="text"
+                        placeholder="Event name/title *" [(ngModel)]="selectedSlc.event_name"> <br>
+  
+                      <input class="form-control" type="datetime-local" placeholder="Event Start DateTime *"
+                        [(ngModel)]="selectedSlc.event_start_datetime" (change)="update_event_end_datetime()">
+                      <input [hidden]="selectedSlc.hideeventenddate==1" class="form-control" type="datetime-local"
+                        placeholder="Event End DateTime *" [(ngModel)]="selectedSlc.event_end_datetime" disabled> <br>
+                      <!--<input  class="form-control" type="text" placeholder="Event Venue" [(ngModel)]="selectedSlc.event_venue"> <br> -->
+                      <!--depr [hidden]="selectedSlc.event_venue"-->
+  
+                       <span> Venue Name Search : <span style="color:red">*</span> <ng-select  bindLabel="name" [items]="venues" [loading]="venueLoading"
+                          [typeahead]="custTypeaheadVenue" placeholder="Search Existing Venue" bindValue="name"
+                          [(ngModel)]="selectedSlc.event_venue">
+                        </ng-select> </span>
+                        <!-- (ngModelChange)="select_event_venue_tag()" -->
+                        <br>
+                          <!-- <div > Event Venue Tag: 
+                              <br>
+                              <span>
+                                <input  class="form-control"  name=event_tag bindLabel="name"
+                                placeholder=""
+                              [(ngModel)]="selectedSlc.event_tag" required disabled> 
+  
+                              </span>
+                          </div> <br> -->
+  
+                        <!-- <span> Event Venue Tag  : <ng-select bindLabel="name" [items]="event_venue_tag" [loading]="eventvenuetagLoading"
+                          [typeahead]="custTypeaheadEventvenuetag" placeholder="Search Existing Venue" bindValue="name"
+                          [(ngModel)]="selectedSlc.event_venue_tag">
+                        </ng-select> </span> -->
+                      <!-- Depreciated
+                          <input  class="form-control" type="text" placeholder="or Add new Event Venue Name *" [(ngModel)]="selectedSlc.event_venue"> <br>
+                                    -->
+                      <!-- Depreciated  <input  class="form-control" type="text" placeholder="Venue Location *" [(ngModel)]="selectedSlc.event_location"> <br>
+                        <input  class="form-control" type="number" placeholder="Venue Pincode *" [(ngModel)]="selectedSlc.event_pincode"> <br> -->
+  
+                      <div class="form-group row">
+  
+                        <div class="col-sm-12" *ngIf=states><br>
+                          Event State : <span style="color:red">*</span>
+                          <!--  <input placeholder = "State" class="form-control  " disabled [(ngModel)]="selectedCustomer.state" name="state" required>
+                            -->
+                          <ng-select placeholder="Select State" name="event_state"
+                            (change)="lookupstate=selectedSlc.event_state;cities = [];selectedSlc.event_city='';" required
+                            bindLabel="state" bindValue="state" [items]="states" [(ngModel)]="selectedSlc.event_state">
+                          </ng-select>
+                        </div>
+  
+  
+                        <div class="col-sm-12"><br>
+                          Event City : <span style="color:red">*</span>
+                          <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
+                              -->
+  
+                          <ng-select name=event_city bindLabel="name" bindValue="name" [items]="cities"
+                            [loading]="cityLoading" [typeahead]="custTypeaheadCity" placeholder="Search Existing City"
+                            [(ngModel)]="selectedSlc.event_city" required>
+                          </ng-select>
+  
+                        </div>
+  
+  
+                      </div>
+  
+                    
+                      <!-- - <div class="form-group row">
+  
+                        <div class="col-sm-12"><br>
+                          
+                          
+                          <span> Venue Name Search : <span style="color:red">*</span> <ng-select  bindLabel="name" [items]="venues" [loading]="venueLoading"
+                          [typeahead]="custTypeaheadVenue" placeholder="Search Existing Venue" bindValue="name" (change)="lookupstate=selectedSlc.event_venue;metaeventvenuetag=[];selectedSlc.event_venue_tag='';"
+                          [(ngModel)]="selectedSlc.event_venue">
+                        </ng-select> </span>
+                        </div>
+                      
+  
+                        <div class="col-sm-12"><br>
+                          event venue tag : <span style="color:red">*</span>
+                         
+  
+                          <ng-select name=event_venue_tag bindLabel="name" bindValue="name" [items]="metaeventvenuetag"
+                            [loading]="eventvenuetagLoading" [typeahead]="custTypeaheadEventtag" placeholder=""
+                            [(ngModel)]="selectedSlc.event_venue_tag" required>
+                          </ng-select>
+  
+                        </div>
+  
+  
+                      </div>  -->
+                      
+  
+                      <input class="form-control" type="text" placeholder="Additional Info / No of Pax *"
+                        [(ngModel)]="selectedSlc.event_extra"> <br>
+  
+                      <input class="form-control" type="text" placeholder="Internal Notes"
+                        [(ngModel)]="selectedSlc.notes"> <br>
+  
+                    </div>
+                    <div *ngIf="selectedSlc.cat_type==='bg'">
+                      Start Date : <input (change)="selectedSlc.end_date=nextYearDate(selectedSlc.start_date)" type=date
+                        [(ngModel)]="selectedSlc.start_date" class="form-control"><Br>End Date : <input
+                        class="form-control" type=date [(ngModel)]="selectedSlc.end_date"
+                        (change)="ValidateSelectedSlcStartEndDate()">
+                    </div>
+                    <hr>
+                    <div [hidden]="activefilter=='penalty'">
+                      Licensee Details : <span style="color:red">*</span>
+                      <input class="form-control" type="text" placeholder="Licensee Name *"
+                        [(ngModel)]="selectedSlc.l_name">
+                      <input class="form-control" type="text" placeholder="Licensee franchise "
+                        [(ngModel)]="selectedSlc.l_franchise">
+                      <!--  <input  class="form-control" type="text" placeholder="Licensee Address *" [(ngModel)]="selectedSlc.l_address">-->
+  
+                      <input class="form-control" type="text" placeholder="Licensee Address 1"
+                        [(ngModel)]="selectedSlc.l_address_line_1">
+                      <input class="form-control" type="text" placeholder="Licensee Address 2"
+                        [(ngModel)]="selectedSlc.l_address_line_2">
+                      <input class="form-control" type="text" placeholder="Licensee Address 3"
+                        [(ngModel)]="selectedSlc.l_address_line_3">
+  
+                      <input class="form-control" type="number" placeholder="Licensee Pincode *"
+                        [(ngModel)]="selectedSlc.l_pincode">
+  
+                      <div class="form-group row">
+  
+                        <div class="col-sm-12" *ngIf=states><br>
+                          State : <span style="color:red">*</span>
+                          <!--  <input placeholder = "State" class="form-control  " disabled [(ngModel)]="selectedCustomer.state" name="state" required>
+                        -->
+                          <ng-select placeholder="Select State" name="l_state"
+                            (change)="lookupstate=selectedSlc.l_state;cities = [];selectedSlc.l_city='';" required
+                            bindLabel="state" bindValue="state" [items]="states" [(ngModel)]="selectedSlc.l_state">
+                          </ng-select>
+                        </div>
+  
+  
+                        <div class="col-sm-12"><br>
+                          City : <span style="color:red">*</span>
+                          <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
+                          -->
+  
+                          <ng-select *ngIf="selectedSlc.cat_type==='bg'" name=l_city bindLabel="name" bindValue="name" [items]="cities"
+                            [loading]="cityLoading" [typeahead]="custTypeaheadCity" placeholder="Search Existing City"
+                            [(ngModel)]="selectedSlc.l_city" required>
+                          </ng-select>
+  
+                          <ng-select *ngIf="selectedSlc.cat_type==='event'" name=l_city bindLabel="name" bindValue="name" [items]="cities"
+                            [loading]="cityLoading" [typeahead]="custTypeaheadeCityevent" placeholder="Search Existing City"
+                            [(ngModel)]="selectedSlc.l_city" required>
+                          </ng-select>
+  
+                        </div>
+                        <div class="col-sm-12" *ngIf="selectedSlc.cat_type==='bg'"><br>
+                          <input class="form-control" type="text" placeholder="Additional Info / No of Pax *"
+                            [(ngModel)]="selectedSlc.event_extra"> <br>
+  
+                          <input class="form-control" type="text" placeholder="Internal Notes"
+                            [(ngModel)]="selectedSlc.notes">
+                        </div>
+  
+                        <!-- <div class="col-sm-12" *ngIf="allevidence && allevidence.length > 0">
+                        <br>
+                        Select Evidence : &nbsp;&nbsp;
+                        <button class="button" class="btn btn-info btn-sm" (click) = "modalevidence.show(); openmodalselectfile() "> Add Evidence</button>
+                        <br>
+                      </div> -->
+                        <!-- <div class="col-sm-12 mt-2"  *ngIf="selectedSlc?.cartevidence && selectedSlc?.cartevidence?.length > 0">
+                          <table class="col-12 col-md-12 col-sm-12 " style="width: 100%;" border=1 cellpadding=3 cellspacing=3>
+                          <tr>
+                            <th class="text-center" style="width: 10%;">Sr. No.</th>
+                            <th style="width: 90%;">File Name</th>
+                          </tr>
+                          <tr *ngFor="let evidence of selectedSlc?.cartevidence;let i =index;">
+                            <td class="text-center">{{i+1}}</td>
+                            <td><a href="{{evidence?.evidenceUrl}}" target="_blank">{{evidence?.filename}} </a>
+                            </td>
+                          </tr>
+                          </table>
+                          <br>
+                      </div> -->
+  
+                      </div>
+  
+  
+                    </div>
+  
+                    
+                    <!-- <small> {{selectedSlc.desc2}} </small> -->
+  
+                    <hr>
+                    <!-- Selected SLC MultiInvoice Start -->
+                    <!--  <b> Multi Invoice Fields : (only in case of Multi Invoice - Keep blank for single Invoice)</b><br>
+                    <br>Invoice Name : 
+                    <input  class="form-control" type="text" placeholder="Name" [(ngModel)]="selectedSlc.mi_name"> 
+                    <br>GST No.: 
+                    <input  class="form-control" type="text" placeholder="GST No." [(ngModel)]="selectedSlc.mi_gst"> 
+                   <Br> Address Line  1 :
+                    <input  class="form-control" type="text" placeholder="Address Line 1" [(ngModel)]="selectedSlc.mi_address_line_1">
+                    <br>Address Line  2 :
+                    <input  class="form-control" type="text" placeholder="Address Line 2" [(ngModel)]="selectedSlc.mi_address_line_2">
+                    <br>Town / Locality :
+                    <input  class="form-control" type="text" placeholder="Address Line 3" [(ngModel)]="selectedSlc.mi_address_line_3">
+                    <Br>Pincode :
+                    <input  class="form-control" type="text" placeholder="Pincode" [(ngModel)]="selectedSlc.mi_pincode">
+                    <br>City :
+                    <input  class="form-control" type="text" placeholder="City" [(ngModel)]="selectedSlc.mi_city">
+                    <br>State :
+                    <input  class="form-control" type="text" placeholder="state" [(ngModel)]="selectedSlc.mi_state">
+                    -->
+                    <!-- Selected SLC MultiInvoice End -->
+                  </div>
+                  <!-- <div class="col-sm-12 col-xl-6">
+                          Start Date : <input  type=date [(ngModel)]="selectedSlc.start_date"> </div> -->
+                </div>
+              </div>
+  
+  
+              <div class="col-md-2">
+                Quantity :
+                <input width=20px type="number" disabled *ngIf="selectedSlc?.id > 0" value=1 class="form-control" min=1
+                  placeholder="quantity" [(ngModel)]="selectedSlc.quantity">
+              </div>
+              <div class="col-md-3">
+                <span *ngIf="selectedSlc?.id >0 ">
+                  <span *ngIf="getCatTotal(selectedSlc)>0"> ₹
+                    {{getCatTotal(selectedSlc) * selectedSlc.quantity * selectedSlc.no_of_usages  * selectedSlc.usage_multiplier | number : '1.0-0' }}
+                    <hr> <!-- *ngIf="getCatTotal(selectedSlc) > 0 "-->
+                    <button style="margin:2px" class="button" (click)="cart_add()" class="btn btn-primary btn-sm">Add to
+                      Cart</button>
+  
+  
+                    <hr> <!-- *ngIf="getCatTotal(selectedSlc) > 0"-->
+                    <button style="margin:2px" class="button" (click)="buyNow()" class="btn btn-primary btn-sm">Buy
+                      Now</button>
+                  </span>
+  
+                </span>
+  
+                <div *ngIf="activefilter!='penalty'">
+                  <hr>
+                  <label for="upload2">
+                    <span class="btn btn-info btn-sm f-right">Bulk Upload</span>
+                    <!-- <input type="file" id="upload2" style="display:none" accept=".csv"
+                      (change)="onBUFileChange($event,'photos','add')"> -->
+                  </label> <br>
+                  <a href="{{commonService.apiUrl}}/others/sampleBulkUpload_new.csv" target="_blank">Download Sample CSV</a>
+                </div>
+              </div>
+            </div>
+            <hr>
+  
+            <div class="centered-content" *ngIf="allSelectedLc.length<1">
+              Cart is Empty
+            </div>
+            <div class="centered-contentt" *ngIf="allSelectedLc.length>0">
+              <div class="centered-content" style="font-size: 1.3em">Cart Items - <small style="color:red;cursor:pointer"
+                  (click)="cart_alldelete()">Clear all </small></div>
+  
+              <div class="row">
+                <div class="col-1">Sn.</div>
+                <div class="col-7">License Category</div>
+                <!--       <div class="col-sm-2 col-xl-2">No. Of Licenses</div>-->
+                <div class="col-3">Total</div>
+              </div>
+              <div class="row" *ngFor="let slc of allSelectedLc;let i = index" style="border: 1px solid #e4e4e4;
+  /* padding: 10px;*/
+   box-shadow: 1px 1px 1px gray;">
+                <div class="col-1"> {{i+1}}</div>
+                <div class="col-7">
+                  <b> {{slc?.displayname}} </b> <br>
+                  <span *ngIf="slc.cat_type=='bg'">
+                    {{slc.ltype}}
+                    <br></span>
+                  <!-- <div *ngFor="let cf of getcustomfields(slc.custom_fields)">
+  
+                    <span
+                      *ngIf="(cf.f_type=='single_field' || cf.f_type=='range_field' ) && cf.setcartvalue && (!cf.is_show || (cf.is_show && cf?.is_show==1))">{{cf.f_name}} :
+                      {{cf.setcartvalue}} {{cf.single_field_desc}}</span>
+                    <span *ngIf="cf.f_type!='single_field' && cf.f_type!='range_field' && cf.setcartvalue ">
+                      {{cf.name}} : {{getCfValue(cf)}}
+                      <span *ngIf="cf.setaddcartvalue && cf.setcartvalue.addfield_desc.length > 1"> <br>
+                        <i>{{cf.addfield_name}} : {{cf.setaddcartvalue}}</i>
+                      </span>
+                    </span>
+  
+                  </div> -->
+                  <span *ngIf="slc.setcartpremium_enable"><b> {{ slc.premium_name }}</b></span>
+  
+                  <span [hidden]="allSelectedLc[i].show_no_of_usages==0">
+                    {{allSelectedLc[i].no_of_usages_f_name}} : <input type=number min=1 placehodeler="usages/days/year"
+                      value=1 style="width:50px" [(ngModel)]="allSelectedLc[i].no_of_usages" disabled>
+                    <!--  {{allSelectedLc[i].no_of_usages * allSelectedLc[i].usage_multiplier}} Total Usages --> </span>
+                  <br>
+                  <hr>
+                  <div *ngIf="allSelectedLc[i].cat_idcode === '49' || allSelectedLc[i].cat_idcode == '49 - V2022' || allSelectedLc[i].cat_idcode == '33(L)'" style="padding-bottom:10px"> 
+                      Category Description :
+                      <!-- <input class="form-control" type="text" placeholder="Category Description"  [(ngModel)]="allSelectedLc[i].cat_description"> -->
+                      <textarea class="form-control" readonly [(ngModel)]="allSelectedLc[i].cat_description"
+                      placeholder="Category Description"></textarea>
+                      <hr>
+                  </div>
+                  <div *ngIf="allSelectedLc[i].cat_idcode === 'PD (1)'" style="padding-bottom:10px"> 
+                    <span>Additional Remarks : {{allSelectedLc[i].cat_description}}</span> <br>
+                    <span>Proforma Invoice No. : {{allSelectedLc[i].penalty_pino}}</span> <br>
+                    <span>Internal Notes : {{allSelectedLc[i].notes}}</span> <br>
+                    <hr>
+                </div>
+  
+                  <div *ngIf="allSelectedLc[i].cat_type==='event'">
+                    <input disabled class="form-control" type="text" placeholder="Event name/title"
+                      [(ngModel)]="allSelectedLc[i].event_name"> <br>
+                    <input disabled class="form-control" type="text" placeholder="Event Type"
+                      [(ngModel)]="allSelectedLc[i].event_type"> <br>
+  
+                    <input *ngIf="allSelectedLc[i].id == 46" disabled class="form-control" type="text" placeholder="Event Sub Type"
+                      [(ngModel)]="allSelectedLc[i].eventsubtypes"> <br *ngIf="allSelectedLc[i].id == 46">
+  
+                    <input disabled class="form-control" type="datetime-local" placeholder="Event Start DateTime"
+                      [(ngModel)]="allSelectedLc[i].event_start_datetime">
+                    <input [hidden]="allSelectedLc[i].hideeventenddate==1" disabled class="form-control"
+                      type="datetime-local" placeholder="Event End DateTime"
+                      [(ngModel)]="allSelectedLc[i].event_end_datetime"> <br>
+                      
+                    <input disabled class="form-control" type="text" placeholder="Event Venue Name"
+                      [(ngModel)]="allSelectedLc[i].event_venue"> <br>
+  
+                      <!-- <span *ngIf="allSelectedLc[i].event_tag"><input  disabled class="form-control" type="text" placeholder="Event Type"
+                        [(ngModel)]="allSelectedLc[i].event_tag"> <br></span> -->
+                    <!---  <input disabled class="form-control" type="text" placeholder="Venue Location" [(ngModel)]="allSelectedLc[i].event_location"> <br>
+                  <input disabled class="form-control" type="text" placeholder="Venue Pincode" [(ngModel)]="allSelectedLc[i].event_pincode"> <br>-->
+                    <input disabled class="form-control" type="text" placeholder="Event State"
+                      [(ngModel)]="allSelectedLc[i].event_state"> <br>
+                    <input disabled class="form-control" type="text" placeholder="Event City"
+                      [(ngModel)]="allSelectedLc[i].event_city"> <br>
+                    <input disabled class="form-control" type="text" placeholder="Additional Info / No Of Pax"
+                      [(ngModel)]="allSelectedLc[i].event_extra"> <br>
+  
+                  </div>
+                  <div *ngIf="allSelectedLc[i].cat_type==='bg'">
+                    Start Date : <input disabled
+                      (change)="allSelectedLc[i].end_date=nextYearDate(allSelectedLc[i].start_date)" type=date
+                      [(ngModel)]="allSelectedLc[i].start_date" class="form-control">
+                    <Br>End Date : <input class="form-control" disabled type=date [(ngModel)]="allSelectedLc[i].end_date">
+                  </div>
+                  <hr>
+                  <div *ngIf="allSelectedLc[i].cat_type!='penalty'">
+                    Licensee Details : *
+                    <input class="form-control" type="text" placeholder="Licensee Name" disabled
+                      [(ngModel)]="allSelectedLc[i].l_name">
+                    <input class="form-control" type="text" placeholder="Licensee franchise " disabled
+                      [(ngModel)]="allSelectedLc[i].l_franchise">
+  
+                    <!-- <input  class="form-control" type="text" placeholder="Licensee Address" disabled [(ngModel)]="allSelectedLc[i].l_address"> 
+              -->
+                    <input class="form-control" type="text" placeholder="Licensee Address" disabled
+                      [(ngModel)]="allSelectedLc[i].l_address_line_1">
+                    <input class="form-control" type="text" placeholder="Licensee Address" disabled
+                      [(ngModel)]="allSelectedLc[i].l_address_line_2">
+                    <input class="form-control" type="text" placeholder="Licensee Address" disabled
+                      [(ngModel)]="allSelectedLc[i].l_address_line_3">
+  
+                    <input class="form-control" type="number" placeholder="Licensee Pincode" disabled
+                      [(ngModel)]="allSelectedLc[i].l_pincode">
+  
+                    <input class="form-control" type="text" placeholder="Licensee State" disabled
+                      [(ngModel)]="allSelectedLc[i].l_state">
+                    <input class="form-control" type="text" placeholder="Licensee City" disabled
+                      [(ngModel)]="allSelectedLc[i].l_city">
+                  </div>
+                  <div *ngIf="allSelectedLc[i].cat_type==='bg'">
+                    <input disabled class="form-control" type="text" placeholder="Additional Info / No Of Pax"
+                      [(ngModel)]="allSelectedLc[i].event_extra">
+                    <input disabled class="form-control" type="text" placeholder="Internal Notes"
+                      [(ngModel)]="allSelectedLc[i].notes">
+                  </div>
+                  <!-- <div *ngIf="allSelectedLc[i].cartevidence?.length > 0">
+                    <hr>
+                    Selected Evidence : <br>
+                    <div class="col-sm-12 mt-2" style="background: #f4f5f7;">
+                      <table class="col-12 col-md-12 col-sm-12 " style="width: 100%;" border=1 cellpadding=3 cellspacing=3>
+                      <tr>
+                        <th class="text-center" style="width: 10%;">Sr. No.</th>
+                        <th style="width: 90%;">File Name</th>
+                      </tr>
+                      <tr *ngFor="let evidence of allSelectedLc[i]?.cartevidence;let i =index;">
+                        <td class="text-center">{{i+1}}</td>
+                        <td><a href="{{evidence?.evidenceUrl}}" target="_blank">{{evidence?.filename}} </a></td>
+                      </tr>
+                      </table>
+                      <br>
+                    </div>
+                  </div> -->
+                  <br>
+                </div>
+                <!--<div class="col-2">
+                      <input type="number" width=50px  class="form-control" min=1 placeholder="quantity" [(ngModel)]="allSelectedLc[i].quantity">
+                    </div> -->
+                <div class="col-3">
+                  <small>Q. : {{ allSelectedLc[i].quantity}} <br>
+                    ₹
+                    {{slc.quantity * slc.no_of_usages * allSelectedLc[i].cattotal  * slc.usage_multiplier | number : '1.0-0'}}
+                  </small>
+                  <a (click)="cart_delete(i)" style="color: red">
+                    <i class="ti-trash"></i>
+                  </a>
+  
+                </div>
+  
+              </div>
+              <div class="centered-content" style="padding:10px">
+                <h3>Total : ₹ {{getQuoteTotal() | number : '1.0-0'}}</h3>
+              </div>
+            </div>
+  
+  
           </div>
           <hr>
-          <span *ngIf="licenseCategories">
-            Filter : 
-            <label style="display:none">
-                <input type="radio" name="lcatfilter" [checked]="activefilter === 'all'" (change)="filterlc('all'); activefilter='all'"> All
-            </label> &nbsp;&nbsp; 
-            <label>
-                <input type="radio" name="lcatfilter" (change)="filterlc('bg'); activefilter='bg'"> Background
-            </label> &nbsp;&nbsp; 
-            <label>
-                <input type="radio" name="lcatfilter" (change)="filterlc('event'); activefilter='event'; ltype='New'"> Events
-            </label> &nbsp;&nbsp; 
-            <label>
-                <input type="radio" name="lcatfilter" (change)="filterlc('penalty'); activefilter='penalty'; ltype='New'"> Damages
-            </label>
-        
-            <div [hidden]="activefilter === 'event' || rejectedArray.length < 1" *ngIf="rejectedArray.length > 0 && (activefilter !== 'event' && activefilter !== 'all')" class="col-md-2 col-xl-2" style="float: right;" (click)="checkRejectedCart(); modalrejectcart.show();">
-              <button type="button" class="btn btn-primary btn-sm">Rejected Cart</button>
+          <div class=centered-content>
+            <div class="btn-group mt-10 ">
+              <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
+                  class="ti-arrow-left"></i></button>
+              <span> <button style="margin-right: 5px;" type="button" [hidden]="allSelectedLc.length<1"
+                  class="btn btn-primary btn-xl" (click)="saveQuotation()">Save Changes</button> &nbsp;</span>
+              <button type="button" class="btn btn-primary btn-xl" [hidden]="allSelectedLc.length<1"
+                (click)="saveQuotation(true)" nextStep>Buy Now</button>
+            </div>
           </div>
-          
-        </span>
-
-          <div>
-            <p>Go to a different step to see the error state</p>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
-          </div>
-        </form>
+  
+        </div>
       </mat-step>
 
       <!-- ========================================= LICENSE CATEGORIES second setp end ============================================================= -->
@@ -807,673 +1452,7 @@
 
    
     <wizard-step stepTitle="License Categories" optionalStep>
-      <div class="centered-contentt">
-        <div>
-         
-        
-
-          <!-- try -->
-          <!-- <span *ngIf="licenseCategories && (this.qvalues._166 == 'Multiple Outlets' || qvalues._166 == 'Stand-alone store')">
-              Filter : <label style="display:none"> <input type=radio name="lcatfilter" [checked]="activefilter=='all'" 
-                  (change)="filterlc('all');activefilter='all'"> All</label> &nbsp;&nbsp; 
-                  <label> <input
-                  (change)="filterlc('bg');activefilter='bg'" type=radio name="lcatfilter" [checked]="activefilter=='bg'" value ="bg"> Background</label>
-              
-            </span>
-            <span *ngIf="licenseCategories && this.qvalues._166 == 'Event'">
-                Filter : <label style="display:none"> <input type=radio name="lcatfilter" [checked]="activefilter=='all'"
-                    (change)="filterlc('all');activefilter='all'"> All</label> &nbsp;&nbsp; 
-        
-               
-                 <label> <input (change)="filterlc('event');activefilter='event';ltype='New'" type=radio
-                    name="lcatfilter" [checked]="activefilter=='event'" value ="event"> Events</label>
-              </span> -->
-          <!-- close -->
-
-          <div class="row" *ngIf="false && licenseCategories && (activefilter=='bg' || activefilter=='event'|| activefilter=='penalty')">
-            <div class="col-md-1 col-xl-1">Sn.</div>
-            <div class="col-md-5 col-xl-5">License Category</div>
-            <div class="col-md-2 col-xl-2">No. Of Licenses</div> |
-            <div class="col-md-2 col-xl-2">Total</div>
-
-          </div>
-         
-
-
-
-          <div class="row" style="border: 1px solid #e4e4e4;
- padding: 5px;
- box-shadow: 2px 2px 2px skyblue;" *ngIf="licenseCategories && (activefilter=='bg' || activefilter=='event' || activefilter=='penalty')">
-
-
-
-            <div class="col-1">*</div>
-
-            <div class="col-md-6">
-              <span *ngIf="activefilter !== 'event' && activefilter !== 'bg' && activefilter !== 'penalty'">
-                <b [hidden]="activefilter=='event' || activefilter=='penalty'"><label><input type=radio name="ltype" [checked]="ltype=='New'"
-                      [(ngModel)]="ltype" value="New"> New</label> &nbsp;&nbsp;
-                  <label><input type=radio name="ltype" [checked]="ltype=='Renewal'" [(ngModel)]="ltype"
-                      value="Renewal"> Renewal </label>
-                </b>
-                <hr [hidden]="activefilter=='event'">
-
-                <!--  [groupBy]="catGroupByFn" -->
-                <ng-select placeholder="Select License Category" (change)="setSelectedSlc($event)"
-                  bindLabel="displayname" [items]="licenseCategories" autocomplete="off">
-                  <!-- [(ngModel)]="selectedSlc"-->
-
-                  <ng-template ng-option-tmp let-item="item">
-                    <span *ngIf="item.active==0" style="color:red">{{ item.displayname  }}</span>
-                    <span *ngIf="item.active==1">{{ item.displayname  }}</span>
-                  </ng-template>
-
-                </ng-select>
-              </span>
-
-              <div *ngIf="selectedSlc?.id > 0">
-                <!--              <small> {{selectedSlc.desc1}} </small>-->
-                <hr>
-
-                <div *ngFor="let cf of selectedSlc.custom_fields; let i = index">
-                  <span *ngIf="cf.is_premium==0">
-                    
-                    <div *ngIf="cf.f_type=='range_field' && (_can_show_condition_field(selectedSlc,cf)) ">
-                      {{cf.f_name}} : <input type=number [min]="selectedSlc.custom_fields[i].min_value" value="1"
-                        step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                        [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue" [required]="cf?.is_required==1" /> {{cf.single_field_desc}}
-                    </div>
-
-                    <!-- (change)="updateSelectCatTotalCf($event,selectedSlc, cf,i)" -->
-                    <div *ngIf="cf.f_type=='category_field' && (_can_show_condition_field(selectedSlc,cf))" style="border:1px solid #e4e4e4;padding:10px">
-                      {{cf.name}} : <ng-select (change)="conditionFieldNoCheck(cf);checkForCityClass(selectedSlc.custom_fields[i]);conditionFieldvalidateCheck(selectedSlc);"
-                        [searchable]="false" [clearable]="false" placeholder="{{cf.name}}" bindLabel="name"
-                        [items]="cf.category_options" [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue">
-                      </ng-select> {{cf.single_field_desc}}
-                      <div *ngIf="cf.addfield_f_name.length > 1 && selectedSlc.custom_fields[i].setcartvalue"
-                        style="padding:3px">
-
-                        <span *ngIf="selectedSlc.custom_fields[i].setcartvalue.addfield_desc.length > 1">
-                          {{ cf.addfield_f_name }}:
-                          <input type="number" min="0" 
-                                 (input)="validate_add_max($event, selectedSlc.custom_fields[i].setcartvalue.addfield_max_value, i)"
-                                 [max]="selectedSlc.custom_fields[i].setcartvalue.addfield_max_value"
-                                 [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue">
-                          {{ selectedSlc.custom_fields[i].setcartvalue.addfield_desc }}
-                        </span>
-                        
-
-                      </div>
-                    </div>
-                    <div *ngIf="cf.f_type=='single_field' && (_can_show_condition_field(selectedSlc,cf))" style="padding:5px;">
-                      {{cf.f_name}} : <input type=number [min]="selectedSlc.custom_fields[i].min_value"
-                        [max]="selectedSlc.custom_fields[i].max_value" value="1" step="1"
-                        oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                        [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue" [required]="cf?.is_required==1" /> {{cf.single_field_desc}}
-                    </div>
-                    <div *ngIf="cf.f_type=='matrix_field'" style="border:1px solid #e4e4e4;padding:10px">
-                      {{cf.name}} : <ng-select (change)="checkForCityClass(selectedSlc.custom_fields[i])"
-                        [searchable]="false" [clearable]="false"
-                        (change)="selectedSlc.custom_fields[i].setaddcartvalue=0" placeholder="{{cf.name}}"
-                        bindLabel="name" [items]="cf.category_options"
-                        [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue"> </ng-select> {{cf.single_field_desc}}
-                      <div *ngIf="cf.addfield_desc.length > 1 && selectedSlc.custom_fields[i].setcartvalue"
-                        style="padding:3px">
-                        <span *ngIf="selectedSlc.custom_fields[i].setcartvalue.addfield_desc.length > 1">
-                          {{cf.addfield_f_name}} : <input type=number min=0 step="1"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                            [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue"> {{cf.addfield_desc}} </span>
-                      </div>
-                    </div>
-
-                  </span>
-
-                </div>
-
-                <span *ngIf="selectedSlc.premium_enable==1">
-                  <hr>
-                  <div class="checkbox-fade fade-in-primary d-">
-                    <label><input type=checkbox [(ngModel)]="selectedSlc.setcartpremium_enable">
-                      <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
-                      <span> {{selectedSlc.premium_name}} </span>
-                    </label>
-                  </div>
-                  <br>
-
-                  <div *ngFor="let cf of selectedSlc.custom_fields; let i = index">
-                    <span *ngIf="cf.is_premium==1 && selectedSlc.setcartpremium_enable== true">
-                      <div *ngIf="cf.f_type=='single_field'">
-                        {{cf.f_name}} : <input type=number min=0 step="1"
-                          oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                          [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue" /> {{cf.single_field_desc}}
-                      </div>
-                      <!-- (change)="updateSelectCatTotalCf($event,selectedSlc, cf,i)" -->
-                      <div *ngIf="cf.f_type=='category_field'" style="border:1px solid #e4e4e4;padding:10px">
-                        {{cf.name}} : <ng-select [searchable]="false" [clearable]="false" placeholder="{{cf.name}}"
-                          bindLabel="name" [items]="cf.category_options"
-                          [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue"> </ng-select> {{cf.single_field_desc}}
-                        <div
-                          *ngIf="cf.addfield_f_name.length > 1 && selectedSlc.custom_fields[i].setcartvalue.addfield_desc!='0' && selectedSlc.custom_fields[i].setcartvalue"
-                          style="padding:3px">
-                          {{cf.addfield_f_name}} : <input type=number min=0 step="1"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                            [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue">
-                          {{selectedSlc.custom_fields[i].setcartvalue.addfield_desc}}
-                        </div>
-                      </div>
-                      <div *ngIf="cf.f_type=='matrix_field'" style="border:1px solid #e4e4e4;padding:10px">
-                        {{cf.name}} : <ng-select [searchable]="false" [clearable]="false" placeholder="{{cf.name}}"
-                          bindLabel="name" [items]="cf.category_options"
-                          [(ngModel)]="selectedSlc.custom_fields[i].setcartvalue"> </ng-select> {{cf.single_field_desc}}
-                        <div
-                          *ngIf="cf.addfield_desc.length > 1 && cf.addfield_desc!='0' && selectedSlc.custom_fields[i].setcartvalue"
-                          style="padding:3px">
-                          {{cf.addfield_f_name}} : <input type=number min=0 step="1"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-                            [(ngModel)]="selectedSlc.custom_fields[i].setaddcartvalue"> {{cf.addfield_desc}}
-                        </div>
-                      </div>
-
-                    </span>
-
-                  </div>
-                </span>
-
-              </div>
-
-
-              <div class="row" *ngIf="selectedSlc?.id > 0">
-                <hr>
-
-                <div class="col-sm-12 col-md-12 col-xl-12">
-                  <span [hidden]="selectedSlc.show_no_of_usages==0">
-                    {{selectedSlc.no_of_usages_f_name}} : <input (change)=validate_no_of_usages($event) type=number
-                      min=1 placehodeler="usages/days/year" step="1"
-                      oninput="this.value=this.value.replace(/[^0-9]/g,'');" value=1 style="width:50px"
-                      [(ngModel)]="selectedSlc.no_of_usages">
-                    <!--  {{selectedSlc.no_of_usages * selectedSlc.usage_multiplier}} Total Usages --> </span>
-                  <br>
-                  <hr>
-                  <div *ngIf="selectedSlc.cat_idcode == '49'  || selectedSlc.cat_idcode == '49 - V2022' || selectedSlc.cat_idcode == '33(L)'" style="padding-bottom:10px"> 
-                      Category Description :
-                      <!-- <input class="form-control" type="textarea" placeholder="Category Description"  [(ngModel)]="selectedSlc.cat_description"> -->
-                      <textarea class="form-control" [(ngModel)]="selectedSlc.cat_description"
-                      placeholder="Category Description" required></textarea>
-                  <hr>
-                  </div>
-                  <div *ngIf="selectedSlc.cat_idcode == 'PD (1)'" style="padding-bottom:10px"> 
-                    Additional Remarks :
-                    <!-- <input class="form-control" type="textarea" placeholder="Category Description"  [(ngModel)]="selectedSlc.cat_description"> -->
-                    <textarea class="form-control" [(ngModel)]="selectedSlc.cat_description"
-                    placeholder="Category Description" required></textarea>
-                
-                </div>
-
-                  <div *ngIf="selectedSlc.cat_idcode == 'PD (1)'" style="padding-bottom:10px"> 
-                    Proforma Invoice No. , If any  :
-                    <!-- <input class="form-control" type="textarea" placeholder="Category Description"  [(ngModel)]="selectedSlc.cat_description"> -->
-                    <input class="form-control" type="number" [(ngModel)]="selectedSlc.penalty_pino"
-                    placeholder="PI Number" required >
-                
-                </div>
-                <div  *ngIf="selectedSlc.cat_type==='penalty'"><br>
-                    
-                  <input class="form-control" type="text" placeholder="Internal Notes"
-                    [(ngModel)]="selectedSlc.notes">
-                    <hr>
-                </div>
-
-                  <div *ngIf="selectedSlc.cat_type==='event'">
-                    <span> Event Type : <span style="color:red">*</span><ng-select  bindLabel="name"
-                        [items]="eventtypes" [loading]="eventtypesLoading" [typeahead]="custTypeaheadEventtypes"
-                        placeholder="Search Event Type" bindValue="name" [(ngModel)]="selectedSlc.event_type">
-                      </ng-select>
-                      <hr> </span>
-
-                    <span *ngIf="selectedSlc.id== 46">
-                      <!-- *ngIf="selectedSlc.id== 46 && quotation.noc == 1" -->
-                      Event Sub Type :
-                      <br>
-                      <label> <input type=radio name="eventsubtype" value="Wedding Event"
-                          [(ngModel)]="selectedSlc.eventsubtypes"> Wedding Event</label> &nbsp;
-                      <label> <input type=radio name="eventsubtype" value="Wedding Related Event"
-                          [(ngModel)]="selectedSlc.eventsubtypes"> Wedding Related Event</label> &nbsp;
-                      <label> <input type=radio name="eventsubtype" value="Birthday"
-                          [(ngModel)]="selectedSlc.eventsubtypes"> Birthday </label> &nbsp;
-                      <label> <input type=radio name="eventsubtype" value="Others"
-                          [(ngModel)]="selectedSlc.eventsubtypes"> Others</label> &nbsp;
-                      <hr>
-                    </span>
-
-                    <!-- [disabled]="selectedSlc.event_fixedname"-->
-                    <input  class="form-control" type="text"
-                      placeholder="Event name/title *" [(ngModel)]="selectedSlc.event_name"> <br>
-
-                    <input class="form-control" type="datetime-local" placeholder="Event Start DateTime *"
-                      [(ngModel)]="selectedSlc.event_start_datetime" (change)="update_event_end_datetime()">
-                    <input [hidden]="selectedSlc.hideeventenddate==1" class="form-control" type="datetime-local"
-                      placeholder="Event End DateTime *" [(ngModel)]="selectedSlc.event_end_datetime" disabled> <br>
-                    <!--<input  class="form-control" type="text" placeholder="Event Venue" [(ngModel)]="selectedSlc.event_venue"> <br> -->
-                    <!--depr [hidden]="selectedSlc.event_venue"-->
-
-                     <span> Venue Name Search : <span style="color:red">*</span> <ng-select (ngModelChange)="select_event_venue_tag()" bindLabel="name" [items]="venues" [loading]="venueLoading"
-                        [typeahead]="custTypeaheadVenue" placeholder="Search Existing Venue" bindValue="name"
-                        [(ngModel)]="selectedSlc.event_venue">
-                      </ng-select> </span>
-                      <br>
-                    <div > Event Venue Tag: 
- <br>
- <span>
-  <input  class="form-control"  name=event_tag bindLabel="name"
-  placeholder=""
- [(ngModel)]="selectedSlc.event_tag" required disabled> 
-
- </span>
-                     </div> <br>
-
-                      <!-- <span> Event Venue Tag  : <ng-select bindLabel="name" [items]="event_venue_tag" [loading]="eventvenuetagLoading"
-                        [typeahead]="custTypeaheadEventvenuetag" placeholder="Search Existing Venue" bindValue="name"
-                        [(ngModel)]="selectedSlc.event_venue_tag">
-                      </ng-select> </span> -->
-                    <!-- Depreciated
-                        <input  class="form-control" type="text" placeholder="or Add new Event Venue Name *" [(ngModel)]="selectedSlc.event_venue"> <br>
-                                  -->
-                    <!-- Depreciated  <input  class="form-control" type="text" placeholder="Venue Location *" [(ngModel)]="selectedSlc.event_location"> <br>
-                      <input  class="form-control" type="number" placeholder="Venue Pincode *" [(ngModel)]="selectedSlc.event_pincode"> <br> -->
-
-                    <div class="form-group row">
-
-                      <div class="col-sm-12" *ngIf=states><br>
-                        Event State : <span style="color:red">*</span>
-                        <!--  <input placeholder = "State" class="form-control  " disabled [(ngModel)]="selectedCustomer.state" name="state" required>
-                          -->
-                        <ng-select placeholder="Select State" name="event_state"
-                          (change)="lookupstate=selectedSlc.event_state;cities = [];selectedSlc.event_city='';" required
-                          bindLabel="state" bindValue="state" [items]="states" [(ngModel)]="selectedSlc.event_state">
-                        </ng-select>
-                      </div>
-
-
-                      <div class="col-sm-12"><br>
-                        Event City : <span style="color:red">*</span>
-                        <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
-                            -->
-
-                        <ng-select name=event_city bindLabel="name" bindValue="name" [items]="cities"
-                          [loading]="cityLoading" [typeahead]="custTypeaheadCity" placeholder="Search Existing City"
-                          [(ngModel)]="selectedSlc.event_city" required>
-                        </ng-select>
-
-                      </div>
-
-
-                    </div>
-
-                  
-                    <!-- - <div class="form-group row">
-
-                      <div class="col-sm-12"><br>
-                        
-                        
-                        <span> Venue Name Search : <span style="color:red">*</span> <ng-select  bindLabel="name" [items]="venues" [loading]="venueLoading"
-                        [typeahead]="custTypeaheadVenue" placeholder="Search Existing Venue" bindValue="name" (change)="lookupstate=selectedSlc.event_venue;metaeventvenuetag=[];selectedSlc.event_venue_tag='';"
-                        [(ngModel)]="selectedSlc.event_venue">
-                      </ng-select> </span>
-                      </div>
-                    
-
-                      <div class="col-sm-12"><br>
-                        event venue tag : <span style="color:red">*</span>
-                       
-
-                        <ng-select name=event_venue_tag bindLabel="name" bindValue="name" [items]="metaeventvenuetag"
-                          [loading]="eventvenuetagLoading" [typeahead]="custTypeaheadEventtag" placeholder=""
-                          [(ngModel)]="selectedSlc.event_venue_tag" required>
-                        </ng-select>
-
-                      </div>
-
-
-                    </div>  -->
-                    
-
-                    <input class="form-control" type="text" placeholder="Additional Info / No of Pax *"
-                      [(ngModel)]="selectedSlc.event_extra"> <br>
-
-                    <input class="form-control" type="text" placeholder="Internal Notes"
-                      [(ngModel)]="selectedSlc.notes"> <br>
-
-                  </div>
-                  <div *ngIf="selectedSlc.cat_type==='bg'">
-                    Start Date : <input (change)="selectedSlc.end_date=nextYearDate(selectedSlc.start_date)" type=date
-                      [(ngModel)]="selectedSlc.start_date" class="form-control"><Br>End Date : <input
-                      class="form-control" type=date [(ngModel)]="selectedSlc.end_date"
-                      (change)="ValidateSelectedSlcStartEndDate()">
-                  </div>
-                  <hr>
-                  <div [hidden]="activefilter=='penalty'">
-                    Licensee Details : <span style="color:red">*</span>
-                    <input class="form-control" type="text" placeholder="Licensee Name *"
-                      [(ngModel)]="selectedSlc.l_name">
-                    <input class="form-control" type="text" placeholder="Licensee franchise "
-                      [(ngModel)]="selectedSlc.l_franchise">
-                    <!--  <input  class="form-control" type="text" placeholder="Licensee Address *" [(ngModel)]="selectedSlc.l_address">-->
-
-                    <input class="form-control" type="text" placeholder="Licensee Address 1"
-                      [(ngModel)]="selectedSlc.l_address_line_1">
-                    <input class="form-control" type="text" placeholder="Licensee Address 2"
-                      [(ngModel)]="selectedSlc.l_address_line_2">
-                    <input class="form-control" type="text" placeholder="Licensee Address 3"
-                      [(ngModel)]="selectedSlc.l_address_line_3">
-
-                    <input class="form-control" type="number" placeholder="Licensee Pincode *"
-                      [(ngModel)]="selectedSlc.l_pincode">
-
-                    <div class="form-group row">
-
-                      <div class="col-sm-12" *ngIf=states><br>
-                        State : <span style="color:red">*</span>
-                        <!--  <input placeholder = "State" class="form-control  " disabled [(ngModel)]="selectedCustomer.state" name="state" required>
-                      -->
-                        <ng-select placeholder="Select State" name="l_state"
-                          (change)="lookupstate=selectedSlc.l_state;cities = [];selectedSlc.l_city='';" required
-                          bindLabel="state" bindValue="state" [items]="states" [(ngModel)]="selectedSlc.l_state">
-                        </ng-select>
-                      </div>
-
-
-                      <div class="col-sm-12"><br>
-                        City : <span style="color:red">*</span>
-                        <!-- <input type="text" id="autocomplete" class="form-control " name="city" autocorrect="off" placeholder="City" [(ngModel)]="selectedCustomer.city"   required>
-                        -->
-
-                        <ng-select *ngIf="selectedSlc.cat_type==='bg'" name=l_city bindLabel="name" bindValue="name" [items]="cities"
-                          [loading]="cityLoading" [typeahead]="custTypeaheadCity" placeholder="Search Existing City"
-                          [(ngModel)]="selectedSlc.l_city" required>
-                        </ng-select>
-
-                        <ng-select *ngIf="selectedSlc.cat_type==='event'" name=l_city bindLabel="name" bindValue="name" [items]="cities"
-                          [loading]="cityLoading" [typeahead]="custTypeaheadeCityevent" placeholder="Search Existing City"
-                          [(ngModel)]="selectedSlc.l_city" required>
-                        </ng-select>
-
-                      </div>
-                      <div class="col-sm-12" *ngIf="selectedSlc.cat_type==='bg'"><br>
-                        <input class="form-control" type="text" placeholder="Additional Info / No of Pax *"
-                          [(ngModel)]="selectedSlc.event_extra"> <br>
-
-                        <input class="form-control" type="text" placeholder="Internal Notes"
-                          [(ngModel)]="selectedSlc.notes">
-                      </div>
-
-                      <!-- <div class="col-sm-12" *ngIf="allevidence && allevidence.length > 0">
-                      <br>
-                      Select Evidence : &nbsp;&nbsp;
-                      <button class="button" class="btn btn-info btn-sm" (click) = "modalevidence.show(); openmodalselectfile() "> Add Evidence</button>
-                      <br>
-                    </div> -->
-                      <!-- <div class="col-sm-12 mt-2"  *ngIf="selectedSlc?.cartevidence && selectedSlc?.cartevidence?.length > 0">
-                        <table class="col-12 col-md-12 col-sm-12 " style="width: 100%;" border=1 cellpadding=3 cellspacing=3>
-                        <tr>
-                          <th class="text-center" style="width: 10%;">Sr. No.</th>
-                          <th style="width: 90%;">File Name</th>
-                        </tr>
-                        <tr *ngFor="let evidence of selectedSlc?.cartevidence;let i =index;">
-                          <td class="text-center">{{i+1}}</td>
-                          <td><a href="{{evidence?.evidenceUrl}}" target="_blank">{{evidence?.filename}} </a>
-                          </td>
-                        </tr>
-                        </table>
-                        <br>
-                    </div> -->
-
-                    </div>
-
-
-                  </div>
-
-                  
-                  <!-- <small> {{selectedSlc.desc2}} </small> -->
-
-                  <hr>
-                  <!-- Selected SLC MultiInvoice Start -->
-                  <!--  <b> Multi Invoice Fields : (only in case of Multi Invoice - Keep blank for single Invoice)</b><br>
-                  <br>Invoice Name : 
-                  <input  class="form-control" type="text" placeholder="Name" [(ngModel)]="selectedSlc.mi_name"> 
-                  <br>GST No.: 
-                  <input  class="form-control" type="text" placeholder="GST No." [(ngModel)]="selectedSlc.mi_gst"> 
-                 <Br> Address Line  1 :
-                  <input  class="form-control" type="text" placeholder="Address Line 1" [(ngModel)]="selectedSlc.mi_address_line_1">
-                  <br>Address Line  2 :
-                  <input  class="form-control" type="text" placeholder="Address Line 2" [(ngModel)]="selectedSlc.mi_address_line_2">
-                  <br>Town / Locality :
-                  <input  class="form-control" type="text" placeholder="Address Line 3" [(ngModel)]="selectedSlc.mi_address_line_3">
-                  <Br>Pincode :
-                  <input  class="form-control" type="text" placeholder="Pincode" [(ngModel)]="selectedSlc.mi_pincode">
-                  <br>City :
-                  <input  class="form-control" type="text" placeholder="City" [(ngModel)]="selectedSlc.mi_city">
-                  <br>State :
-                  <input  class="form-control" type="text" placeholder="state" [(ngModel)]="selectedSlc.mi_state">
-                  -->
-                  <!-- Selected SLC MultiInvoice End -->
-                </div>
-                <!-- <div class="col-sm-12 col-xl-6">
-                        Start Date : <input  type=date [(ngModel)]="selectedSlc.start_date"> </div> -->
-              </div>
-            </div>
-
-
-            <div class="col-md-2">
-              Quantity :
-              <input width=20px type="number" disabled *ngIf="selectedSlc?.id > 0" value=1 class="form-control" min=1
-                placeholder="quantity" [(ngModel)]="selectedSlc.quantity">
-            </div>
-            <div class="col-md-3">
-              <span *ngIf="selectedSlc?.id >0 ">
-                <span *ngIf="getCatTotal(selectedSlc)>0"> ₹
-                  {{getCatTotal(selectedSlc) * selectedSlc.quantity * selectedSlc.no_of_usages  * selectedSlc.usage_multiplier | number : '1.0-0' }}
-                  <hr> <!-- *ngIf="getCatTotal(selectedSlc) > 0 "-->
-                  <button style="margin:2px" class="button" (click)="cart_add()" class="btn btn-primary btn-sm">Add to
-                    Cart</button>
-
-
-                  <hr> <!-- *ngIf="getCatTotal(selectedSlc) > 0"-->
-                  <button style="margin:2px" class="button" (click)="buyNow()" class="btn btn-primary btn-sm">Buy
-                    Now</button>
-                </span>
-
-              </span>
-
-              <div *ngIf="activefilter !== 'penalty'">                <hr>
-                <label for="upload2">
-                  <span class="btn btn-info btn-sm f-right">Bulk Upload</span>
-                  <input type="file" id="upload2" style="display:none" accept=".csv"
-                    (change)="onBUFileChange($event)"> 
-                </label> <br>
-                <a href="{{commonService.apiUrl}}/others/sampleBulkUpload_new.csv" target="_blank">Download Sample CSV</a>
-              </div>
-            </div>
-            </div>
-          </div>
-          <hr>
-
-          <!-- <div class="centered-content" *ngIf="allSelectedLc.length<1">
-            Cart is Empty
-          </div> -->
-          <div class="centered-contentt" *ngIf="allSelectedLc.length>0">
-            <div class="centered-content" style="font-size: 1.3em">Cart Items - <small style="color:red;cursor:pointer"
-                (click)="cart_alldelete()">Clear all </small></div>
-
-            <div class="row">
-              <div class="col-1">Sn.</div>
-              <div class="col-7">License Category</div>
-              <!--       <div class="col-sm-2 col-xl-2">No. Of Licenses</div>-->
-              <div class="col-3">Total</div>
-            </div>
-            <div class="row" *ngFor="let slc of allSelectedLc;let i = index" style="border: 1px solid #e4e4e4;
-/* padding: 10px;*/
- box-shadow: 1px 1px 1px gray;">
-              <div class="col-1"> {{i+1}}</div>
-              <div class="col-7">
-                <b> {{slc?.displayname}} </b> <br>
-                <span *ngIf="slc.cat_type=='bg'">
-                  {{slc.ltype}}
-                  <br></span>
-                  <!-- <div *ngFor="let cf of getcustomfields(slc.custom_fields)">
-                    <span *ngIf="(cf.f_type=='single_field' || cf.f_type=='range_field') && cf.setcartvalue && (!cf.is_show || (cf.is_show && cf?.is_show==1))">
-                      {{ cf.f_name }}: {{ cf.setcartvalue }} {{ cf.single_field_desc }}
-                    </span>
-                    <span *ngIf="cf.f_type!='single_field' && cf.f_type!='range_field' && cf.setcartvalue">
-                      {{ cf.name }}: {{ getCfValue(cf) }}
-                      <span *ngIf="cf.setaddcartvalue && cf.setcartvalue.addfield_desc && cf.setcartvalue.addfield_desc.length > 1">
-                        <br>
-                        <i>{{ cf.addfield_name }}: {{ cf.setaddcartvalue }}</i>
-                      </span>
-                    </span>
-                  </div>
-                   -->
-                <span *ngIf="slc.setcartpremium_enable"><b> {{ slc.premium_name }}</b></span>
-
-                <span [hidden]="allSelectedLc[i].show_no_of_usages==0">
-                  {{allSelectedLc[i].no_of_usages_f_name}} : <input type=number min=1 placehodeler="usages/days/year"
-                    value=1 style="width:50px" [(ngModel)]="allSelectedLc[i].no_of_usages" disabled>
-                  <!--  {{allSelectedLc[i].no_of_usages * allSelectedLc[i].usage_multiplier}} Total Usages --> </span>
-                <br>
-                <hr>
-                <div *ngIf="allSelectedLc[i].cat_idcode === '49' || allSelectedLc[i].cat_idcode == '49 - V2022' || allSelectedLc[i].cat_idcode == '33(L)'" style="padding-bottom:10px"> 
-                    Category Description :
-                    <!-- <input class="form-control" type="text" placeholder="Category Description"  [(ngModel)]="allSelectedLc[i].cat_description"> -->
-                    <textarea class="form-control" readonly [(ngModel)]="allSelectedLc[i].cat_description"
-                    placeholder="Category Description"></textarea>
-                    <hr>
-                </div>
-                <div *ngIf="allSelectedLc[i].cat_idcode === 'PD (1)'" style="padding-bottom:10px"> 
-                  <span>Additional Remarks : {{allSelectedLc[i].cat_description}}</span> <br>
-                  <span>Proforma Invoice No. : {{allSelectedLc[i].penalty_pino}}</span> <br>
-                  <span>Internal Notes : {{allSelectedLc[i].notes}}</span> <br>
-                  <hr>
-              </div>
-
-                <div *ngIf="allSelectedLc[i].cat_type==='event'">
-                  <input disabled class="form-control" type="text" placeholder="Event name/title"
-                    [(ngModel)]="allSelectedLc[i].event_name"> <br>
-                  <input disabled class="form-control" type="text" placeholder="Event Type"
-                    [(ngModel)]="allSelectedLc[i].event_type"> <br>
-
-                  <input *ngIf="allSelectedLc[i].id == 46" disabled class="form-control" type="text" placeholder="Event Sub Type"
-                    [(ngModel)]="allSelectedLc[i].eventsubtypes"> <br *ngIf="allSelectedLc[i].id == 46">
-
-                  <input disabled class="form-control" type="datetime-local" placeholder="Event Start DateTime"
-                    [(ngModel)]="allSelectedLc[i].event_start_datetime">
-                  <input [hidden]="allSelectedLc[i].hideeventenddate==1" disabled class="form-control"
-                    type="datetime-local" placeholder="Event End DateTime"
-                    [(ngModel)]="allSelectedLc[i].event_end_datetime"> <br>
-                    
-                  <input disabled class="form-control" type="text" placeholder="Event Venue Name"
-                    [(ngModel)]="allSelectedLc[i].event_venue"> <br>
-
-                    <span *ngIf="allSelectedLc[i].event_tag"><input  disabled class="form-control" type="text" placeholder="Event Type"
-                      [(ngModel)]="allSelectedLc[i].event_tag"> <br></span>
-                  <!---  <input disabled class="form-control" type="text" placeholder="Venue Location" [(ngModel)]="allSelectedLc[i].event_location"> <br>
-                <input disabled class="form-control" type="text" placeholder="Venue Pincode" [(ngModel)]="allSelectedLc[i].event_pincode"> <br>-->
-                  <input disabled class="form-control" type="text" placeholder="Event State"
-                    [(ngModel)]="allSelectedLc[i].event_state"> <br>
-                  <input disabled class="form-control" type="text" placeholder="Event City"
-                    [(ngModel)]="allSelectedLc[i].event_city"> <br>
-                  <input disabled class="form-control" type="text" placeholder="Additional Info / No Of Pax"
-                    [(ngModel)]="allSelectedLc[i].event_extra"> <br>
-
-                </div>
-                <div *ngIf="allSelectedLc[i].cat_type==='bg'">
-                  Start Date : <input disabled
-                    (change)="allSelectedLc[i].end_date=nextYearDate(allSelectedLc[i].start_date)" type=date
-                    [(ngModel)]="allSelectedLc[i].start_date" class="form-control">
-                  <Br>End Date : <input class="form-control" disabled type=date [(ngModel)]="allSelectedLc[i].end_date">
-                </div>
-                <hr>
-                <div *ngIf="allSelectedLc[i].cat_type!='penalty'">
-                  Licensee Details : *
-                  <input class="form-control" type="text" placeholder="Licensee Name" disabled
-                    [(ngModel)]="allSelectedLc[i].l_name">
-                  <input class="form-control" type="text" placeholder="Licensee franchise " disabled
-                    [(ngModel)]="allSelectedLc[i].l_franchise">
-
-                  <!-- <input  class="form-control" type="text" placeholder="Licensee Address" disabled [(ngModel)]="allSelectedLc[i].l_address"> 
-            -->
-                  <input class="form-control" type="text" placeholder="Licensee Address" disabled
-                    [(ngModel)]="allSelectedLc[i].l_address_line_1">
-                  <input class="form-control" type="text" placeholder="Licensee Address" disabled
-                    [(ngModel)]="allSelectedLc[i].l_address_line_2">
-                  <input class="form-control" type="text" placeholder="Licensee Address" disabled
-                    [(ngModel)]="allSelectedLc[i].l_address_line_3">
-
-                  <input class="form-control" type="number" placeholder="Licensee Pincode" disabled
-                    [(ngModel)]="allSelectedLc[i].l_pincode">
-
-                  <input class="form-control" type="text" placeholder="Licensee State" disabled
-                    [(ngModel)]="allSelectedLc[i].l_state">
-                  <input class="form-control" type="text" placeholder="Licensee City" disabled
-                    [(ngModel)]="allSelectedLc[i].l_city">
-                </div>
-                <div *ngIf="allSelectedLc[i].cat_type==='bg'">
-                  <input disabled class="form-control" type="text" placeholder="Additional Info / No Of Pax"
-                    [(ngModel)]="allSelectedLc[i].event_extra">
-                  <input disabled class="form-control" type="text" placeholder="Internal Notes"
-                    [(ngModel)]="allSelectedLc[i].notes">
-                </div>
-                <!-- <div *ngIf="allSelectedLc[i].cartevidence?.length > 0">
-                  <hr>
-                  Selected Evidence : <br>
-                  <div class="col-sm-12 mt-2" style="background: #f4f5f7;">
-                    <table class="col-12 col-md-12 col-sm-12 " style="width: 100%;" border=1 cellpadding=3 cellspacing=3>
-                    <tr>
-                      <th class="text-center" style="width: 10%;">Sr. No.</th>
-                      <th style="width: 90%;">File Name</th>
-                    </tr>
-                    <tr *ngFor="let evidence of allSelectedLc[i]?.cartevidence;let i =index;">
-                      <td class="text-center">{{i+1}}</td>
-                      <td><a href="{{evidence?.evidenceUrl}}" target="_blank">{{evidence?.filename}} </a></td>
-                    </tr>
-                    </table>
-                    <br>
-                  </div>
-                </div> -->
-                <br>
-              </div>
-              <!--<div class="col-2">
-                    <input type="number" width=50px  class="form-control" min=1 placeholder="quantity" [(ngModel)]="allSelectedLc[i].quantity">
-                  </div> -->
-              <div class="col-3">
-                <small>Q. : {{ allSelectedLc[i].quantity}} <br>
-                  ₹
-                  {{slc.quantity * slc.no_of_usages * allSelectedLc[i].cattotal  * slc.usage_multiplier | number : '1.0-0'}}
-                </small>
-                <a (click)="cart_delete(i)" style="color: red">
-                  <i class="ti-trash"></i>
-                </a>
-
-              </div>
-
-            </div>
-            <div class="centered-content" style="padding:10px">
-              <h3>Total : ₹ {{getQuoteTotal() | number : '1.0-0'}}</h3>
-            </div>
-          </div>
-
-
-        </div>
-        <hr>
-        <div class=centered-content>
-          <div class="btn-group mt-10 ">
-            <!-- <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
-                class="ti-arrow-left"></i></button> -->
-            <span> <button style="margin-right: 5px;" type="button" [hidden]="allSelectedLc.length<1"
-                class="btn btn-primary btn-xl" (click)="saveQuotation()">Save Changes</button> &nbsp;</span>
-            <button type="button" class="btn btn-primary btn-xl" [hidden]="allSelectedLc.length<1"
-              (click)="saveQuotation(true)" nextStep>Buy Now</button>
-          </div>
-        </div>
-
+      
       
     </wizard-step>
     <wizard-step stepTitle="Checkout">
