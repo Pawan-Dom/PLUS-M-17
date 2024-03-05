@@ -32,6 +32,11 @@ import { ArchwizardModule } from 'ng2-archwizard/dist';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { StepperErrorsExampleComponent } from './stepper-errors-example/stepper-errors-example.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
     declarations: [
@@ -62,7 +67,15 @@ import { MatStepperModule } from '@angular/material/stepper';
         RouterModule, 
         CommonModule,
         NgbModule,
+        MatRadioModule,
+        MatInputModule,
+        MatIconModule,
         NgChartsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatRadioModule,
+        MatCheckboxModule,
+        MatButtonModule,
         NgxChartsModule,
         NgxDatatableModule,
         NgSelectModule,
@@ -70,7 +83,8 @@ import { MatStepperModule } from '@angular/material/stepper';
         AppRoutingModule,
         SimpleNotificationsModule.forRoot() ,
         GoogleMapsModule,
-        MatStepperModule
+        MatStepperModule,
+        NgOptionHighlightModule,
     ]
 })
 export class AppModule { }

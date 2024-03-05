@@ -77,13 +77,13 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-R32D6M7N.js";
-import "./chunk-QOAHSALO.js";
 import {
   animationFrameScheduler,
   asapScheduler,
   fromEvent,
   merge
 } from "./chunk-GFVJDENN.js";
+import "./chunk-QOAHSALO.js";
 import {
   Subject,
   auditTime,

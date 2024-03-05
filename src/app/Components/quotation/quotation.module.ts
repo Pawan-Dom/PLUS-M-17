@@ -7,6 +7,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { NotificationsService } from 'angular2-notifications';
 import { CommonService } from '../../Services/common.service';
 import { QuotationService } from '../../Services/quotation.service';
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { TransactionService } from '../../Services/transaction.service';
 
 @NgModule({
@@ -14,6 +15,7 @@ import { TransactionService } from '../../Services/transaction.service';
     CommonModule,
     ApplicationRoutingModule,
     SharedModule,
+    NgOptionHighlightModule,
   ],
   declarations: [],
   providers: [NotificationsService,CommonService ,QuotationService,TransactionService] ,

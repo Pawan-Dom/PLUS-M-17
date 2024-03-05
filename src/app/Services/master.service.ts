@@ -1,8 +1,8 @@
 
-import {map} from 'rxjs/operators';
+import {catchError, filter, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 
 @Injectable({
@@ -47,14 +47,21 @@ export class MasterService {
         map(res => res));
       }
 
-      metasearch(term : any='0',type:any='') {
-        term=encodeURIComponent(term);
-        type=encodeURI(type);
-        return this.http
-        .get<any>(this.R2apiUrl + '/master/metasearch?q='+term+'&type='+type).pipe(
-        map(res => res));
+      metasearch(term: string = '', type: string = ''): Observable<any> {
+        const encodedTerm = encodeURIComponent(term);
+        const encodedType = encodeURIComponent(type);
+        
+        return this.http.get<any>(`${this.R2apiUrl}/master/metasearch?q=${encodedTerm}&type=${encodedType}`).pipe(
+          catchError(error => {
+            console.error('Error in metasearch request:', error);
+            return of(null); // Return an observable with null value in case of error
+          }),
+          filter(res => res !== null), // Filter out null responses
+          map(res => res)
+        );
       }
-
+      
+    
       addeditcity(customer: any) {  
         return this.http.post(this.apiUrl + '/master/addeditcity',customer).pipe(
         map(res => res));

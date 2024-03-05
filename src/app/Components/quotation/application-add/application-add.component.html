@@ -86,9 +86,9 @@
   
     <!-- ################################################################## new stepper code start #################################################################### -->
     <mat-stepper #stepper>
-      <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
-        <form [formGroup]="firstFormGroup">
-          <ng-template matStepLabel>CUSTOMER INFO</ng-template>
+      <mat-step  errorMessage="Name is required.">
+        
+          <!-- <ng-template matStepLabel>CUSTOMER INFO</ng-template> -->
           <!-- <mat-form-field>
             <mat-label>Name</mat-label>
             <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
@@ -164,8 +164,8 @@
                   <hr>
                   <h4 class="sub-title">
                     Select Customer :
-                     <label> <input type=radio name="lcustfilter" checked (change)="selectedCustomer.lcustfilter=0;selectedCustomer.action='update'"> Existing</label> &nbsp;&nbsp; <label  > 
-                      <input  (change)="selectedCustomer.lcustfilter=1;selectedCustomer.action='addnew';selectedCustomer.id=-1;showC=1" type=radio name="lcustfilter"> New</label> 
+                     <!-- <label> <input type=radio name="lcustfilter" checked (change)="selectedCustomer.lcustfilter=0;selectedCustomer.action='update'"> Existing</label> &nbsp;&nbsp; <label  > 
+                      <input  (change)="selectedCustomer.lcustfilter=1;selectedCustomer.action='addnew';selectedCustomer.id=-1;showC=1" type=radio name="lcustfilter"> New</label>  -->
                   </h4>
                   <!-- [hidden]="selectedCustomer?.lcustfilter==1" -->
                   <ng-select bindLabel="displayname" [items]="customers" [loading]="custLoading" [typeahead]="custTypeahead"
@@ -749,7 +749,6 @@
             <!-- <p>Go to a different step to see the error state</p> -->
             <button mat-button matStepperNext>Next</button>
           </div>
-        </form>
       </mat-step>
       <!-- ========================================= LICENSE CATEGORIES second setp start ============================================================= -->
       <mat-step [stepControl]="secondFormGroup" errorMessage="Address is required.">

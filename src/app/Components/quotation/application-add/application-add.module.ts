@@ -20,7 +20,8 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 @NgModule({
   imports: [
     CommonModule,
@@ -36,6 +37,7 @@ import { MatStepperModule } from '@angular/material/stepper';
   MatFormFieldModule,
   MatInputModule,
   MatButtonModule,
+  NgOptionHighlightModule,
   
 
 
@@ -43,7 +45,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 
   ],
   declarations: [ApplicationAddComponent ] ,
-  providers: [NotificationsService,CommonService ,QuotationService,TransactionService,LicenseCategoryService,DocumentService,LeadService, {
+  providers: [NotificationsService,CommonService ,MatStepper,QuotationService,TransactionService,LicenseCategoryService,DocumentService,LeadService, {
     provide: STEPPER_GLOBAL_OPTIONS,
     useValue: { showError: true },
   },], 

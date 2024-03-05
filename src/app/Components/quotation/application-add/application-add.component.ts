@@ -1,10 +1,10 @@
 /// <reference types="@types/googlemaps" />
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ComponentFactoryResolver } from '@angular/core';
-import { distinctUntilChanged, debounceTime, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime, switchMap, tap, catchError } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal, { SweetAlertResult } from 'sweetalert2';
 // import {IOption} from 'ng-select';
-import { Subject } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { AgmCoreModule } from '@agm/core';
 //import {} from '@types/googlemaps';
 import { Location } from '@angular/common';
@@ -25,7 +25,7 @@ import { UserService } from '../../../Services/user.service';
 import { CustomerService } from '../../../Services/customer.service';
 import { CommonService } from '../../../Services/common.service';
 import {  NgModule } from '@angular/core';
-import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -70,9 +70,10 @@ export class ApplicationAddComponent implements OnInit, OnDestroy {
   leads: any = [];
   venues: any = [];
   event_tag: any ;
-  eventtypes: any = [];
-  eventtag: any = [];
+  eventtypes: any[] = [];
+  eventtag: any[] = [];
   cities: any = [];
+
   params: any = [];
   states: any = [];
   pickuplocations: any = [];
@@ -144,6 +145,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   pigst: any;
   ptax: any;
   selectedLead :any = {};
+  mapsAPILoader: any;
 
   constructor(private _formBuilder: FormBuilder,private location: Location, public masterService: MasterService, public authService: AuthService, private ngZone: NgZone, private route: ActivatedRoute,
     private cd: ChangeDetectorRef, public router: Router, public userService: UserService, public commonService: CommonService, public quotationService: QuotationService,
@@ -222,7 +224,6 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     this.show = false;
   }
 
-
   selectedLicenseCategory: any;
   custLoading = false;
   leadLoading = false;
@@ -286,62 +287,108 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
 
     console.log('goBack()...');
   }
-
   getData() {
-    //get eventtypes
-    this.masterService.metasearch('', 'EVENTTYPE').subscribe(
-      (res: any) => {
-        this.eventtypes = res;
-      }
-    );
+    // Fetch EVENTTYPE
+this.masterService.metasearch('', 'EVENTTYPE').subscribe(
+  (res: any) => {
+    if (res !== null && res !== undefined) {
+      this.eventtypes = res;
+    } else {
+      console.error('Empty response received for EVENTTYPE.');
+      this.eventtypes = [];
+    }
+  },
+  (error) => {
+    console.error('Error fetching EVENTTYPE:', error);
+    this.eventtypes = [];
+  }
+);
+
   
-    //get eventtag
+    // Fetch EVENTTAG
     this.masterService.metasearch('', 'EVENTTAG').subscribe(
       (res: any) => {
-        this.eventtag = res;
+        if (res !== null && res !== undefined) {
+          this.eventtag = res;
+        } else {
+          console.error('Empty response received for EVENTTAG.');
+          this.eventtag = [];
+        }
+      },
+      (error) => {
+        console.error('Error fetching EVENTTAG:', error);
+        this.eventtag = []; // Ensure proper error handling by setting eventtag to an empty array or any appropriate default value
       }
     );
+    
+    // Fetch PICKUPLOCATION
+    // Fetch PICKUPLOCATION
+this.masterService.metasearch('', 'PICKUPLOCATION').subscribe(
+  (res: any) => {
+    if (res !== null && res !== undefined) {
+      this.pickuplocations = res;
+    } else {
+      console.error('Empty response received for PICKUPLOCATION.');
+      this.pickuplocations = [];
+    }
+  },
+  (error) => {
+    console.error('Error fetching PICKUPLOCATION:', error);
+    this.pickuplocations = [];
+  }
+);
+
+// Fetch PITAG
+this.masterService.metasearch('', 'PITAG').subscribe(
+  (res: any) => {
+    if (res !== null && res !== undefined) {
+      this.tagpi = res;
+    } else {
+      console.error('Empty response received for PITAG.');
+    }
+  },
+  (error) => {
+    console.error('Error fetching PITAG:', error);
+  }
+);
+
   
-    //get pickuplocations
-    this.masterService.metasearch('', 'PICKUPLOCATION').subscribe(
-      (res: any) => {
-        this.pickuplocations = res;
-      }
-    );
-  
-    //get pickuplocations
-    this.masterService.metasearch('', 'PITAG').subscribe(
-      (res: any) => {
-        this.tagpi = res;
-      }
-    );
-  
-    if (sessionStorage.getItem('users') !== null) {
+    // Fetch users
+    if (sessionStorage.getItem('users')) {
       this.users = JSON.parse(sessionStorage.getItem('users') as string);
-      if (this.currentUser.role.level > 2) {
+      if (this.currentUser && this.currentUser.role && this.currentUser.role.level > 2) {
         this.users = this.users.filter((lc: any) => lc.active == 1);
       }
     } else {
       this.userService.list().subscribe(
-        (res: any) => {
+        (res: any[]) => {
           this.users = res;
-          if (this.currentUser.role.level > 2) {
+          if (this.currentUser && this.currentUser.role && this.currentUser.role.level > 2) {
             this.users = this.users.filter((lc: any) => lc.active == 1);
           }
         }
       );
     }
   
+    // Fetch GST state codes
     this.quotationService.genGststatecodes().subscribe(
       (res: any[]) => {
         this.gststatecodes = res;
-        this.states = res.filter(book => book.hidden == 0);
+        if (res && res.length > 0) {
+          this.states = res.filter(state => state.hidden === 0);
+        } else {
+          console.error('No GST state codes found or invalid response format.');
+        }
+      },
+      (error: any) => {
+        console.error('Error fetching GST state codes:', error);
       }
     );
   
-    if (sessionStorage.getItem('lcs') !== null) {
+    // Fetch license categories
+    if (sessionStorage.getItem('lcs')) {
       let lcc = JSON.parse(sessionStorage.getItem('lcs') as string);
-      if (this.currentUser.role.level > 2) {
+      if (this.currentUser && this.currentUser.role && this.currentUser.role.level > 2) {
         lcc = lcc.filter((lc: any) => lc.active == 1);
       }
       this.licenseCategories = lcc;
@@ -350,7 +397,7 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
       this.licenseCategoryService.list().subscribe(
         (res: any[]) => {
           let lcc = res;
-          if (this.currentUser.role.level > 2) {
+          if (this.currentUser && this.currentUser.role && this.currentUser.role.level > 2) {
             lcc = res.filter((lc: any) => lc.active == 1);
           }
           this.licenseCategories = lcc;
@@ -360,6 +407,8 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     }
   }
   
+
+
   
   getcustomerdata(id: any){
 
@@ -378,16 +427,15 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
 
   getleaddata(id: string){
 
-    this.leadService.leadsearch('searchq='+id).subscribe((res: { rows: string | any[]; })=>{
+    this.leadService.leadsearch('searchq='+id).subscribe((res: { rows: any[]; })=>{
       console.log(res, 'selectedlead')
-      if(res.rows.length>0){
-        
+      if(res.rows.length > 0){
         this.selectedLead = res.rows[0];
         this.setLeadInfo();
       }
-    })
-
+    });
   }
+  
 
   checktanmms() {
     if (this.selectedCustomer.tan) {
@@ -532,36 +580,36 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
         // get all evidence data
       // Assuming this is within a class or a context where 'this' is defined
 
-// First, make sure this.allSelectedLc is not undefined or null and it is indeed an array
-// if (res.evidence && Array.isArray(this.allSelectedLc)) {
-//   this.evidence_id = res.evidence.id;
-//   console.log('all cart', this.allSelectedLc);
-//   let edj = JSON.parse(res.evidence.evdebugjson);
-//   this.eviSelectedLc = edj.eviSelectedLc;
-//   console.log('evd all cart', this.eviSelectedLc);
-//   this.allevidence = edj.allevidence;
-
-//   for (let i = 0; i < this.allSelectedLc.length; i++) {
-//       for (let j = 0; j < this.eviSelectedLc.length; j++) {
-//           if (typeof this.allSelectedLc[i] === 'object' && typeof this.eviSelectedLc[j] === 'object' &&
-//               JSON.stringify(this.allSelectedLc[i]) === JSON.stringify(this.eviSelectedLc[j]) && this.eviSelectedLc[j].cartevidence) {
-//               let cartevidence = this.eviSelectedLc[j].cartevidence;
-//               // Assigning cartevidence to cartevidence property of allSelectedLc[i]
-//               if (typeof this.allSelectedLc[i] === 'object') {
-//                   (this.allSelectedLc[i] as any).cartevidence = cartevidence; // Use 'any' to bypass type checking
-//               }
-//           }
-//       }
-//   }
-//   console.log('final evd all cart', this.allSelectedLc);
-// } else {
-//   console.log('Evidence is not available or allSelectedLc is not an array.');
-// }
+      if (res.evidence && Array.isArray(this.allSelectedLc)) {
+        this.evidence_id = res.evidence.id;
+        console.log('all cart', this.allSelectedLc);
+        let edj = JSON.parse(res.evidence.evdebugjson);
+        this.eviSelectedLc = edj.eviSelectedLc;
+        console.log('evd all cart', this.eviSelectedLc);
+        this.allevidence = edj.allevidence;
+      
+        for (let i = 0; i < this.allSelectedLc.length; i++) {
+          for (let j = 0; j < this.eviSelectedLc.length; j++) {
+            if (typeof this.allSelectedLc[i] === 'object' && typeof this.eviSelectedLc[j] === 'object' &&
+              JSON.stringify(this.allSelectedLc[i]) === JSON.stringify(this.eviSelectedLc[j]) &&
+              (this.eviSelectedLc[j] as any).cartevidence) { // Use 'any' to bypass type checking
+              let cartevidence = (this.eviSelectedLc[j] as any).cartevidence; // Use 'any' to bypass type checking
+              if (typeof this.allSelectedLc[i] === 'object') {
+                (this.allSelectedLc[i] as any).cartevidence = cartevidence; // Use 'any' to bypass type checking
+              }
+            }
+          }
+        }
+        console.log('final evd all cart', this.allSelectedLc);
+      } else {
+        console.log('Evidence is not available or allSelectedLc is not an array.');
+      }
+      
 
       
         // else{
         //   this.eviSelectedLc = this.allSelectedLc; 
-        // }
+        //  }
 
         if(this.allevidence){
           for (let i = 0; i < this.allevidence.length; i++) {
@@ -732,7 +780,6 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
       /*types: ['establishment'],*/
       componentRestrictions: { country: "in" }
     };
-    //load Places Autocomplete
     // this.mapsAPILoader.load().then(() => {
     //   let autocomplete = new google.maps.places.Autocomplete(this.searchElement.nativeElement, options);
 
@@ -757,49 +804,45 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
     //       if (place.formatted_phone_number) { this.selectedCustomer.phone = place.formatted_phone_number; }
 
     //       if (place.name) { this.selectedCustomer.name = place.name; }
-    //       if (place && place.address_components) {
-    //         for (let i = 0; i < place.address_components.length; i++) {
-    //             for (let j = 0; j < place.address_components[i].types.length; j++) {
-    //                 if (place.address_components[i].types[j] == "postal_code") {
-    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-    //                     console.log(place.address_components[i].long_name);
-    //                     this.selectedCustomer.pincode = place.address_components[i].long_name;
-    //                 }
-    //                 if (place.address_components[i].types[j] == "country") {
-    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-        
-    //                     this.selectedCustomer.country = place.address_components[i].long_name;
-    //                 }
-        
-    //                 if (place.address_components[i].types[j] == "administrative_area_level_1") {
-    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-        
-    //                     this.selectedCustomer.state = place.address_components[i].long_name;
-    //                 }
-        
-    //                 if (place.address_components[i].types[j] == "administrative_area_level_2") {
-    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-        
-    //                     this.selectedCustomer.city = place.address_components[i].long_name;
-    //                 }
-        
-    //                 if (place.address_components[i].types[j] == "sublocality_level_1") {
-    //                     //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-        
-    //                     this.selectedCustomer.address_line_3 = place.address_components[i].long_name;
-    //                 }
-        
-    //             }
-    //         }
-    //     } else {
-    //         console.log("place or place.address_components is undefined.");
-    //     }
-        
+    //       // for (let i = 0; i < place.address_components.length; i++) {
+    //       // for (let j = 0; j < place.address_components[i].types.length; j++) {
+    //       //     if (place.address_components[i].types[j] == "postal_code") {
+    //       //       //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+    //       //       console.log(place.address_components[i].long_name);
+    //       //       this.selectedCustomer.pincode = place.address_components[i].long_name;
+    //       //     }
+    //       //     if (place.address_components[i].types[j] == "country") {
+    //       //       //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
 
-    //     });
-    //   });
+    //       //       this.selectedCustomer.country = place.address_components[i].long_name;
+    //       //     }
+
+    //       //     if (place.address_components[i].types[j] == "administrative_area_level_1") {
+    //       //       //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+
+    //       //       this.selectedCustomer.state = place.address_components[i].long_name;
+    //       //     }
+
+    //       //     if (place.address_components[i].types[j] == "administrative_area_level_2") {
+    //       //       //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+
+    //       //       this.selectedCustomer.city = place.address_components[i].long_name;
+    //       //     }
+
+    //       //     if (place.address_components[i].types[j] == "sublocality_level_1") {
+    //       //       //document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+
+    //       //       this.selectedCustomer.address_line_3 = place.address_components[i].long_name;
+    //       //     }
+
+    //       //   }
+    //       //  }
+
+    //        });
+    //         });
 
     // });
+    
   }
 
   is_inmh() {
@@ -2622,38 +2665,52 @@ bulkAddItem(blc: unknown) {
     
   }
   // lead ques
-  getLeadstatusquestions(leadstatus_id: string | number,lead_id=null, forpi=null){
-    let params="leadstatus_id="+leadstatus_id;
-
-    if(lead_id){
-      params+='&lead_id='+lead_id;
+  getLeadstatusquestions(leadstatus_id: string | number, lead_id = null, forpi = null) {
+    let params = "leadstatus_id=" + leadstatus_id;
+  
+    if (lead_id) {
+      params += '&lead_id=' + lead_id;
     }
-    if(forpi){
-      params+='&forpi='+forpi;
+    if (forpi) {
+      params += '&forpi=' + forpi;
     }
-    if(this.activity_id){
-      params+='&activity_id='+this.activity_id;
+    if (this.activity_id) {
+      params += '&activity_id=' + this.activity_id;
     }
-    // console.log(params);
+  
     this.leadService.leadstatusdata(params).subscribe(
       (res: { leadstatusdata: any; qvalues: string; }) => {
-        this.lead_lead_status_data=res;
-        this.leadstatusdata=res.leadstatusdata;
-        this.leadstatusdata.questions.sort(function(x: { seq: number; }, y: { seq: number; }) {
-          // Ascending: first age less than the previous
-          return x.seq - y.seq;
-        });
-        
-        if(res.qvalues){
-          const temp=JSON.parse(res.qvalues);
-          if(temp){
-            this.qvalues=temp;
+        if (res && res.leadstatusdata) { // Check if res and res.leadstatusdata are defined
+          this.lead_lead_status_data = res;
+          this.leadstatusdata = res.leadstatusdata;
+  
+          if (Array.isArray(this.leadstatusdata.questions)) { // Check if questions is an array
+            this.leadstatusdata.questions.sort(function (x: { seq: number; }, y: { seq: number; }) {
+              return x.seq - y.seq;
+            });
           }
-          console.log(JSON.parse(res.qvalues));
+  
+          if (res.qvalues) {
+            try {
+              const temp = JSON.parse(res.qvalues); // Parse JSON safely
+              if (temp) {
+                this.qvalues = temp;
+              }
+              console.log(temp);
+            } catch (error) {
+              console.error('Error parsing qvalues JSON:', error);
+            }
+          }
+        } else {
+          console.error('Invalid response:', res);
         }
-
-      }); 
+      },
+      error => {
+        console.error('Error fetching lead status data:', error);
+      }
+    );
   }
+  
   getChildQuestions(parentrow:any){
     //filtersout child questions to be used
     if(this.qvalues['_'+parentrow.id] && parentrow.input_options_array){
@@ -2787,15 +2844,15 @@ if(cf.canflagcityclass){
 
   }
 
-  tdspatch(tdsa: any){
-    //Dont touch TDS if PI is Paid
+  tdspatch(tdsa: any) {
+    // TDS reset only if PI is not paid
     console.log('TDS Reset only on Not Paid');
-    if(this.selectedCustomer.tds && this.quotation.status!='paid'){
-    
-    this.tds=this.selectedCustomer.tds;
+    if (this.selectedCustomer.tds && this.quotation.status !== 'paid') {
+        this.tds = this.selectedCustomer.tds;
     }
- 
-  }
+}
+
+
 
   // recreate Licenses 
   confirmrecreateLicenses() {
@@ -3179,24 +3236,24 @@ if(cf.canflagcityclass){
     // }
 
     regionvalidation() {
-
-      console.log('this.quotation.subregion', this.selectedUser.region_ids_info , this.quotation.subregion);
-
-      if(this.selectedUser.region_ids_info && !this.quotation.subregion){
-        this.quotation.subregion = this.selectedUser.region_ids_info[0];
+      console.log('this.quotation.subregion', this.selectedUser.region_ids_info, this.quotation.subregion);
+  
+      if (this.selectedUser.region_ids_info && (this.quotation.subregion === undefined || this.quotation.subregion === null)) {
+          this.quotation.subregion = this.selectedUser.region_ids_info[0];
       }
-    
-      if ((this.selectedUser.region_ids_info && this.quotation.subregion) || (this.selectedUser.region_ids == null)) {
-        if (this.selectedUser.region_ids == null) {
-          this.quotation.subregion = null;
-        }
-      
-        this.regionflag = 1;
+  
+      if ((this.selectedUser.region_ids_info && this.quotation.subregion) || (this.selectedUser.region_ids === null)) {
+          if (this.selectedUser.region_ids === null) {
+              this.quotation.subregion = null;
+          }
+  
+          this.regionflag = 1;
       } else {
-        this.regionflag = 0;
-        this.commonService.notify('error', 'Please Select Region ');
+          this.regionflag = 0;
+          this.commonService.notify('error', 'Please Select Region');
       }
-    }
+  }
+  
     // Cancel Invoice popup
     prepareCancelnvoice() {
       let that = this;
@@ -3444,17 +3501,23 @@ conditionFieldvalidateCheck(selectSlc: { id: number; custom_fields: { setcartval
 }
 
 
-  setLeadInfo() {
-    if(this.selectedLead){
-      //this.getLeadstatusquestions(this.selectedLead.lead_status_id, this.selectedLead.id,1);
-      this.getLeadstatusquestions(0);
-      // this.customers[0] = this.selectedCustomer;
-      // this.selectedCustomer = this.selectedLead.customer;
-      this.selectedUser = this.selectedLead.user;
-      this.quotation.lead_id = this.selectedLead.id;
+setLeadInfo() {
+  if (this.selectedLead && this.selectedLead.user) { // Check if selectedLead and its user property exist
+    
+    this.getLeadstatusquestions(this.selectedLead.lead_status_id, this.selectedLead.id, null); // Pass null or undefined as the third argument
+    
+    this.selectedUser = this.selectedLead.user;
+
+    this.quotation.lead_id = this.selectedLead.id;
+
+    if (this.selectedLead.user.region_ids_info && this.selectedLead.user.region_ids_info.length > 0) {
       this.quotation.subregion = this.selectedLead.user.region_ids_info[0];
-      this.regionvalidation();
     }
+
+    this.regionvalidation();
   }
+}
+
+
 
 }
