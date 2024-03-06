@@ -1448,7 +1448,7 @@
           <div class="row" *ngIf="selectedSlc">
   
             <div [class]="quotation.status==='pending' ? 'col-sm-12 col-xl-12' : 'col-sm-12 col-xl-12' ">
-              <div *ngIf="selectedCustomer?.id > 0">
+              <div *ngIf="selectedCustomer?.id > 0" style="text-align:center">
                 <h4>Billing Summary</h4>
                 <div class="btn-group mt-12 " *ngIf="quotation.pir_status=='approve' && quotation.is_old_tariff==0">
                   <button *ngIf="quotation.pir_status=='approve' && quotation.noc == 0 " style="margin-right: 5px;"
@@ -2408,8 +2408,8 @@
   -->
         </div>
       </div>
+      </mat-stepper>
     <!-- </mat-step> -->
-    </mat-stepper>
     <!--
     <wizard-step stepTitle="Payment" >
       <div class="centered-content">
