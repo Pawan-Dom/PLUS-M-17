@@ -3,7 +3,6 @@ import {
   ScrollingModule,
   ViewportRuler
 } from "./chunk-2Z3EJNTR.js";
-import "./chunk-XYGXDGTL.js";
 import {
   BasePortalOutlet,
   CdkPortalOutlet,
@@ -12,6 +11,7 @@ import {
   PortalModule,
   TemplatePortal
 } from "./chunk-B2ZTO346.js";
+import "./chunk-XYGXDGTL.js";
 import {
   animate,
   state,
@@ -104,10 +104,10 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-R32D6M7N.js";
+import "./chunk-QOAHSALO.js";
 import {
   merge
 } from "./chunk-GFVJDENN.js";
-import "./chunk-QOAHSALO.js";
 import {
   Subject,
   Subscription,

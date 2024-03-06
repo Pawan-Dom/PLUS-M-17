@@ -1921,15 +1921,14 @@
           </div>
         </div>
       </mat-step> 
-    </mat-stepper>
     <!-- ################################################################## new stepper code end #################################################################### -->
 
    
-    <wizard-step stepTitle="License Categories" optionalStep>
+    <mat-step stepTitle="License Categories" optionalStep>
       
       
-    </wizard-step>
-    <wizard-step stepTitle="Checkout">
+    </mat-step>
+    <mat-step stepTitle="Checkout">
       <div class="centered-content">
 
 
@@ -2413,7 +2412,8 @@
   -->
         </div>
       </div>
-    </wizard-step>
+    </mat-step>
+    </mat-stepper>
     <!--
     <wizard-step stepTitle="Payment" >
       <div class="centered-content">
@@ -2447,8 +2447,6 @@
         </div>
       </div>
     </wizard-step> -->
-  <!-- </wizard> -->
-
   <!-- Customer NO PAN Approval -->
   <div *ngIf ="quotation.status =='paid' && commonService.getCurrentUser().role_id < 71 && ((panstr && panstr == 'NOPAN') || (quotation.cpn_status==='approve'))">
     
@@ -2583,6 +2581,7 @@
         <table style="margin:0px auto;border:1px solid gray" border=1 cellpadding=3 cellspacing=3>
           <tr>
             <th>Id</th>
+              <!-- </wizard> -->
             <th>Details</th>
             <th></th>
           </tr>
@@ -2685,7 +2684,6 @@
   </div>
 
   <!-- end of return tr -->
-
 <app-modal-basic #modalIssueLicenses [dialogClass]="'modal-lg'">
   <div class="app-modal-header">
     <h4 class="modal-title">Issue Licenses <small *ngIf="issuedLc.action=='cancel'" style="color:red">ALL LICENSES ARE
