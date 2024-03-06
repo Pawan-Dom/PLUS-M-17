@@ -1439,12 +1439,486 @@
 
       <!-- ========================================= LICENSE CATEGORIES second setp end ============================================================= -->
       
-      <mat-step>
+      <mat-step  >
         <ng-template matStepLabel>CHECKOUT</ng-template>
         <p>You are now done.</p>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Reset</button>
+        <div class="centered-content">
+
+
+          <div class="row" *ngIf="selectedSlc">
+  
+            <div [class]="quotation.status==='pending' ? 'col-sm-12 col-xl-12' : 'col-sm-12 col-xl-12' ">
+              <div *ngIf="selectedCustomer?.id > 0">
+                <h4>Billing Summary</h4>
+                <div class="btn-group mt-12 " *ngIf="quotation.pir_status=='approve' && quotation.is_old_tariff==0">
+                  <button *ngIf="quotation.pir_status=='approve' && quotation.noc == 0 " style="margin-right: 5px;"
+                    type="button" class="btn btn-primary btn-sm" (click)="sendAlert('send-pi')"><i
+                      class="cr-icon fa fa-envelope"></i> Send PI </button>
+                  <span *ngIf="quotation.pir_status=='approve'  && quotation.noc == 0"> <button style="margin-right: 5px;"
+                      type="button" [hidden]="!quotation?.invoice_no" class="btn btn-primary btn-sm"
+                      (click)="sendAlert('send-ti')"><i class="cr-icon fa fa-envelope"></i>
+                      Send TI </button> &nbsp;</span>
+                  <button type="button" *ngIf="quotation.noc == 0 " class="btn btn-primary btn-sm"
+                    [hidden]="quotation.license_issued!=1 && quotation.noc == 0" (click)="sendAlert('send-license')"><i
+                      class="cr-icon fa fa-envelope"></i> Send Lic </button>
+                  <!-- <hr> -->
+                </div>
+  
+                <hr>
+                <!-- request for PI -->
+                <!--quotation.user.role.id == 68 &&-->
+                <!--[hidden]=true-->
+                <!-- <div [hidden]=true *ngIf="quotation.status !='paid' &&  quotation.id && quotation.noc == 0" -->
+                  <div  *ngIf="quotation.status !='paid' && quotation.pir_status!='approve' && quotation.id && quotation.noc == 0"
+                  class="well well-sm" style="min-width: 273px;
+                margin: 0px auto;">
+                  <a style="color:#FF7E00" class="" *ngIf="quotation.isPirChanged == 1 && quotation.pir_status"> PI
+                    Changes are detected, Please send PI Request again. <br> </a>
+                  <a style="color:green" class="" *ngIf="quotation.pir_status=='pending'">PI Request Pending For
+                    Approval</a>
+                  <a style="color:green;font-weight:bold" class="" *ngIf="quotation.pir_status=='approve'">PI Request is
+                    Approved</a>
+                  <a style="color:red;font-weight:bold" class="" *ngIf="quotation.pir_status=='reject'">PI Request is
+                    Rejected </a>
+                  <br>
+                  <button class="btn btn-primary btn-sm" (click)="commonService.openModal('modalpirequest')">Send PI For
+                    Approval</button><br>
+  
+                </div>
+                <!-- <hr> -->
+                <!-- add new line container-->
+                <ng-container *ngIf="quotation.pir_status=='approve' && quotation.noc == 0">
+                  <br>
+                  <p>License Fees : ₹ {{getQuoteTotal()| number : '1.0-0'}} </p>
+                  <!-- persegst-->
+                  <span *ngIf="quotation?.multiinvoice">
+                    <hr>
+                    <span *ngFor="let item of quotation?.multiinvoice ; let i = index">
+                      #{{i+1}} : GST : <b>{{item.gst}}</b> - <b>Rs. {{item.cartamountwithdiscount}}</b>
+                      <br>({{item.totallicenses}} Licenses) | <span> <a target=_blank
+                          href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&invoice=1&mi={{i+1}}"><span
+                            *ngIf="!quotation.invoice_no">Preview TI</span> Download</a></span><br>
+                      <hr>
+                    </span>
+                    <hr>
+                  </span>
+                  <!-- endofpersegst-->
+  
+                  <p *ngIf="discount>0">Current Applied Discount {{discount | number:'1.2-2'}}% : ₹
+                    {{ getQuoteTotal() * discount/100 | number : '1.0-0'}} <br>
+                    Total After Discount : ₹
+                    {{ getQuoteTotal() - (getQuoteTotal() * previewdiscount/100)  | number : '1.0-0'}}
+                  </p>
+  
+  
+  
+                  <div class="well well-sm" style="min-width: 273px;
+                        margin: 0px auto;">
+  
+                    <span *ngIf="quotation.atir_status">
+                      <a style="color:green" class="" *ngIf="quotation.atir_status=='pending'">Pending For Approval</a>
+                      <a style="color:green;font-weight:bold" class="" *ngIf="quotation.atir_status=='approve'"
+                        target=_blank href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&invoice=1&uuid={{quotation.uuid}}">Advance Tax
+                        Invoice
+                        Request is Approved - Download</a>
+                      <a style="color:red;font-weight:bold" class="" *ngIf="quotation.atir_status=='reject'">Advance Tax
+                        Invoice Request is Rejected </a>
+                      <br>
+                    </span>
+                    <button class="btn btn-primary btn-sm" *ngIf="quotation?.atir_status!='approve'"
+                      (click)=" commonService.openModal('modalatirrequest')">Request For Advance Tax Invoice</button>
+  
+                  </div>
+                  
+                  <hr>
+                  
+                  <div class="well well-sm" style="min-width: 273px;
+                        margin: 0px auto;">
+                    <div class="row" *ngIf="quotation.tag_name && quotation?.log_pitag.length > 1">    
+                  <div class="col-md-6">
+                    <p style="color:black ;font-weight:bold"> Initial PI Tag</p>
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation?.log_pitag[0]?.tag_name">Tag Name : {{quotation?.log_pitag[0]?.tag_name}}</a>
+                    <br>
+                    <a style="color:red;font-weight:bold" class="" *ngIf="quotation?.log_pitag[0]?.tag_remark">Remark : {{quotation?.log_pitag[0]?.tag_remark}}</a>
+                    <br>
+                    <a style="color:red;font-weight:bold" class="" *ngIf="quotation?.log_pitag[0]?.expected_date">Expected Date : {{quotation?.log_pitag[0]?.expected_date | date:'d/M/y'}} <br></a>
+  
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation?.log_pitag[0]?.tag_name">Created On : {{quotation?.log_pitag[0]?.created_on | date: 'd/M/y' }}<br></a>
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation?.log_pitag[0]?.tag_name"> updated by : {{quotation?.log_pitag[0]?.tag_user_name }} <br></a>
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation?.log_pitag[0]?.tag_name"> updated On : {{quotation?.log_pitag[0]?.created_on | date: 'd/M/y'}}<br></a>
+                    <br>
+  
+                  </div>
+  
+                    <div class="col-md-6" >
+                      <p style="color:black ;font-weight:bold"> Current PI Tag</p>
+                      <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Tag Name : {{quotation.tag_name}}</a>
+                      <br>
+                      <a style="color:red;font-weight:bold" class="" *ngIf="quotation.tag_remark">Remark : {{quotation.tag_remark}}</a>
+                      <br>
+                      <a style="color:red;font-weight:bold" class="" *ngIf="quotation.tag_expected_date">Expected Date : {{quotation.tag_expected_date | date:'d/M/y'}} <br></a>
+  
+                      <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Created On : {{quotation.tag_created_on | date: 'd/M/y' }}<br></a>
+                      <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Last updated by : {{quotation?.tag_user_id?.name }} <br></a>
+                      <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Last updated On : {{quotation.tag_updated_on | date: 'd/M/y'}}<br></a>
+                      <br>
+                    </div>
+                  </div>
+  
+                  <span *ngIf="quotation.tag_name && quotation?.log_pitag.length == 1">
+                    <p style="color:black ;font-weight:bold"> Initial PI Tag</p>
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Tag Name : {{quotation.tag_name}}</a>
+                    <br>
+                    <a style="color:red;font-weight:bold" class="" *ngIf="quotation.tag_remark">Remark : {{quotation.tag_remark}}</a>
+                    <br>
+                    <a style="color:red;font-weight:bold" class="" *ngIf="quotation.tag_expected_date">Expected Date : {{quotation.tag_expected_date | date:'d/M/y'}} <br></a>
+  
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Created On : {{quotation.tag_created_on | date: 'd/M/y' }}<br></a>
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Last updated by : {{quotation?.tag_user_id?.name }} <br></a>
+                    <a style="color:green ;font-weight:bold" class="" *ngIf="quotation.tag_name">Last updated On : {{quotation.tag_updated_on | date: 'd/M/y'}}<br></a>
+                    <br>
+  
+                  </span>
+  
+                    <button class="btn btn-primary btn-sm" (click)="showPi()"><b>Add PI Tag</b></button>
+  
+                  </div>
+  
+  
+                  <hr>
+                  <div class="well well-sm" style="min-width: 273px;
+                        margin: 0px auto;" *ngIf="getQuoteTotal()>minamountfordiscount ">
+  
+                    <span *ngIf="maxdiscount > 0">Apply Discount : <input style="width:50px" type=number min=0 max=101
+                        [(ngModel)]="previewdiscount" (change)="validateMax($event,selectedUser.role.discount)"> % = ₹
+                      {{ getQuoteTotal() * previewdiscount/100  | number : '1.0-0'}}
+                      &nbsp;&nbsp; <button class="btn btn-secondary btn-sm" (click)="applyDiscount() ">Apply
+                        Discount</button>
+                      <hr *ngIf="quotation.dr_status"> </span>
+  
+                    <!-- <span *ngIf="quotation.dr_status=='pending' && previewdiscount > 99"> <a style="color:green;font-weight:bold;" class=""> NOC Request of Pending For Approval </a> <br></span> -->
+                    <br>
+                    <a style="color:green" class="" *ngIf="quotation.dr_status=='pending'">
+                      <span *ngIf="quotation.dr_discount < 99">Discount Request of
+                        {{quotation.dr_discount | number:'1.2-2'}}% </span>
+                      <!-- <span *ngIf="quotation.dr_discount > 99">NOC Request is</span> -->
+                      Pending For Approval</a>
+                    <a style="color:green;font-weight:bold" class="" *ngIf="quotation.dr_status=='approve'">
+                      <span *ngIf="quotation.dr_discount < 99">Discount Request of
+                        {{quotation.dr_discount | number:'1.2-2'}}% </span>
+                      <!-- <span *ngIf="quotation.dr_discount > 99">NOC Request </span> -->
+                      is Approved</a>
+                    <a style="color:red;font-weight:bold" class="" *ngIf="quotation.dr_status=='reject'">
+                      <span *ngIf="quotation.dr_discount < 99">Discount Request of
+                        {{quotation.dr_discount | number:'1.2-2'}}% </span>
+                      <!-- <span *ngIf="quotation.dr_discount > 99">NOC Request </span>  -->
+                      is Rejected</a>
+                    <hr>
+  
+                    <button class="btn btn-primary btn-sm btn-sm"
+                      (click)=" commonService.openModal('modaldrrequest'); quotation.dr_discount ='';">Request
+                      For Discount</button>&nbsp;
+                    <!-- <button class="btn btn-primary btn-sm " (click)=" commonService.openModal('modaldrrequest'); quotation.dr_discount =100;">Request
+                        For NOC</button>
+                        <br> -->
+  
+  
+  
+  
+                  </div>
+                </ng-container>
+                <!-- noc-->
+                <ng-container *ngIf="quotation.pir_status=='approve' && quotation.noc == 1 ">
+                  <div class="well well-sm" style="min-width: 273px;margin: 0px auto;">
+                    <a style="color:green;font-weight:bold" class=""
+                      *ngIf="quotation.dr_status=='pending' && quotation.dr_discount > 99">
+                      NOC Request is For Approval</a>
+                    <a style="color:green;font-weight:bold" class=""
+                      *ngIf="quotation.dr_status=='approve' && quotation.dr_discount > 99">
+                      NOC Request is Approved</a>
+                    <a style="color:red;font-weight:bold" class=""
+                      *ngIf="quotation.dr_status=='reject' && quotation.dr_discount > 99">
+                      NOC Request is Rejected </a>
+                    <br>
+                    <button class="btn btn-primary  "
+                      (click)=" commonService.openModal('modaldrrequest'); quotation.dr_discount =100;">Request
+                      For NOC</button>
+                    <br>
+                  </div>
+                </ng-container>
+  
+                <ng-container *ngIf ="(panstr && panstr == 'NOPAN') || (quotation.cpn_status==='approve')"> 
+                  <br>
+                  <div class="well well-sm" style="min-width: 273px;margin: 0px auto;">
+                    <span *ngIf="quotation.cpn_status">
+                      <a style="color:green" *ngIf="quotation.cpn_status=='pending'" class="">Customer NO PAN Request Pending For Approval</a>
+                      <a style="color:green;font-weight:bold"  *ngIf="quotation.cpn_status=='approve'" class="">Customer PAN No Request Approved</a> 
+                      <!-- &nbsp;&nbsp; <button *ngIf="quotation.cpn_status=='approve' && quotation.cpn_pan_no" class="btn btn-secondary btn-sm" (click)="applyCPN() ">Apply 
+                        PAN Number</button>-->
+                      <a style="color:red;font-weight:bold"*ngIf="quotation.cpn_status=='reject'">Customer PAN No Request is Rejected </a>
+                      <br><br>
+                    </span>
+                    <button class="btn btn-primary btn-sm" (click)=" commonService.openModal('modalpanrequest'); cpnmodel();">Request For PAN No Change</button>
+                  </div>
+                </ng-container>
+  
+                <!-- Interest UI start -->
+                <!-- <ng-container  *ngIf="quotation.is_renewal_pi==1">
+                  <hr>
+                  <br>
+                  <h6>Interest Fee : ₹ {{totalInterestf|  number:'1.2-2'}}</h6>
+                  <span style="color: #d34e47; margin-top:5px;margin-left:20px;">Note: *Interest is charged @18% per annum.</span>
+                  <br>
+                  <div class="col-12 col-md-12 col-sm-12 interestdiv" style="height: 200px; overflow-y: auto; 
+                  margin: 0px auto;">
+                    <table class="col-12 col-md-12 col-sm-12  well well-sm " style="width: 100%;" border=5 cellpadding=4 cellspacing=3>
+                      <tr>
+                        <th style="width: 5%;">Sr.No.</th>
+                        <th style="width: 40%;">Cart Id</th>
+                        <th style="width: 20%;">no.of Days Delayed </th>
+                        <th style="width: 35%;">Interest Fee </th>
+                      </tr>
+                      <tr *ngFor="let slc of allSelectedLc;let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{slc.cat_idcode}} : {{slc.name}} </td>
+                        <td>
+                            {{slc.latedays }}
+                        </td>
+                        <td>
+                          {{slc.interesttotal | number:'1.2-2'}}
+                      </td>
+                      </tr>
+                    </table>
+                    <br>
+                </div>
+                <hr>
+                </ng-container> -->
+                <!-- Interest UI end  -->
+  
+                <ng-container *ngIf="quotation.pir_status=='approve' && quotation.noc == 0">
+                  <!-- <hr> -->
+                  <!--<p *ngIf="is_inmh()">GST : ₹ {{  (getQuoteTotal() - (getQuoteTotal() * discount/100) ) * gst/100  | number : '1.0-0'}} </p>
+                       <p *ngIf="!is_inmh()">
+                          IGST (Other than Maharashtra) : ₹ {{ (getQuoteTotal() 49- (getQuoteTotal() * discount/100) ) * igst/100 | number : '1.0-0'}}
+                       </p>-->
+  
+                  <div class="well well-sm" style="max-width: 273px;
+                       margin: 0px auto;" *ngIf="selectedCustomer">
+                    <div class="row">
+                      <div class="col-3  " style="padding:5px">
+                        TAN :
+                      </div>
+                      <div class="col-9">
+                        <input type="text" class="form-control" name="tan"
+                          (change)="field_validate($event,'tan',selectedCustomer?.tan)" placeholder="TAN"
+                          [(ngModel)]="selectedCustomer.tan" required>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3  " style="padding:5px">
+                        TDS (%) :
+                      </div>
+                      <div class="col-9">
+                        <input class="form-control " (change)="changeatds=true;checkIfTan($event); " type=number min=0
+                          [(ngModel)]="tds">
+                        <a *ngIf="changeatds" class="btn btn-primary btn-sm" style="color:white"
+                          (click)="saveQuotation(true)">Apply TDS</a> <br>
+                        ₹ {{  (getQuoteTotal() - (getQuoteTotal() * discount/100) ) * tds/100 | number : '1.0-0'}}
+                      </div>
+  
+                    </div>
+  
+                    <span *ngIf="tanmms?.ldc_percent && this.selectedCustomer?.tan">
+                      <hr>
+                      <span style="font-weight:bold"> This TAN carries LDC &#64; {{tanmms?.ldc_percent}}% <br>
+                        in the name of <b>{{tanmms?.ldc_name}}</b>
+                        <br>
+                        which is valid from {{tanmms?.ldc_startdate | date: 'd/M/y'}} to
+                        {{tanmms?.ldc_enddate | date: 'd/M/y'}} </span>
+                      <hr>
+                    </span>
+                  </div>
+  
+                </ng-container>
+                <h3>
+                  <br>
+                  Total :
+                  ₹ {{getQuoteFinalTotal() | number : '1.0-0'}}
+                </h3>
+                <!-- inerest calculation total show start -->
+                <!-- <h4 *ngIf="quotation.is_renewal_pi==1">
+                  <br>
+                  Interest Fee :
+                  ₹ {{getInterestTotal() | number : '1.0-0'}}
+                </h4>
+                <h4 *ngIf="quotation.is_renewal_pi==1">
+                  <br>
+                  All Total :
+                  ₹ {{getQuoteFinalTotalWithInterest() | number : '1.0-0'}}
+                </h4> -->
+                <!--inerest calculation total end  -->
+              </div>
+              <!-- </div>
+  
+                  <div *ngIf="quotation.status=='pending'" class="col-sm-6 col-xl-6"> 
+                      <h3>Payment</h3>
+                  -->
+              <hr>
+              <ng-container *ngIf="quotation.pir_status=='approve' && quotation.noc == 0 && ((quotation.tax==12 && quotation.atir_status=='approve') || quotation.tax!=12 || quotation.status=='paid')">
+                <ng-container *ngIf="quotation?.id">
+                  <div *ngIf="quotation?.id && quotation?.transactions.length>0" style="max-width:600px;margin:0px auto;"
+                    class="centered-content">
+                    <b>Previous Payments :</b><br>
+                    <table style="margin:0px auto;max-width:273px;border:1px solid gray" border=1 cellpadding=3
+                      cellspacing=3>
+                      <tr>
+                        <th>Id</th>
+                        <th>Details</th>
+                        <th></th>
+                      </tr>
+                      <tr *ngFor="let tr of quotation.transactions">
+                        <td>#{{tr.id}}<br>
+                          <span *ngIf="tr.receipt_no">{{tr?.receipt_no}} </span>
+                        </td>
+                        <td style="padding:3px">
+                          <span *ngIf="tr.status!='success'" title="{{tr.status}}">
+                            <i class=" ti-time"></i>
+                            ₹ {{tr.amount}}
+                          </span>
+  
+                          <span *ngIf="tr.status=='success'" style="color:green" title="{{tr.status}}">
+                            <i class=" ti-check"></i>
+                            ₹ {{tr.amount}}
+                          </span> <br> <small>
+                            <b>{{tr.payment_method}}</b> <br>
+                            Ref No : {{tr.ref_no}} <br>
+                            <span *ngIf="tr?.pickuppoint"> <br>
+                              Pickup Point : {{tr.pickuppoint}}
+                            </span>
+  
+                            <span *ngIf="tr.remark"> <br>
+                              Remark : {{tr.remark}}
+                            </span>
+                          </small>
+                        </td>
+  
+  
+                        <td style="text-align:center">
+                          <a style="color: #6B05F9" href="{{commonService.apiUrl}}/pg/receipt.php?id={{tr.id}}&uuid={{tr.uuid}}"
+                            target=_blank>
+                            Receipt</a> <Br>
+  
+                          <a *ngIf="tr.status=='pending'" style="color: blue" (click)="setst(tr)">
+                            Edit</a>
+  
+                          &nbsp; &nbsp; <a *ngIf="tr.status=='pending'" style="color: red"
+                            (click)="deleteTransaction(tr.id)">
+                            Cancel</a>
+  
+                        </td>
+                      </tr>
+                    </table>
+                    <hr>
+                    <h4> Balance : ₹ {{remainingPayment}} </h4>
+                    <hr>
+                  </div>
+                </ng-container>
+                <div *ngIf="quotation.pir_status=='approve' && quotation.is_old_tariff==0 ">
+                  <span style="font-weight:bold;font-size:large"> Payment Method : </span>&nbsp;<Br>
+                  <label *ngIf="!quotation.transaction"><input (click)="resetst()" type=radio name=pmode
+                      value="ONLINE_PG1" [(ngModel)]="selectedTransaction.payment_method"> Online </label> &nbsp;&nbsp;
+                  <label><input (click)="resetst()" type=radio name=pmode value="OFFLINE_NEFTIMPSRTGS"
+                      [(ngModel)]="selectedTransaction.payment_method"> IMPS/NEFT/RTGS </label>&nbsp;&nbsp;
+                  <label><input (click)="resetst()" type=radio name=pmode value="OFFLINE_CHEQUEDD"
+                      [(ngModel)]="selectedTransaction.payment_method"> Cheque/DD </label>
+                </div>
+  
+                <div *ngIf="quotation.pir_status=='approve' && quotation.is_old_tariff==1 ">
+                  <span style="color:red;font-weight:bold" > To update the Tariff, Click on License Categories Page --> Add New Cart with updated Tariff and delete the Old Cart --> Click on Buy Now</span>
+                </div>
+  
+                <div *ngIf="selectedTransaction?.payment_method=='ONLINE_PG1'">
+                  <div class="well well-sm" style="max-width: 273px;
+      margin: 0px auto;">
+                    Payment Link : <a href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&uuid={{quotation.uuid}}"
+                      target=_blank>{{commonService.apiUrl}}/pg/?id={{quotation.id}}&uuid={{quotation.uuid}} </a> <br>
+                  </div>
+                  <a *ngIf="quotation?.id && quotation?.status=='pending'" style="margin-right: 5px;"
+                    (click)="saveQuotation(true);checkIfPaid();"
+                    href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&pay=111111&invoice=2&closeonsuccess=1&uuid={{quotation.uuid}}"
+                    target=_blank class="btn btn-primary btn-xl">Pay Online Now</a>
+  
+                </div>
+  
+                <div
+                *ngIf="selectedTransaction?.payment_method=='OFFLINE_NEFTIMPSRTGS' || selectedTransaction?.payment_method=='OFFLINE_CHEQUEDD'"
+                  style="width: 273px;
+                       margin:0px auto;">
+                  <div class="row">
+                    <div class="col-12">
+                      <input class="form-control" name=ref_no [(ngModel)]=selectedTransaction.ref_no
+                        [placeholder]="selectedTransaction.payment_method=='OFFLINE_CHEQUEDD' ? 'Cheque No/ DD no': 'UTR No.'">
+                      <input type=date class="form-control" name=pdate [(ngModel)]=selectedTransaction.date
+                        placeholder="Cheque/DD Date">
+                      <input class="form-control" *ngIf="selectedTransaction?.payment_method=='OFFLINE_CHEQUEDD'" name=bank [(ngModel)]=selectedTransaction.bank
+                        placeholder="Client's Bank Name">
+                      <input class="form-control" *ngIf="selectedTransaction?.payment_method=='OFFLINE_CHEQUEDD'" name=branch [(ngModel)]=selectedTransaction.branch
+                        placeholder="Client's Bank Branch">
+                      <input type=number class="form-control" name=amount [(ngModel)]=selectedTransaction.amount
+                        placeholder="Amount">
+                      <br> <span style="text-align: left" *ngIf="selectedTransaction?.payment_method=='OFFLINE_CHEQUEDD'">
+                        Cheque Collection/Pickup Location : *
+                        <ng-select name=pickuppoint bindLabel="name" [items]="pickuplocations"
+                          [loading]="pickuplocationLoading" [typeahead]="custTypeaheadPickuplocation"
+                          placeholder="Search Pickup Location" bindValue="name"
+                          [(ngModel)]=selectedTransaction.pickuppoint>
+                        </ng-select>
+  
+                      </span>
+                      <!--   <input class="form-control" name=pickuppoint [(ngModel)]=selectedTransaction.pickuppoint placeholder="Cheque Drop / Pickup Point">
+                          -->
+                      <br>
+                                               <!-- <ng-select [(ngModel)]=selectedTransaction.pplbank placeholder="Select PPL Bank Account" [items]="['CITI','ICICI','SBI']"></ng-select> -->
+  
+  
+                      <input type="text" class="form-control" name="remark" [(ngModel)]=selectedTransaction.remark
+                        placeholder="Remark">
+                      <br>
+                      <button (click)="addEditTransaction()" class="btn btn-primary btn-xl">
+                        Add <span *ngIf="selectedTransaction.id">/Edit</span> Transaction</button>
+  
+  
+  
+  
+                    </div>
+                  </div>
+  
+                </div>
+                <!--<a  class="btn btn-primary btn-xl" target=_blank href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}">Download Quotation</a> 
+                      <a *ngIf="quotation.status=='pending'" (click)="saveQuotation(true)"  href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&pay=111111" target=_blank class="btn btn-primary btn-xl"  >Pay Now</a>
+                    -->
+              </ng-container>
+            </div>
+          </div>
+  
+          <!-- </ng-container> -->
+          <hr>
+          <div class="btn-group mt-10 centered-content text-center">
+  
+            <div class=" centered-content text-center" style="padding-top:10px">
+              <span *ngIf="quotation.atir_status!='pending' && quotation.atir_status!='approve' "><button
+                  style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
+                    class="ti-arrow-left"></i> </button> &nbsp;</span>
+              <a *ngIf="quotation?.id && quotation.pir_status=='approve'" class="btn btn-primary btn-xl" target=_blank
+                href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&invoice=2&uuid={{quotation.uuid}}">Download Proforma Invoice</a>
+            </div>
+  
+            <!--  <span>  <button style="margin-right: 5px;" type="button" [hidden]="allSelectedLc.length<1" class="btn btn-secondary btn-xl" (click)="saveQuotation(true)">Save Changes</button> &nbsp;</span>
+          
+        
+  <span>          <button *ngIf="quotation.status=='draft'" type="button" class="btn btn-primary btn-xl" (click)="saveQuotation(true)">Buy Now</button></span>
+    -->
+          </div>
         </div>
       </mat-step> 
     </mat-stepper>

@@ -48,8 +48,8 @@ export class ApplicationAddComponent implements OnInit, OnDestroy {
   @ViewChild('search')
   public searchElement!: ElementRef;
 
-  @ViewChild('wizard')
-  public wizard!: WizardComponent;
+  @ViewChild('stepper')
+  public stepper!: MatStepperModule;
 
   selectedOption = '3';
   pmode: any;
@@ -146,10 +146,11 @@ catGroupByFn = (item: { version: string; }) => 'Version '+item.version+' :';
   ptax: any;
   selectedLead :any = {};
   mapsAPILoader: any;
+  wizard: any;
 
   constructor(private _formBuilder: FormBuilder,private location: Location, public masterService: MasterService, public authService: AuthService, private ngZone: NgZone, private route: ActivatedRoute,
     private cd: ChangeDetectorRef, public router: Router, public userService: UserService, public commonService: CommonService, public quotationService: QuotationService,
-    public customerService: CustomerService, public licenseCategoryService: LicenseCategoryService, public transactionService: TransactionService, public leadService : LeadService, public documentService:DocumentService,) {
+    public customerService: CustomerService, public licenseCategoryService: LicenseCategoryService, public transactionService: TransactionService, public leadService : LeadService, public documentService:DocumentService) {
     this.quotation.status = '';
     this.quotation.lead_id = 0;
     this.quotation.isPirChanged = 0;
@@ -1080,7 +1081,7 @@ this.masterService.metasearch('', 'PITAG').subscribe(
     this.allSelectedLc.push(ss);
   
     this.premium_en = false;
-    this.commonService.notify("info", "Item Added");
+    // this.commonService.notify("info", "Item Added");
     this.activefilter = 'all';
     this.selectedSlc = {};
   
@@ -1755,6 +1756,7 @@ validate_add_max($e: any, max: string, model: string | number) {
       this.quotationService.addSaveIssuedLc(this.issuedLc)
         .subscribe(
           (data: any) => {
+            console.log("hello sunil r u superb")
             this.commonService.notify('info', 'Licenses Saved Successfully');
             this.quotation = data;
           },
@@ -1850,7 +1852,7 @@ saveQuotation(statuschange = false): 0 | undefined {
     this.quotation.qvalues = this.qvalues;
 
     if (this.saveinprogress) {
-        this.commonService.notify('Error', 'Please Wait');
+        // this.commonService.notify('Error', 'Please Wait');
         return 0;
     }
 
@@ -1951,13 +1953,13 @@ saveQuotation(statuschange = false): 0 | undefined {
         newq.extended_pi = 0;
     }
 
-    this.commonService.notify('info', 'Please Wait');
+    // this.commonService.notify('info', 'Please Wait');
 
     this.quotationService.addSave(newq)
         .subscribe(
             (data: { id: string; uuid: string; }) => {
                 this.saveinprogress = false;
-                this.commonService.notify('info', 'Application Added/Updated Successfully');
+                // this.commonService.notify('info', 'Application Added/Updated Successfully');
                 console.log('evidenceuploadfloag', this.evidenceuploadfloag);
                 if (this.evidenceuploadfloag == 1) {
                     this.saveEvidence();
