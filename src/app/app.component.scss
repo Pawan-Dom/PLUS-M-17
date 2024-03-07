@@ -7,4 +7,7 @@
   mat-sidenav-content {
     flex: 1;
   }
-  
+  .main-body .page-wrapper {
+    padding: 1.8rem;
+    transition: all ease-in 0.3s;
+}

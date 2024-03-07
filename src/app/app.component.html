@@ -8,7 +8,14 @@
       <app-side-menu></app-side-menu>
     </mat-sidenav>
     <mat-sidenav-content class="content-container">
-      <router-outlet></router-outlet>
+      <div class="main-body">
+        <div class="page-wrapper">
+    <!-- <div></div> -->
+    <router-outlet></router-outlet>
+
+        
+        </div>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </ng-container>
