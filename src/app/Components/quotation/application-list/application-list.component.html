@@ -28,64 +28,72 @@
 
           </div>
           <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <span class="f-right" style="width:50%">
+                  <ng-select name="searchquserf" bindValue="id" bindLabel="userdisplayname" [items]="users"
+                    placeholder="Select Users" [(ngModel)]="searchquserf" (change)="search()" (clear)="search()">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span *ngIf="item.active==0" style="color:red">{{ item.userdisplayname  }}</span>
+                      <span *ngIf="item.active==1">{{ item.userdisplayname  }}</span>
+                    </ng-template>
+    
+                  </ng-select>
+                </span>
+                <span class="f-right" style="width:50%">
+                  <ng-select name="searchqregionf" [items]="['All','NORTH','EAST','WEST','SOUTH','NORTHWEST']"
+                    placeholder="Select Region" [(ngModel)]="searchqregionf" (change)="search()" (clear)="search()">
+                  </ng-select>
+                </span>
+                <span class="f-right" style="width:50%;">
+                  <ng-select bindLabel="displayname" bindValue="id" [items]="customers" [loading]="custLoading"
+                    [typeahead]="custTypeahead" placeholder="Select Customer" [(ngModel)]="searchqcustomerf "
+                    (change)="search()" (clear)="searchqcustomerf='All';search()">
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                      <div style="margin: 2px 0;" class="card">
+                        <div class="card-body" style="padding: 5px">
+                          <h5 class="card-title" style="font-size: 14px;
+                              font-weight: 400;">#{{item?.id}} : {{item?.name}} -
+                            {{item.city}}
+                          </h5>
+                          <h6 class="card-subtitle   text-muted" style="margin-top: 0px;">
+                            <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
+                            <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
+                          </h6>
+                        </div>
+                      </div>
+                    </ng-template>
+    
+                  </ng-select>
+                </span>
+              </div>
+              <div class="col-md-6">
+                <span class="f-right" style="width:50%">
+                  <ng-select name="searchqsubregionf" [items]="region_ids"  bindValue="id" bindLabel="displayname"
+                    placeholder="Select Region(New method)" [(ngModel)]="searchqsubregionf" (change)="search()" (clear)="search()">
+                  </ng-select>
+                </span>
+                <span *ngIf="showdr!='noc'&& showdr!='dr' && showdr!='atir' && showdr!='cpn'" class="f-right" style="width:50%">
+                  <ng-select name="searchqf" [items]="['All','Pending','Paid','Draft','Cancelled']"
+                    placeholder="Select Status" [(ngModel)]="searchqf" (change)="search()" (clear)="search()">
+                  </ng-select>
+                </span>
+                <span *ngIf="showdr=='noc' || showdr=='dr' || showdr=='atir' || showdr=='cpn' " class="f-right" style="width:50%">
+                  <ng-select name="searchqf" [items]="['All','Approved','Pending for approval','Rejected']"
+                    placeholder="Select Status" [(ngModel)]="searchqf" (change)="search()" (clear)="search()">
+                  </ng-select>
+                </span>
+    
+                <span class="f-right" style="width:50%">
+                  <ng-select name="searchqevidence" [items]="['All','Yes','No']"
+                    placeholder="Select evidence PI's" [(ngModel)]="searchqevidence" (change)="search()" (clear)="search()">
+                  </ng-select>
+                </span>
+              </div>
+            </div>
             <!-- bindLabel="name" bindValue="id"-->
-            <span class="f-right" style="width:50%">
-              <ng-select name="searchquserf" bindValue="id" bindLabel="userdisplayname" [items]="users"
-                placeholder="Select Users" [(ngModel)]="searchquserf" (change)="search()" (clear)="search()">
-                <ng-template ng-option-tmp let-item="item">
-                  <span *ngIf="item.active==0" style="color:red">{{ item.userdisplayname  }}</span>
-                  <span *ngIf="item.active==1">{{ item.userdisplayname  }}</span>
-                </ng-template>
-
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:50%">
-              <ng-select name="searchqregionf" [items]="['All','NORTH','EAST','WEST','SOUTH','NORTHWEST']"
-                placeholder="Select Region" [(ngModel)]="searchqregionf" (change)="search()" (clear)="search()">
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:50%;">
-              <ng-select bindLabel="displayname" bindValue="id" [items]="customers" [loading]="custLoading"
-                [typeahead]="custTypeahead" placeholder="Select Customer" [(ngModel)]="searchqcustomerf "
-                (change)="search()" (clear)="searchqcustomerf='All';search()">
-                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                  <div style="margin: 2px 0;" class="card">
-                    <div class="card-body" style="padding: 5px">
-                      <h5 class="card-title" style="font-size: 14px;
-                          font-weight: 400;">#{{item?.id}} : {{item?.name}} -
-                        {{item.city}}
-                      </h5>
-                      <h6 class="card-subtitle   text-muted" style="margin-top: 0px;">
-                        <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
-                        <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
-                      </h6>
-                    </div>
-                  </div>
-                </ng-template>
-
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:50%">
-              <ng-select name="searchqsubregionf" [items]="region_ids"  bindValue="id" bindLabel="displayname"
-                placeholder="Select Region(New method)" [(ngModel)]="searchqsubregionf" (change)="search()" (clear)="search()">
-              </ng-select>
-            </span>
-            <span *ngIf="showdr!='noc'&& showdr!='dr' && showdr!='atir' && showdr!='cpn'" class="f-right" style="width:50%">
-              <ng-select name="searchqf" [items]="['All','Pending','Paid','Draft','Cancelled']"
-                placeholder="Select Status" [(ngModel)]="searchqf" (change)="search()" (clear)="search()">
-              </ng-select>
-            </span>
-            <span *ngIf="showdr=='noc' || showdr=='dr' || showdr=='atir' || showdr=='cpn' " class="f-right" style="width:50%">
-              <ng-select name="searchqf" [items]="['All','Approved','Pending for approval','Rejected']"
-                placeholder="Select Status" [(ngModel)]="searchqf" (change)="search()" (clear)="search()">
-              </ng-select>
-            </span>
-
-            <span class="f-right" style="width:50%">
-              <ng-select name="searchqevidence" [items]="['All','Yes','No']"
-                placeholder="Select evidence PI's" [(ngModel)]="searchqevidence" (change)="search()" (clear)="search()">
-              </ng-select>
-            </span>
+          
+          
             <!-- <span *ngIf="showdr=='noc'" class="f-left" style="width:50%">
               <ng-select name="searchqextnd" [items]="['Yes','No']"
                 placeholder="Select Extended PI's" [(ngModel)]="searchqextnd" (change)="search()" (clear)="search()">

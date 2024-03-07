@@ -13,9 +13,9 @@
   <h4 *ngIf="quotation.id"> <a href="javascript:void(0)" (click)="goBack()">
       <i class="cr-icon fa fa-arrow-left"></i>
     </a> Application #{{quotation.id}} : <span *ngIf="quotation.noc == 1">NOC </span> {{ quotation.status | uppercase}}
-    <a *ngIf="quotation.status=='pending'" (click)="stopInterval(); getQuotation(quotation.id, quotation.uuid)" class="btn btn-primary btn-xl" style="color:white">
+    <!-- <a *ngIf="quotation.status=='pending'" (click)="stopInterval(); getQuotation(quotation.id, quotation.uuid)" class="btn btn-primary btn-xl" style="color:white">
       <i class="cr-icon fa fa-refresh"></i>
-  </a>
+  </a> -->
   
 
     <button *ngIf="quotation.invoice_no && quotation.noc == 0 && quotation.irn_no && quotation.irn_status != 'cancel' && authService.checkPermission(85)" style="margin-left:5px; float: right;" target=_blank class="btn btn-danger" (click)="prepareCancelnvoice()"> Cancel Invoice </button>
