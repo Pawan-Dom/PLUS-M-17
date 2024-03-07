@@ -99,8 +99,10 @@
             <h4>Customer Info</h4>
           </div> -->
           <!-- ==================================================================== customer info first step ========================================== -->
-          <div>
-            <div class="centered-content">
+          <div style="border-radius: 5px;
+          border: 1px solid #d6d6d6;
+          padding: 20px;">
+            <div class="centered-content" style="text-align:center;">
               <h4>Customer Info</h4>
             </div>
     
@@ -109,7 +111,7 @@
               <div class="row">
                 <div class="col-sm-12">
                   <hr>
-                  <h4 class="sub-title" style="padding-bottom: 2px">Enter Lead ID :  
+                  <h4 class="sub-title" style="padding-bottom: 2px;font-size: 12px;">Enter Lead ID :  
                     <!-- (For PALM Sync) -->
                     <!-- <input
                       class="form-control" type=number min=0 step=1 name=lead_id [(ngModel)]="quotation.lead_id"
@@ -136,7 +138,7 @@
                     </ng-select>
                     <!-- <small> <b>Note : You should enter Lead Id for Renewals , Otherwise New Lead ID will be created for
                         same.</b></small> -->
-                        <small> <b>Note : You should enter Lead Id Mandatory</b></small>
+                        <small> <b style="font-size: x-small;">Note : You should enter Lead Id Mandatory</b></small>
                   </h4>
                
     
@@ -144,7 +146,7 @@
     
                 <div class="col-sm-12">
                   <hr>
-                  <h4 class="sub-title" style="padding-bottom: 18px">Select Lead Owner :</h4>
+                  <h4 class="sub-title" style="padding-bottom: 18px;font-size: 12px;">Select Lead Owner :</h4>
                   <ng-select bindLabel="userdisplayname" [items]="users" [(ngModel)]="selectedUser" placeholder="Select Lead Owner" (change)="this.quotation.subregion =null; regionvalidation(); ">
                     <ng-template ng-option-tmp let-item="item">
                       <span *ngIf="item.active==0" style="color:red">{{ item.userdisplayname  }}</span>
@@ -154,7 +156,7 @@
                 </div>
                 <div *ngIf="selectedUser?.region_ids" class="col-sm-12">
                   <hr>
-                  <h4 class="sub-title" style="padding-bottom: 18px">Select Region(New method) :</h4>
+                  <h4 class="sub-title" style="padding-bottom: 18px;font-size: 12px;">Select Region(New method) :</h4>
                   <ng-select bindLabel="displayname" [items]="selectedUser?.region_ids_info" [(ngModel)]="quotation.subregion" placeholder="Select Region" (change)="regionvalidation()">
                     <ng-template ng-option-tmp let-item="item">
                       <span>{{ item.displayname  }}</span>
@@ -164,7 +166,7 @@
     
                 <div  class="col-sm-12">
                   <hr>
-                  <h4 class="sub-title">
+                  <h4 class="sub-title" style="font-size: 12px;">
                     Select Customer :
                      <!-- <label> <input type=radio name="lcustfilter" checked (change)="selectedCustomer.lcustfilter=0;selectedCustomer.action='update'"> Existing</label> &nbsp;&nbsp; <label  > 
                       <input  (change)="selectedCustomer.lcustfilter=1;selectedCustomer.action='addnew';selectedCustomer.id=-1;showC=1" type=radio name="lcustfilter"> New</label>  -->
@@ -711,7 +713,7 @@
     
             </div>
     
-            <div class="centered-content">
+            <div class="centered-content" style="text-align:center;">
               <div class="btn-group mt-10">
                 <span *ngIf="!selectedCustomer?.name">
                   <button type="button" class="btn btn-primary btn-xl"
@@ -736,8 +738,8 @@
                 <br>
                 <hr>
                 <span style="color:red">*</span> Fields are Mandatory <br>
-                <!-- <b>Tax invoice will be printed in the name and address of the customer
-                  provided here</b> -->
+                <b>Tax invoice will be printed in the name and address of the customer
+                  provided here</b>
                 <!-- <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; <br>&nbsp; -->
               </span>
     
