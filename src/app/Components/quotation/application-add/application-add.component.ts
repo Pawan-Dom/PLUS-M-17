@@ -520,12 +520,12 @@ this.masterService.metasearch('', 'PITAG').subscribe(
         //    this.showC=1;
         //  this.wizard.model.navigationMode.goToStep(0);
         //}
-        if (res.status === 'pending' || (res.status === 'paid' && this.currentUser.role.level < 4)) {
-          this.showC = 1;
-          this.wizard.model.navigationMode.goToStep(2);
-        } else {
-          this.wizard.model.navigationMode.goToStep(1);
-        }
+        // if (res.status === 'pending' || (res.status === 'paid' && this.currentUser.role.level < 4)) {
+        //   this.showC = 1;
+        //   this.wizard.model.navigationMode.goToStep(2);
+        // } else {
+        //   this.wizard.model.navigationMode.goToStep(1);
+        // }
         if (res.status === 'paid' || res.atir_status === 'approve') {
           // this.wizard.model.navigationMode.goToStep(2);
           if (res.issuedlcjson.toString().length > 4) {
@@ -572,6 +572,9 @@ this.masterService.metasearch('', 'PITAG').subscribe(
         }
 
         this.selectedUser = dj.selectedUser;
+
+
+        console.log(this.selectedUser);
         // console.log(dj.subregion, "");
 
 
@@ -1055,7 +1058,8 @@ this.masterService.metasearch('', 'PITAG').subscribe(
       if (this.selectedSlc.start_date && this.selectedSlc.end_date && this.selectedSlc.l_name && this.selectedSlc.l_address_line_1 && this.selectedSlc.l_pincode && this.selectedSlc.l_state && this.selectedSlc.l_city) {
   
       } else {
-        this.commonService.notify('error', 'Please Provide all Information About Background License');
+        // this.commonService.notify('error', 'Please Provide all Information About Background License');
+        alert('Please Provide all Information About Background License');
         return 0;
       }
       if ((this.selectedSlc.id == '134' || this.selectedSlc.id == '153') && !this.selectedSlc.cat_description) {
@@ -2006,7 +2010,8 @@ saveQuotation(statuschange = false): 0 | undefined {
           .subscribe(
             (data: { id: any; uuid: any; }) => {
               this.savedrinprogress = false;
-              this.commonService.notify('info', 'Discount Request Sent For Approval');
+              alert('Discount Request Sent For Approval')
+              // this.commonService.notify('info', 'Discount Request Sent For Approval');
               this.commonService.hideModal('modaldrrequest');
               this.getQuotation(data.id,data.uuid);
             },

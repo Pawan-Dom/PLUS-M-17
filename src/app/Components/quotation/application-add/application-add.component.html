@@ -87,6 +87,8 @@
     <!-- ################################################################## new stepper code start #################################################################### -->
     <mat-stepper #stepper>
       <mat-step  errorMessage="Name is required.">
+        <ng-template matStepLabel>CUSTOMER INFORMATION</ng-template>
+
         
           <!-- <ng-template matStepLabel>CUSTOMER INFO</ng-template> -->
           <!-- <mat-form-field>
@@ -724,8 +726,8 @@
                   <span
                   *ngIf="selectedUser?.id && selectedCustomer?.name && selectedCustomer?.pincode && selectedCustomer?.state  && selectedCustomer?.address_line_1 && selectedCustomer?.contact_no && selectedCustomer?.contact_person && selectedCustomer?.contact_email  && selectedCustomer.contact_designation && regionflag ==1 && quotation.lead_id > 0 ">
                   <!-- && checkQvalues() &&  queFlag == 1-->
-                  <button [disabled]="!selectedCustomer" type="button" class="btn btn-primary btn-xl" nextStep>Continue <i
-                      class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                  <!-- <button [disabled]="!selectedCustomer" type="button" class="btn btn-primary btn-xl" nextStep>Continue <i
+                      class="fa fa-arrow-right" aria-hidden="true"></i></button> -->
                 </span>
     
               </div>
@@ -752,6 +754,8 @@
       </mat-step>
       <!-- ========================================= LICENSE CATEGORIES second setp start ============================================================= -->
       <mat-step [stepControl]="secondFormGroup" errorMessage="Address is required.">
+        <ng-template matStepLabel>LICENSE CATEGORIES</ng-template>
+
         <div class="centered-contentt">
           <div>
             <div class="centered-content">

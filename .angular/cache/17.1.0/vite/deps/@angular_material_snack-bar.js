@@ -1,10 +1,4 @@
 import {
-  ScrollDispatcher,
-  ScrollingModule,
-  ViewportRuler
-} from "./chunk-2Z3EJNTR.js";
-import "./chunk-XYGXDGTL.js";
-import {
   BasePortalOutlet,
   CdkPortalOutlet,
   ComponentPortal,
@@ -12,6 +6,12 @@ import {
   PortalModule,
   TemplatePortal
 } from "./chunk-B2ZTO346.js";
+import {
+  ScrollDispatcher,
+  ScrollingModule,
+  ViewportRuler
+} from "./chunk-2Z3EJNTR.js";
+import "./chunk-XYGXDGTL.js";
 import {
   animate,
   state,
