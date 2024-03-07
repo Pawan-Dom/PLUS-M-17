@@ -1665,6 +1665,7 @@
                     <button class="btn btn-primary btn-sm" (click)=" commonService.openModal('modalpanrequest'); cpnmodel();">Request For PAN No Change</button>
                   </div>
                 </ng-container>
+                <br>
   
                 <!-- Interest UI start -->
                 <!-- <ng-container  *ngIf="quotation.is_renewal_pi==1">
@@ -1939,7 +1940,8 @@
               <h4>Billing Summary</h4>
               <div class="btn-group mt-12 " *ngIf="quotation.pir_status=='approve' && quotation.is_old_tariff==0">
                 <button *ngIf="quotation.pir_status=='approve' && quotation.noc == 0 " style="margin-right: 5px;"
-                  type="button" class="btn btn-primary btn-sm" (click)="sendAlert('send-pi')"><i
+                  type="button" class="btn btn-primary btn-sm" (click)="sendAlert('send-pi')"  style="    background-color: #D0399D;
+                  border-color: #D0399D;"><i
                     class="cr-icon fa fa-envelope"></i> Send PI </button>
                 <span *ngIf="quotation.pir_status=='approve'  && quotation.noc == 0"> <button style="margin-right: 5px;"
                     type="button" [hidden]="!quotation?.invoice_no" class="btn btn-primary btn-sm"
@@ -1968,7 +1970,8 @@
                 <a style="color:red;font-weight:bold" class="" *ngIf="quotation.pir_status=='reject'">PI Request is
                   Rejected </a>
                 <br>
-                <button class="btn btn-primary btn-sm" (click)="commonService.openModal('modalpirequest')">Send PI For
+                <button class="btn btn-primary btn-sm"   (click)="commonService.openModal('modalpirequest')" style="    background-color: #D0399D;
+                border-color: #D0399D;">Send PI For
                   Approval</button><br>
 
               </div>
