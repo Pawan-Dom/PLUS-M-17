@@ -8,78 +8,104 @@
           <div class="col-md-9">
             <!-- bindLabel="name" bindValue="id"-->
             <span class="f-right" style="width:33%">
-              <ng-select [searchable]=false  name="searchqs"
-                [items]="['All','Active','Expired','Expiring Within 10 Days','Expiring Within 30 Days','Expiring Within 60 Days','Expiring Within 90 Days']"
-                placeholder="Filter By Status" [(ngModel)]="searchqs" (change)="search()" (clear)="searchqs='All';">
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:33%">
-              <ng-select [searchable]=false  name="searchqf" [items]="['All','BG','EVENT']"
-                placeholder="Filter By Type" [(ngModel)]="searchqf" (change)="search()" (clear)="searchqf='All';">
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:33%">
-              <ng-select name="searchquserf" bindValue="id" bindLabel="name" [items]="users"
-                placeholder="Filter By Users" [(ngModel)]="searchquserf" (change)="search()"
-                (clear)="searchquserf='All';search()">
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:33%">
-              <ng-select name="searchqsubregionf" [items]="region_ids"  bindValue="id" bindLabel="displayname"
-              placeholder="Select Region (New method)" [(ngModel)]="searchqsubregionf" (change)="search()" (clear)="search()">
-            </ng-select>
-            </span>
-            <span class="f-right" style="width:33%">
-              <ng-select name="searchqregionf" [items]="['All','NORTH','EAST','WEST','SOUTH', 'NORTHWEST']"
-                placeholder="Filter By Region" [(ngModel)]="searchqregionf" (change)="searchquserf='All';search()"
-                (clear)="search()">
-              </ng-select>
-            </span>
-            <!-- try -->
-            <span class="f-right" style="width:33%">
-              <ng-select name="searchqeventtypef" bindValue="name" bindLabel="name" [items]="eventtypes" [loading]="eventtypeLoading"
-              [typeahead]="custTypeaheadEventtypes"  placeholder="Filter By Event Type" [(ngModel)]="searchqeventtypef"
-                (change)="search()" (clear)="searchqeventtypef='All';search()">
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:50%">
-              <ng-select name="searchqeventvenuef" bindValue="name" bindLabel="name" [items]="venues" [loading]="venueLoading"
-              [typeahead]="custTypeaheadVenue" placeholder="Filter By Event Venue" [(ngModel)]="searchqeventvenuef"
-                (change)="search()" (clear)="searchqeventvenuef='All';search()">
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:49%;">
-              <ng-select bindLabel="displayname" bindValue="id" [items]="customers" [loading]="custLoading" [typeahead]="custTypeahead"
-                placeholder="Select Existing Customer"
-                [(ngModel)]="searchqcustomerf "
-                (change)="search()"
-                (clear)="searchqcustomerf='All';search()">
-                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                  <div style="margin: 2px 0;" class="card">
-                    <div class="card-body" style="padding: 5px">
-                      <h5 class="card-title" style="font-size: 14px;
-                        font-weight: 400;" >#{{item?.id}} : {{item?.name}} - {{item.city}}
-                      </h5>
-                      <h6 class="card-subtitle   text-muted" style="margin-top: 0px;">
-                        <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
-                        <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
-                      </h6>
-                    </div>
-                  </div>
-                </ng-template>
 
-              </ng-select>
+              <div class="row mb-1">
+                <div class="col-md-4">
+                  <span class="f-right" style="width:100%">
+                    <ng-select [searchable]=false name="searchqs"
+                      [items]="['All','Active','Expired','Expiring Within 10 Days','Expiring Within 30 Days','Expiring Within 60 Days','Expiring Within 90 Days']"
+                      placeholder="Filter By Status" [(ngModel)]="searchqs" (change)="search()" (clear)="searchqs='All';">
+                    </ng-select>
+                  </span>
+                </div>
+                <div class="col-md-4">
+                  <span class="f-right" style="width:100%">
+                    <ng-select [searchable]=false name="searchqf" [items]="['All','BG','EVENT']"
+                      placeholder="Filter By Type" [(ngModel)]="searchqf" (change)="search()" (clear)="searchqf='All';">
+                    </ng-select>
+                  </span>
+                </div>
+                <div class="col-md-4">
+                  <span class="f-right" style="width:100%">
+                    <ng-select name="searchquserf" bindValue="id" bindLabel="name" [items]="users"
+                      placeholder="Filter By Users" [(ngModel)]="searchquserf" (change)="search()"
+                      (clear)="searchquserf='All';search()">
+                    </ng-select>
+                  </span>
+                </div>
+              </div>
+              
             </span>
-            <span class="f-right" style="width:50%;">
-              <input placeholder="End Date"
-                class="form-control" type=date [(ngModel)]="searchqend_date" (change)="search()" (clear)="search()" >
-            </span>
-            <span class="f-right" style="width:49%; ">
-              <input  type=date placeholder="Start Date"
-              [(ngModel)]="searchqstart_date" class="form-control" (change)="search()" (clear)="search()">
-            </span>
-
-
+            <div class="row mb-1">
+              <div class="col-md-4">
+                <span class="f-right" style="width:100%">
+                  <ng-select name="searchqsubregionf" [items]="region_ids"  bindValue="id" bindLabel="displayname"
+                    placeholder="Select Region (New method)" [(ngModel)]="searchqsubregionf" (change)="search()" (clear)="search()">
+                  </ng-select>
+                </span>
+              </div>
+              <div class="col-md-4">
+                <span class="f-right" style="width:100%">
+                  <ng-select name="searchqregionf" [items]="['All','NORTH','EAST','WEST','SOUTH', 'NORTHWEST']"
+                    placeholder="Filter By Region" [(ngModel)]="searchqregionf" (change)="searchquserf='All';search()"
+                    (clear)="search()">
+                  </ng-select>
+                </span>
+              </div>
+              <div class="col-md-4">
+                <span class="f-right" style="width:100%">
+                  <ng-select name="searchqeventtypef" bindValue="name" bindLabel="name" [items]="eventtypes" [loading]="eventtypeLoading"
+                    [typeahead]="custTypeaheadEventtypes" placeholder="Filter By Event Type" [(ngModel)]="searchqeventtypef"
+                    (change)="search()" (clear)="searchqeventtypef='All';search()">
+                  </ng-select>
+                </span>
+              </div>
+            </div>
+            
+            <div class="row mb-1">
+              <div class="col-md-6">
+                <span class="f-right" style="width:100%">
+                  <ng-select name="searchqeventvenuef" bindValue="name" bindLabel="name" [items]="venues" [loading]="venueLoading"
+                    [typeahead]="custTypeaheadVenue" placeholder="Filter By Event Venue" [(ngModel)]="searchqeventvenuef"
+                    (change)="search()" (clear)="searchqeventvenuef='All';search()">
+                  </ng-select>
+                </span>
+              </div>
+              <div class="col-md-6">
+                <span class="f-right" style="width:100%">
+                  <ng-select bindLabel="displayname" bindValue="id" [items]="customers" [loading]="custLoading" [typeahead]="custTypeahead"
+                    placeholder="Select Existing Customer" [(ngModel)]="searchqcustomerf" (change)="search()"
+                    (clear)="searchqcustomerf='All';search()">
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                      <div style="margin: 2px 0;" class="card">
+                        <div class="card-body" style="padding: 5px">
+                          <h5 class="card-title" style="font-size: 14px; font-weight: 400;">#{{item?.id}} : {{item?.name}} - {{item.city}}
+                          </h5>
+                          <h6 class="card-subtitle text-muted" style="margin-top: 0px;">
+                            <span *ngIf="item?.pan">PAN : {{item?.pan}}</span>
+                            <span *ngIf="item?.gst">&nbsp;|&nbsp; GST : {{item?.gst}}</span>
+                          </h6>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </span>
+              </div>
+            </div>
+            
+            <div class="row mb-1">
+              <div class="col-md-6">
+                <span class="f-right" style="width:100%;">
+                  <input placeholder="End Date" class="form-control" type="date" [(ngModel)]="searchqend_date" (change)="search()" (clear)="search()">
+                </span>
+              </div>
+              <div class="col-md-6">
+                <span class="f-right" style="width:100%;">
+                  <input placeholder="Start Date" type="date" [(ngModel)]="searchqstart_date" class="form-control" (change)="search()" (clear)="search()">
+                </span>
+              </div>
+            </div>
+            
 
             <!-- close -->
           </div>

@@ -8,17 +8,25 @@
            <h5>Einvoice CT Log List</h5>
           </div>
           <div class="col-md-6">
-            <span class="f-right" style="width:50%">
-              <ng-select name="searchqtyp" [items]="['All','REQUEST', 'RESPONSE']"
-                placeholder="Select Type" [(ngModel)]="searchqtyp" (change)="search()" (clear)="search()">
-              </ng-select>
-            </span>
-            <span class="f-right" style="width:50%">
-              <ng-select name="searchqstatus" [items]="['All','Success','Failed']"
-                placeholder="Select Status" [(ngModel)]="searchqstatus" (change)="search()" (clear)="search()">
-              </ng-select>
-            </span>
+
+          <div class="row">
+            <div class="col-md-6">
+              <span class="f-right">
+                <ng-select name="searchqtyp" [items]="['All','REQUEST', 'RESPONSE']"
+                  placeholder="Select Type" [(ngModel)]="searchqtyp" (change)="search()" (clear)="search()">
+                </ng-select>
+              </span>
+            </div>
+            <div class="col-md-6">
+              <span class="f-right">
+                <ng-select name="searchqstatus" [items]="['All','Success','Failed']"
+                  placeholder="Select Status" [(ngModel)]="searchqstatus" (change)="search()" (clear)="search()">
+                </ng-select>
+              </span>
+            </div>
           </div>
+          </div>
+          
           <div class="col-md-3">
             <div class="input-group f-right">
               <input type="search" autocomplete="off" [readonly]=!roflag (focus)="roflag=true;" (change)="search()"
