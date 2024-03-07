@@ -726,8 +726,8 @@
                   <span
                   *ngIf="selectedUser?.id && selectedCustomer?.name && selectedCustomer?.pincode && selectedCustomer?.state  && selectedCustomer?.address_line_1 && selectedCustomer?.contact_no && selectedCustomer?.contact_person && selectedCustomer?.contact_email  && selectedCustomer.contact_designation && regionflag ==1 && quotation.lead_id > 0 ">
                   <!-- && checkQvalues() &&  queFlag == 1-->
-                  <!-- <button [disabled]="!selectedCustomer" type="button" class="btn btn-primary btn-xl" nextStep>Continue <i
-                      class="fa fa-arrow-right" aria-hidden="true"></i></button> -->
+                  <button [disabled]="!selectedCustomer" type="button" class="btn btn-primary btn-xl" matStepperNext>Continue <i
+                      class="fa fa-arrow-right" aria-hidden="true"></i></button>
                 </span>
     
               </div>
@@ -749,7 +749,7 @@
   
           <div>
             <!-- <p>Go to a different step to see the error state</p> -->
-            <button mat-button matStepperNext>Next</button>
+            <!-- <button mat-button matStepperNext>Next</button> -->
           </div>
       </mat-step>
       <!-- ========================================= LICENSE CATEGORIES second setp start ============================================================= -->
@@ -1429,7 +1429,7 @@
           <hr>
           <div class=centered-content>
             <div class="btn-group mt-10 ">
-              <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
+              <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" matStepperPrevious><i
                   class="ti-arrow-left"></i></button>
               <span> <button style="margin-right: 5px;" type="button" [hidden]="allSelectedLc.length<1"
                   class="btn btn-primary btn-xl" (click)="saveQuotation()">Save Changes</button> &nbsp;</span>
@@ -1911,9 +1911,13 @@
           <div class="btn-group mt-10 centered-content text-center">
   
             <div class=" centered-content text-center" style="padding-top:10px">
-              <span *ngIf="quotation.atir_status!='pending' && quotation.atir_status!='approve' "><button
-                  style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" previousStep><i
-                    class="ti-arrow-left"></i> </button> &nbsp;</span>
+              <span *ngIf="quotation.atir_status!='pending' && quotation.atir_status!='approve' ">
+                <button style="margin-right: 5px;" type="button" class="btn btn-primary btn-xl" matStepperPrevious>
+                  <i class="ti-arrow-left" matStepperPrevious></i> 
+                  </button> 
+          <!-- <button mat-button matStepperPrevious> <i class="ti-arrow-left" matStepperPrevious></i> </button> -->
+                  
+                  &nbsp;</span>
               <a *ngIf="quotation?.id && quotation.pir_status=='approve'" class="btn btn-primary btn-xl" target=_blank
                 href="{{commonService.apiUrl}}/pg/?id={{quotation.id}}&invoice=2&uuid={{quotation.uuid}}">Download Proforma Invoice</a>
             </div>

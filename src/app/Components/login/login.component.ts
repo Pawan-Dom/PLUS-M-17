@@ -44,7 +44,7 @@ export class LoginComponent {
         // Show snackbar
         this.snackBar.open('Login successful', 'Close', { duration: 3000 });
            // Navigate to the dashboard
-      this.router.navigate(['/user']);
+      this.router.navigate(['/quotation']);
   
         // You can navigate to another page if needed
         // this.router.navigate(['/dashboard']);
