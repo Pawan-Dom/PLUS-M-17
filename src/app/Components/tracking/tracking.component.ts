@@ -38,7 +38,7 @@ export class TrackingComponent {
 
     mapOptions: google.maps.MapOptions = {
       center: { lat: 21.125681, lng: 82.79499799999996 },
-      zoom: 13,
+      zoom: 5,
     };
     markers: MarkerProperties[] = [
       

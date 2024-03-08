@@ -92,11 +92,11 @@
  
     </form>
  <hr>
- <ng-container *ngIf="usergpsdata && !loading">
+ <!-- <ng-container *ngIf="usergpsdata && !loading">
     <agm-map #gm [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="6" [latitude]="1*usergpsdata[0].gpsdata.lat" [longitude]="1*usergpsdata[0].gpsdata.lon" style="height:500px">
       <ng-container *ngFor="let ugd of usergpsdata">
 
-        <!-- leadmarkers-->
+       
       <ng-container *ngIf="ugd.userleads">
           <agm-marker  *ngFor="let sgd of ugd.userleads" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/lead.png'">
             <agm-info-window><h4 style="font-size:large"><small>Lead #{{sgd.id}}</small><br>{{sgd.cname}}</h4><hr>
@@ -110,7 +110,7 @@
 
 
 
-        <!-- PImarkers-->
+       
       <ng-container *ngIf="ugd.userpis">
         <agm-marker  *ngFor="let sgd of ugd.userpis" [latitude]="sgd.lat" [longitude]="sgd.lon" [iconUrl]="'/assets/map/lead.png'">
           <agm-info-window><h4 style="font-size:large"> <a target=_blank  href="{{commonService.apiUrl}}/pg/?id={{sgd.qid}}&invoice=2"><small>Proforma Invoice ID #{{sgd.qid}}</small></a><br>{{sgd?.customer_name}}</h4><hr>
@@ -163,7 +163,7 @@
       </agm-marker>
     </agm-map>
     
-  </ng-container>
+  </ng-container> -->
 
   </app-card>
   <div class="map">
