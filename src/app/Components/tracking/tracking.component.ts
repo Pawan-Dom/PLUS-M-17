@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+// import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms'; // 1. Import NgForm
 import { HttpClient, HttpParams } from '@angular/common/http';
 import swal from 'sweetalert2';
@@ -9,144 +9,180 @@ import { LicenseCategoryService } from '../../Services/licensecategory.service';
 import { BranchService } from '../../Services/branches.service';
 import { QuotationService } from '../../Services/quotation.service';
 import { UserService } from '../../Services/user.service';
+import { Component, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
-import { MapInfoWindow } from '@angular/google-maps'; 
 
+import { MapInfoWindow } from '@angular/google-maps'; 
+interface MarkerProperties {
+  position: {
+    lat: number;
+    lng: number;
+  };
+}
 @Component({
   selector: 'app-tracking',
   templateUrl: './tracking.component.html',
 })
 export class TrackingComponent {
-  @ViewChild('gm') googleMap!: GoogleMap; // 7. Correct reference to google-map
-  model: any = {};
-  reports: any;
-  usergpsdata: any[] = []; 
-  loading: boolean = false;
-  users: any;
-  branches: any;
-  lcats: any;
-  tempusers: any;
+  model:any={};
+    loading=false;
+    reports:any;
+    users:any;
+    branches:any;
+    lcats:any;
+    tempusers:any;
+    usergpsdata:any;
  
-  lat: number = 51.678418;
-  lng: number = 7.809007;
+    lat: number = 21.125681;
+    lng: number = 82.79499799999996;
 
-  constructor(
-    public trackingService: TrackingService,
-    public commonService: CommonService,
-    public licenseCategoryService: LicenseCategoryService,
-    public branchService: BranchService,
-    public quotationService: QuotationService,
-    private userService: UserService,
-  ) {
-    this.model.report_type = "allquotations";
-    this.model.region = 'All';
-    this.getUsers();
-    this.getList(null); // Pass null initially
-  }
-
-  getList(form: NgForm | null) { // 3. Modify getList() to accept NgForm parameter
-    this.loading = true;
-    let params = '';
-    if (this.model.user_id) {
-      params = params + '&user_id=' + encodeURIComponent(this.model.user_id);
-    }
-
-    if (this.model.start_date && this.model.end_date) {
-      params = params + '&start_date=' + encodeURIComponent(this.model.start_date);
-      params = params + '&end_date=' + encodeURIComponent(this.model.end_date);
-    }
-
-    this.trackingService.list(this.model).subscribe(
-      (res: any) => {
-        this.usergpsdata = res;
-        this.loading = false;
-      }
-    );
-
-    if (form) {
-      form.resetForm(); // Reset the form if NgForm is provided
-    }
-  }
-
-  getUsers() {
-    let storedUsers = sessionStorage.getItem('users');
+    mapOptions: google.maps.MapOptions = {
+      center: { lat: 21.125681, lng: 82.79499799999996 },
+      zoom: 13,
+    };
+    markers: MarkerProperties[] = [
       
-    if (storedUsers) {
-      this.users = JSON.parse(storedUsers);
-      this.tempusers = this.users;
-    } else {
-      this.userService.list().subscribe(
-        (res: any) => {
-          this.users = res; 
-          this.tempusers = this.users; 
+    ];
+    constructor(public trackingService:TrackingService,public commonService:CommonService,public licenseCategoryService:LicenseCategoryService,public branchService:BranchService,public quotationService:QuotationService,private userService:UserService) {
+        this.model.report_type="allquotations";
+        this.model.region='All';
+       // this.model.start_date=new Date().toJSON().slice(0, 10)+'T00:00';
+    //this.model.end_date=this.getTomorrow()+'T00:00';
+   //  this.getReportList();
+         this.getUsers();
+     /*   this.getBranchList();
+        this.getLcats();
+*/
+  this.getList();
+    }
+
+      getTomorrow() {
+        let  today = new Date();
+        let tomorrow = new Date();
+        tomorrow.setDate(today.getDate()+1);
+        return tomorrow.toJSON().slice(0, 10);
+    }
+
+    getToday() {
+        const tomorrow = new Date();
+        //tomorrow.setDate(tomorrow.getDate() + 1); // even 32 is acceptable
+        return `${tomorrow.getFullYear()}-${tomorrow.getMonth() + 1}-${tomorrow.getDate()}`;
+    }
+
+    getList() {
+      this.loading = true;
+      let params = '';
+      if (this.model.user_id) {
+        params = params + '&user_id=' + encodeURIComponent(this.model.user_id);
+      }
+    
+      if (this.model.start_date && this.model.end_date) {
+        params = params + '&start_date=' + encodeURIComponent(this.model.start_date);
+        params = params + '&end_date=' + encodeURIComponent(this.model.end_date);
+      }
+    
+      this.trackingService.list(this.model).subscribe(
+        (res: any[]) => {
+          this.usergpsdata = res;
+          // Clear existing markers
+          this.markers = [];
+          // Populate markers array with latitude and longitude from response
+          this.usergpsdata.forEach((userData: any) => {
+            if (userData.gpsdata && userData.gpsdata.lat && userData.gpsdata.lon) {
+              const marker: MarkerProperties = {
+                position: {
+                  lat: parseFloat(userData.gpsdata.lat),
+                  lng: parseFloat(userData.gpsdata.lon)
+                }
+              };
+              this.markers.push(marker);
+            }
+          });
+          console.log(this.usergpsdata);
+          this.loading = false;
         }
       );
     }
-  }
+    
 
-  getBranchList() {
-    this.branchService.list().subscribe(
-      (res: any) => {
-        this.branches = res;   
+    getUsers() {
+      const storedUsers = sessionStorage.getItem('users');
+    
+      if (storedUsers) {
+        this.users = JSON.parse(storedUsers);
+        this.tempusers = this.users;
+        console.log("hi sunil");
+        console.log(this.users)
+      } else {
+        this.userService.list().subscribe(
+          res => {
+            this.users = res; 
+            this.tempusers = this.users;
+            console.log("hhhhhhhhhhhhhhhh") 
+            console.log(this.tempusers)
+          }
+        );
       }
-    );
-  }
-
-  openInfoWindow(infoWindow: any) {
-    infoWindow.open();
-  }
-
-  getLcats() {
-    this.licenseCategoryService.list().subscribe(
-      (res: any) => {
-        this.lcats = res; 
-      }
-    );
-  }
-
-  filterusers() {
-    console.log(this.model.region);
-    if (!this.model.region || this.model.region === '' || this.model.region === 'All' || this.model.region === 'all') {
-      this.tempusers = this.users;
-    } else {
-      this.tempusers = this.users.filter((lc: any) => lc.region.toLowerCase() === this.model.region.toLowerCase());
-    }
-  }
-
-  genReport() {
-    if (!this.model.report_type) {
-      this.model.report_type = 'tallyinvoice';
     }
     
-    if (this.loading) {
-      return;
+
+
+      getBranchList(){
+        this.branchService.list().subscribe(
+          res => {
+        this.branches=res;   
+              }
+      );
     }
 
-    this.loading = true;
+    getLcats(){
+        this.licenseCategoryService.list().subscribe(
+            res => {
+             // this.loading=false;
+        this.lcats=res; 
+        
+            }
+          );
+    }
 
-    this.quotationService.genReport(this.model).subscribe(
-      (res: { [x: string]: string | URL | undefined; }) => {
-        this.loading = false;
-        this.commonService.notify('info', 'Report Generated');
-        window.open(res['file_url'], '_blank');
+filterusers(){
+    console.log(this.model.region);
+    if(!this.model.region || this.model.region=='' || this.model.region=='All' || this.model.region=='all'){
+        this.tempusers=this.users;
+    } else {
+       this.tempusers= this.users.filter((lc: any) => lc.region.toLowerCase() === this.model.region.toLowerCase());
+    }
+
+}
+
+genReport(){
+  if(this.model.report_type){} else {
+      this.model.report_type='tallyinvoice'; 
+  }
+  if(this.loading){
+      return 0;
+  }
+  this.loading=true;
+  this.quotationService.genReport(this.model).subscribe(
+      res => {
+          this.loading=false;
+          window.open(res['file_url'], '_blank');
       },
-      (error: any) => {
-        this.loading = false;
+      error => {
+          this.loading=false;
       }
-    );
-  }
+  );
+  // Add return statement here
+  return; // Return void
+}
 
-  onMouseOver(gm: any) {
-    const infoWindow = gm.infoWindow; // 6. Use gm directly to get infoWindow
 
-    if (gm.lastOpen != null) {
-      gm.lastOpen.close();
+    onMouseOver(infoWindow: any, gm: any) {
+      if (gm.lastOpen != null) {
+        gm.lastOpen.close();
+      }
+      gm.lastOpen = infoWindow;
+      infoWindow.open();
     }
-
-    gm.lastOpen = infoWindow;
-
-    infoWindow.open();
-  }
-
-  
+    
 }

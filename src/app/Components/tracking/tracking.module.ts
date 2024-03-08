@@ -2,9 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackingRoutingModule } from './tracking-routing.module';
 import { SharedModule } from '../../shared/shared.module';
-import { ArchwizardModule } from 'ng2-archwizard/dist';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrackingComponent } from './tracking.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -14,7 +11,7 @@ import { CommonService } from '../../Services/common.service';
 import { NotificationsService } from 'angular2-notifications';
 import { TrackingService } from '../../Services/tracking.service';
 import { LicenseCategoryService } from '../../Services/licensecategory.service';
-
+import { FormsModule } from '@angular/forms'; 
 
 @NgModule({
   imports: [
@@ -22,9 +19,8 @@ import { LicenseCategoryService } from '../../Services/licensecategory.service';
     TrackingRoutingModule,
     SharedModule,
     NgSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    GoogleMapsModule, 
+    GoogleMapsModule,
+    FormsModule
   ],
   declarations: [TrackingComponent],
   providers: [
@@ -35,6 +31,6 @@ import { LicenseCategoryService } from '../../Services/licensecategory.service';
     TrackingService,
     LicenseCategoryService,
   ],
-  schemas:[CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
 })
 export class TrackingModule {}

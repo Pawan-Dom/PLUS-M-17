@@ -26,11 +26,10 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { LoginComponent } from './Components/login/login.component';
 import { AppComponent } from './app.component';
 import { AuthService } from './Services/auth.service';
-import { AppRoutingModule } from './app-routing.module'; // Correct import statement
-import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications'; // Import SimpleNotificationsModule for options
+import { AppRoutingModule } from './app-routing.module';
+import { NotificationsService, SimpleNotificationsModule } from 'angular2-notifications';
+import { GoogleMapsModule } from '@angular/google-maps'; // Correct import statement
 import { ArchwizardModule } from 'ng2-archwizard/dist';
-import { GoogleMapsModule } from '@angular/google-maps';
-import { StepperErrorsExampleComponent } from './stepper-errors-example/stepper-errors-example.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
@@ -45,10 +44,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         DashboardComponent,
         SideMenuComponent,
         NavBarComponent,
-       
     ],
     providers: [
         NotificationsService, 
+        AuthService,
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     ],
@@ -81,11 +80,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         NgSelectModule,
         SharedModule,
         AppRoutingModule,
-        SimpleNotificationsModule.forRoot() ,
+        SimpleNotificationsModule.forRoot(),
         GoogleMapsModule,
         MatStepperModule,
         NgOptionHighlightModule,
-        
+        // ArchwizardModule, // Ensure that ArchwizardModule is imported if needed
     ]
 })
 export class AppModule { }
