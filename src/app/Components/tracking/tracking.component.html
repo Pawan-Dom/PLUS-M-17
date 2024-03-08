@@ -89,10 +89,10 @@
             <button class="btn btn-primary" type="submit">Refresh Map  <img *ngIf="loading" width=20px src="/assets/loaderwhite.png" /></button>
        </div>
    </div>
-
+ 
     </form>
  <hr>
- <ng-container *ngIf="usergpsdata && !loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
+ <ng-container *ngIf="usergpsdata && !loading"  style=" width:1500px !important; height:600px !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
   <google-map 
   #gm 
   [fullscreenControl]="true" 
@@ -100,7 +100,7 @@
   [zoom]="6" 
   [latitude]="1 * (usergpsdata[0]?.gpsdata.lat || 0)" 
   [longitude]="1 * (usergpsdata[0]?.gpsdata.lon || 0)" 
-  style="width: 100%; height: 100vh;"
+  
 >
   <ng-container *ngFor="let ugd of usergpsdata">
       <!-- leadmarkers-->

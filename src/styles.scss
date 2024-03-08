@@ -12,3 +12,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .ngx-datatable.data-table {
     border: 1px solid #294b57;
 }
+.page-body {
+  position: relative;
+}
+
+/* Styling for Google Maps */
+google-map {
+  display: block;
+  width: 1500px !important;
+  height: 700px !important; /* Adjust height as needed */
+  position: relative;
+  z-index: 0; /* Ensure the map stays behind other elements */
+}
+.map-container{
+  width: 1700px !important;
+  height: 600px !important;
+}
