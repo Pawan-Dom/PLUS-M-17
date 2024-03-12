@@ -12,7 +12,8 @@ import { UserService } from '../../Services/user.service';
 import { Component, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 
-import { MapInfoWindow } from '@angular/google-maps'; 
+import { MapInfoWindow } from '@angular/google-maps';
+ 
 interface MarkerProperties {
   position: {
     lat: number;
@@ -43,6 +44,8 @@ export class TrackingComponent {
     markers: MarkerProperties[] = [
       
     ];
+    @ViewChild(MapInfoWindow, { static: true }) infoWindow!: MapInfoWindow;
+
     constructor(public trackingService:TrackingService,public commonService:CommonService,public licenseCategoryService:LicenseCategoryService,public branchService:BranchService,public quotationService:QuotationService,private userService:UserService) {
         this.model.report_type="allquotations";
         this.model.region='All';
@@ -184,5 +187,12 @@ genReport(){
       gm.lastOpen = infoWindow;
       infoWindow.open();
     }
+    onMarkerClick(marker: MarkerProperties) {
+      // Set the position of the info window and open it
+      this.infoWindow.position = marker.position;
+      this.infoWindow.open();
+    }
+  
+    // @ViewChild(MapInfoWindow, { static: false }) infoWindow: MapInfoWindow;
     
 }

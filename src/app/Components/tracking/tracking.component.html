@@ -164,14 +164,16 @@
     </agm-map>
     
   </ng-container> -->
-
-  </app-card>
   <div class="map">
     <google-map height="100vh"
                 width="100%"
                 [options]="mapOptions">
       <map-marker *ngFor="let marker of markers"
-                  [position]="marker.position"></map-marker>
+                  [position]="marker.position" > <map-info-window #infoWindow> <h4 style="font-size:large">{{usergpsdata.name}} - {{usergpsdata.region}}</h4><hr> TimeStamp : {{usergpsdata.created_on|date:'medium'}} </map-info-window></map-marker>
+                  
+
     </google-map>
   </div>
+  </app-card>
+  
 </div>

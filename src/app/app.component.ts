@@ -1,6 +1,4 @@
-// app.component.ts
-
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AuthService } from './Services/auth.service';
 
 @Component({
@@ -9,26 +7,27 @@ import { AuthService } from './Services/auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title(title: any) {
-    throw new Error('Method not implemented.');
-  }
   isLoggedIn: boolean;
   isSideMenuVisible = false;
+
+  constructor(private authService: AuthService) {
+    this.isLoggedIn = this.authService.isAuthenticated();
+    // Check viewport width on initialization
+    this.checkViewportWidth();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    // Check viewport width when window is resized
+    this.checkViewportWidth();
+  }
+
+  checkViewportWidth() {
+    // Set isSideMenuVisible based on viewport width
+    this.isSideMenuVisible = window.innerWidth >= 768; // Adjust breakpoint as needed
+  }
 
   onToggleSideMenu() {
     this.isSideMenuVisible = !this.isSideMenuVisible;
   }
-
-  constructor(private authService: AuthService) {
-    // Check the authentication status when the component is initialized
-    this.isLoggedIn = this.authService.isAuthenticated();
-  }
-
-  // You might also want to subscribe to authentication changes if your AuthService provides an observable
-
-  // ngOnInit() {
-  //   this.authService.authStatus.subscribe(isLoggedIn => {
-  //     this.isLoggedIn = isLoggedIn;
-  //   });
-  // }
 }
